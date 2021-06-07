@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-class LdbcSnbInteractiveDbValidationParametersFilter implements DbValidationParametersFilter {
+public class LdbcSnbInteractiveDbValidationParametersFilter implements DbValidationParametersFilter {
     private final Set<Class<?>> multiResultOperations;
     private final Map<Class<?>, Long> remainingRequiredResultsPerWriteType;
     private final Map<Class<?>, Long> remainingRequiredResultsPerLongReadType;
@@ -18,11 +18,11 @@ class LdbcSnbInteractiveDbValidationParametersFilter implements DbValidationPara
     private long writeAddPersonOperationCount;
     private int uncompletedShortReads;
 
-    LdbcSnbInteractiveDbValidationParametersFilter(Set<Class<?>> multiResultOperations,
-                                                   long writeAddPersonOperationCount,
-                                                   Map<Class<?>, Long> remainingRequiredResultsPerWriteType,
-                                                   Map<Class<?>, Long> remainingRequiredResultsPerLongReadType,
-                                                   Set<Class<?>> enabledShortReadOperationTypes) {
+    public LdbcSnbInteractiveDbValidationParametersFilter(Set<Class<?>> multiResultOperations,
+                                                          long writeAddPersonOperationCount,
+                                                          Map<Class<?>, Long> remainingRequiredResultsPerWriteType,
+                                                          Map<Class<?>, Long> remainingRequiredResultsPerLongReadType,
+                                                          Set<Class<?>> enabledShortReadOperationTypes) {
         this.multiResultOperations = multiResultOperations;
         this.writeAddPersonOperationCount = writeAddPersonOperationCount;
         this.remainingRequiredResultsPerWriteType = remainingRequiredResultsPerWriteType;

@@ -1340,12 +1340,12 @@ public class LdbcSnbShortReadGenerator implements ChildOperationGenerator
     Buffer
      */
 
-    static Queue<Long> synchronizedCircularQueueBuffer( int bufferSize )
+    public static Queue<Long> synchronizedCircularQueueBuffer(int bufferSize)
     {
         return Queues.synchronizedQueue( EvictingQueue.<Long>create( bufferSize ) );
     }
 
-    static Queue<Long> constantBuffer( final long value )
+    public static Queue<Long> constantBuffer(final long value)
     {
         return new Queue<Long>()
         {

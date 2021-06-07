@@ -1,135 +1,124 @@
-package com.ldbc.driver;
+package com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Charsets;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
-import com.google.common.collect.PeekingIterator;
 import com.google.common.collect.Sets;
+import com.ldbc.driver.Operation;
+import com.ldbc.driver.SerializingMarshallingException;
+import com.ldbc.driver.Workload;
+import com.ldbc.driver.WorkloadException;
+import com.ldbc.driver.WorkloadStreams;
 import com.ldbc.driver.control.ConsoleAndFileDriverConfiguration;
-import com.ldbc.driver.control.DriverConfiguration;
-import com.ldbc.driver.csv.charseeker.*;
-import com.ldbc.driver.csv.simple.SimpleCsvFileReader;
+import com.ldbc.driver.csv.charseeker.BufferedCharSeeker;
+import com.ldbc.driver.csv.charseeker.CharSeeker;
+import com.ldbc.driver.csv.charseeker.Extractors;
+import com.ldbc.driver.csv.charseeker.Mark;
+import com.ldbc.driver.csv.charseeker.Readables;
 import com.ldbc.driver.generator.CsvEventStreamReaderBasicCharSeeker;
 import com.ldbc.driver.generator.GeneratorFactory;
-import com.ldbc.driver.generator.RandomDataGeneratorFactory;
 import com.ldbc.driver.util.ClassLoaderHelper;
 import com.ldbc.driver.util.ClassLoadingException;
-import com.ldbc.driver.util.Tuple;
-import com.ldbc.driver.util.Tuple2;
-import com.ldbc.driver.validation.ResultsLogValidationTolerances;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.*;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery2PersonPosts;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery3PersonFriends;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery7MessageReplies;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcSnbInteractiveDbValidationParametersFilter;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcSnbInteractiveWorkloadConfiguration;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.Equator;
 
-import java.io.*;
-import java.util.*;
+import java.io.Closeable;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
-public abstract class Workload implements Closeable {
-    public static final long DEFAULT_MAXIMUM_EXPECTED_INTERLEAVE_AS_MILLI = TimeUnit.HOURS.toMillis(1);
-    protected List<Closeable> forumUpdateOperationsFileReaders = new ArrayList<>();
-    protected List<File> forumUpdateOperationFiles = new ArrayList<>();
-    protected List<Closeable> personUpdateOperationsFileReaders = new ArrayList<>();
-    protected List<File> personUpdateOperationFiles = new ArrayList<>();
+public class LdbcSnbInteractiveGraphDBWorkload extends Workload
+{
+    private final List<Closeable> readOperationFileReaders = new ArrayList<>();
+    private File readOperation1File;
+    private File readOperation2File;
+    private File readOperation3File;
+    private File readOperation4File;
+    private File readOperation5File;
+    private File readOperation6File;
+    private File readOperation7File;
+    private File readOperation8File;
+    private File readOperation9File;
+    private File readOperation10File;
+    private File readOperation11File;
+    private File readOperation12File;
+    private File readOperation13File;
+    private File readOperation14File;
 
-    protected List<Closeable> readOperationFileReaders = new ArrayList<>();
-    protected File readOperation1File;
-    protected File readOperation2File;
-    protected File readOperation3File;
-    protected File readOperation4File;
-    protected File readOperation5File;
-    protected File readOperation6File;
-    protected File readOperation7File;
-    protected File readOperation8File;
-    protected File readOperation9File;
-    protected File readOperation10File;
-    protected File readOperation11File;
-    protected File readOperation12File;
-    protected File readOperation13File;
-    protected File readOperation14File;
+    private long readOperation1InterleaveAsMilli;
+    private long readOperation2InterleaveAsMilli;
+    private long readOperation3InterleaveAsMilli;
+    private long readOperation4InterleaveAsMilli;
+    private long readOperation5InterleaveAsMilli;
+    private long readOperation6InterleaveAsMilli;
+    private long readOperation7InterleaveAsMilli;
+    private long readOperation8InterleaveAsMilli;
+    private long readOperation9InterleaveAsMilli;
+    private long readOperation10InterleaveAsMilli;
+    private long readOperation11InterleaveAsMilli;
+    private long readOperation12InterleaveAsMilli;
+    private long readOperation13InterleaveAsMilli;
+    private long readOperation14InterleaveAsMilli;
 
-    protected long readOperation1InterleaveAsMilli;
-    protected long readOperation2InterleaveAsMilli;
-    protected long readOperation3InterleaveAsMilli;
-    protected long readOperation4InterleaveAsMilli;
-    protected long readOperation5InterleaveAsMilli;
-    protected long readOperation6InterleaveAsMilli;
-    protected long readOperation7InterleaveAsMilli;
-    protected long readOperation8InterleaveAsMilli;
-    protected long readOperation9InterleaveAsMilli;
-    protected long readOperation10InterleaveAsMilli;
-    protected long readOperation11InterleaveAsMilli;
-    protected long readOperation12InterleaveAsMilli;
-    protected long readOperation13InterleaveAsMilli;
-    protected long readOperation14InterleaveAsMilli;
+    private long updateInterleaveAsMilli;
+    private double compressionRatio;
 
-    protected long updateInterleaveAsMilli;
-    protected double compressionRatio;
-    protected double shortReadDissipationFactor;
+    private Set<Class<?>> enabledLongReadOperationTypes;
+    private LdbcSnbInteractiveWorkloadConfiguration.UpdateStreamParser parser;
 
-    protected Set<Class<?>> enabledLongReadOperationTypes;
-    protected Set<Class<?>> enabledShortReadOperationTypes;
-    protected Set<Class<?>> enabledWriteOperationTypes;
-    protected LdbcSnbInteractiveWorkloadConfiguration.UpdateStreamParser parser;
-
-    private boolean isInitialized = false;
-    private boolean isClosed = false;
-
-    public abstract Map<Integer, Class<? extends Operation<?>>> operationTypeToClassMapping();
-
-    public ResultsLogValidationTolerances resultsLogValidationTolerances(
-            DriverConfiguration configuration,
-            boolean warmup
-    ) {
-        long excessiveDelayThresholdAsMilli = TimeUnit.SECONDS.toMillis(1);
-        double toleratedExcessiveDelayCountPercentage = 0.01;
-        long toleratedExcessiveDelayCount =
-                (warmup) ? Math.round(configuration.warmupCount() * toleratedExcessiveDelayCountPercentage)
-                        : Math.round(configuration.operationCount() * toleratedExcessiveDelayCountPercentage);
-        // TODO this should really be percentages instead of absolute numbers
-        Map<String, Long> toleratedExcessiveDelayCountPerType = new HashMap<>();
-        for (Class<?> operationType : operationTypeToClassMapping().values()) {
-            toleratedExcessiveDelayCountPerType.put(operationType.getSimpleName(), 10l);
-        }
-        return new ResultsLogValidationTolerances(
-                excessiveDelayThresholdAsMilli,
-                toleratedExcessiveDelayCount,
-                toleratedExcessiveDelayCountPerType
-        );
+    @Override
+    public Map<Integer, Class<? extends Operation<?>>> operationTypeToClassMapping() {
+        Map<Integer, Class<? extends Operation<?>>> operationTypeToClassMapping = new HashMap<>();
+        operationTypeToClassMapping.put(LdbcQuery1.TYPE, LdbcQuery1.class);
+        operationTypeToClassMapping.put(LdbcQuery2.TYPE, LdbcQuery2.class);
+        operationTypeToClassMapping.put(LdbcQuery3.TYPE, LdbcQuery3.class);
+        operationTypeToClassMapping.put(LdbcQuery4.TYPE, LdbcQuery4.class);
+        operationTypeToClassMapping.put(LdbcQuery5.TYPE, LdbcQuery5.class);
+        operationTypeToClassMapping.put(LdbcQuery6.TYPE, LdbcQuery6.class);
+        operationTypeToClassMapping.put(LdbcQuery7.TYPE, LdbcQuery7.class);
+        operationTypeToClassMapping.put(LdbcQuery8.TYPE, LdbcQuery8.class);
+        operationTypeToClassMapping.put(LdbcQuery9.TYPE, LdbcQuery9.class);
+        operationTypeToClassMapping.put(LdbcQuery10.TYPE, LdbcQuery10.class);
+        operationTypeToClassMapping.put(LdbcQuery11.TYPE, LdbcQuery11.class);
+        operationTypeToClassMapping.put(LdbcQuery12.TYPE, LdbcQuery12.class);
+        operationTypeToClassMapping.put(LdbcQuery13.TYPE, LdbcQuery13.class);
+        operationTypeToClassMapping.put(LdbcQuery14.TYPE, LdbcQuery14.class);
+        return operationTypeToClassMapping;
     }
 
-    /**
-     * Called once to initialize state for workload
-     */
-    public final void init(DriverConfiguration params) throws WorkloadException {
-        if (isInitialized) {
-            throw new WorkloadException("Workload may be initialized only once");
-        }
-        isInitialized = true;
-        onInit(params.asMap());
-    }
-
+    @Override
     public void onInit(Map<String, String> params) throws WorkloadException {
-        if (params.containsKey(LdbcSnbInteractiveWorkloadConfiguration.UPDATES_DIRECTORY)) {
-            String updatesDirectoryPath =
-                    params.get(LdbcSnbInteractiveWorkloadConfiguration.UPDATES_DIRECTORY).trim();
-            File updatesDirectory = new File(updatesDirectoryPath);
-            if (!updatesDirectory.exists()) {
-                throw new WorkloadException(format("Updates directory does not exist\nDirectory: %s",
-                        updatesDirectory.getAbsolutePath()));
-            }
-            if (!updatesDirectory.isDirectory()) {
-                throw new WorkloadException(format("Updates directory is not a directory\nDirectory: %s",
-                        updatesDirectory.getAbsolutePath()));
-            }
-            forumUpdateOperationFiles = LdbcSnbInteractiveWorkloadConfiguration
-                    .forumUpdateFilesInDirectory(updatesDirectory);
-            personUpdateOperationFiles =
-                    LdbcSnbInteractiveWorkloadConfiguration.personUpdateFilesInDirectory(updatesDirectory);
-        } else {
-            forumUpdateOperationFiles = new ArrayList<>();
-            personUpdateOperationFiles = new ArrayList<>();
+        List<String> compulsoryKeys = Lists.newArrayList(
+                LdbcSnbInteractiveWorkloadConfiguration.PARAMETERS_DIRECTORY);
+
+        compulsoryKeys.addAll(LdbcSnbInteractiveWorkloadConfiguration.LONG_READ_OPERATION_ENABLE_KEYS
+                .stream().map(curr -> "ontotext." + curr).collect(Collectors.toList()));
+
+        Set<String> missingPropertyParameters =
+                LdbcSnbInteractiveWorkloadConfiguration.missingParameters(params, compulsoryKeys);
+        if (!missingPropertyParameters.isEmpty()) {
+            throw new WorkloadException(format("Workload could not initialize due to missing parameters: %s",
+                    missingPropertyParameters));
         }
 
         File parametersDir =
@@ -177,12 +166,14 @@ public abstract class Workload implements Closeable {
                 new File(parametersDir, LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_14_PARAMS_FILENAME);
 
         enabledLongReadOperationTypes = new HashSet<>();
-        for (String longReadOperationEnableKey : LdbcSnbInteractiveWorkloadConfiguration
-                .LONG_READ_OPERATION_ENABLE_KEYS) {
+        List<String> graphdbLongReadOperationEnableKeys =
+                LdbcSnbInteractiveWorkloadConfiguration.LONG_READ_OPERATION_ENABLE_KEYS
+                        .stream().map(curr -> "ontotext." + curr).collect(Collectors.toList());
+        for (String longReadOperationEnableKey : graphdbLongReadOperationEnableKeys) {
             String longReadOperationEnabledString = params.get(longReadOperationEnableKey).trim();
             boolean longReadOperationEnabled = Boolean.parseBoolean(longReadOperationEnabledString);
             String longReadOperationClassName =
-                    LdbcSnbInteractiveWorkloadConfiguration.LDBC_INTERACTIVE_PACKAGE_PREFIX +
+                    "com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive." +
                             LdbcSnbInteractiveWorkloadConfiguration.removePrefix(
                                     LdbcSnbInteractiveWorkloadConfiguration.removeSuffix(
                                             longReadOperationEnableKey,
@@ -206,90 +197,10 @@ public abstract class Workload implements Closeable {
             }
         }
 
-        enabledShortReadOperationTypes = new HashSet<>();
-        for (String shortReadOperationEnableKey : LdbcSnbInteractiveWorkloadConfiguration
-                .SHORT_READ_OPERATION_ENABLE_KEYS) {
-            String shortReadOperationEnabledString = params.get(shortReadOperationEnableKey).trim();
-            boolean shortReadOperationEnabled = Boolean.parseBoolean(shortReadOperationEnabledString);
-            String shortReadOperationClassName =
-                    LdbcSnbInteractiveWorkloadConfiguration.LDBC_INTERACTIVE_PACKAGE_PREFIX +
-                            LdbcSnbInteractiveWorkloadConfiguration.removePrefix(
-                                    LdbcSnbInteractiveWorkloadConfiguration.removeSuffix(
-                                            shortReadOperationEnableKey,
-                                            LdbcSnbInteractiveWorkloadConfiguration.ENABLE_SUFFIX
-                                    ),
-                                    LdbcSnbInteractiveWorkloadConfiguration
-                                            .LDBC_SNB_INTERACTIVE_PARAM_NAME_PREFIX
-                            );
-            try {
-                Class<?> shortReadOperationClass = ClassLoaderHelper.loadClass(shortReadOperationClassName);
-                if (shortReadOperationEnabled) {
-                    enabledShortReadOperationTypes.add(shortReadOperationClass);
-                }
-            } catch (ClassLoadingException e) {
-                throw new WorkloadException(
-                        format(
-                                "Unable to load operation class for parameter: %s\nGuessed incorrect class name: %s",
-                                shortReadOperationEnableKey, shortReadOperationClassName),
-                        e
-                );
-            }
-        }
-        if (!enabledShortReadOperationTypes.isEmpty()) {
-            if (!params.containsKey(LdbcSnbInteractiveWorkloadConfiguration.SHORT_READ_DISSIPATION)) {
-                throw new WorkloadException(format("Configuration parameter missing: %s",
-                        LdbcSnbInteractiveWorkloadConfiguration.SHORT_READ_DISSIPATION));
-            }
-            shortReadDissipationFactor = Double.parseDouble(
-                    params.get(LdbcSnbInteractiveWorkloadConfiguration.SHORT_READ_DISSIPATION).trim()
-            );
-            if (shortReadDissipationFactor < 0 || shortReadDissipationFactor > 1) {
-                throw new WorkloadException(
-                        format("Configuration parameter %s should be in interval [1.0,0.0] but is: %s",
-                                shortReadDissipationFactor));
-            }
-        }
-
-        enabledWriteOperationTypes = new HashSet<>();
-        for (String writeOperationEnableKey : LdbcSnbInteractiveWorkloadConfiguration.WRITE_OPERATION_ENABLE_KEYS) {
-            String writeOperationEnabledString = params.get(writeOperationEnableKey).trim();
-            boolean writeOperationEnabled = Boolean.parseBoolean(writeOperationEnabledString);
-            String writeOperationClassName = LdbcSnbInteractiveWorkloadConfiguration.LDBC_INTERACTIVE_PACKAGE_PREFIX +
-                    LdbcSnbInteractiveWorkloadConfiguration.removePrefix(
-                            LdbcSnbInteractiveWorkloadConfiguration.removeSuffix(
-                                    writeOperationEnableKey,
-                                    LdbcSnbInteractiveWorkloadConfiguration.ENABLE_SUFFIX
-                            ),
-                            LdbcSnbInteractiveWorkloadConfiguration
-                                    .LDBC_SNB_INTERACTIVE_PARAM_NAME_PREFIX
-                    );
-            try {
-                Class<?> writeOperationClass = ClassLoaderHelper.loadClass(writeOperationClassName);
-                if (writeOperationEnabled) {
-                    enabledWriteOperationTypes.add(writeOperationClass);
-                }
-            } catch (ClassLoadingException e) {
-                throw new WorkloadException(
-                        format(
-                                "Unable to load operation class for parameter: %s\nGuessed incorrect class name: %s",
-                                writeOperationEnableKey, writeOperationClassName),
-                        e
-                );
-            }
-        }
-
         List<String> frequencyKeys =
                 Lists.newArrayList(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_FREQUENCY_KEYS);
         Set<String> missingFrequencyKeys = LdbcSnbInteractiveWorkloadConfiguration
                 .missingParameters(params, frequencyKeys);
-        if (enabledWriteOperationTypes.isEmpty() &&
-                !params.containsKey(LdbcSnbInteractiveWorkloadConfiguration.UPDATE_INTERLEAVE)) {
-            // if UPDATE_INTERLEAVE is missing and writes are disabled set it to DEFAULT
-            params.put(
-                    LdbcSnbInteractiveWorkloadConfiguration.UPDATE_INTERLEAVE,
-                    LdbcSnbInteractiveWorkloadConfiguration.DEFAULT_UPDATE_INTERLEAVE
-            );
-        }
         if (!params.containsKey(LdbcSnbInteractiveWorkloadConfiguration.UPDATE_INTERLEAVE)) {
             // if UPDATE_INTERLEAVE is missing but writes are enabled it is an error
             throw new WorkloadException(
@@ -317,7 +228,7 @@ public abstract class Workload implements Closeable {
 
         try {
             readOperation1InterleaveAsMilli = Long.parseLong(
-                    params.get(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_1_INTERLEAVE_KEY).trim());
+                    params.get("ldbc.snb.interactive.LdbcQuery1_interleave").trim());
             readOperation2InterleaveAsMilli = Long.parseLong(
                     params.get(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_2_INTERLEAVE_KEY).trim());
             readOperation3InterleaveAsMilli = Long.parseLong(
@@ -361,197 +272,21 @@ public abstract class Workload implements Closeable {
         );
     }
 
-
-    public final void close() throws IOException {
-        if (isClosed) {
-            throw new IOException("Workload may be cleaned up only once");
-        }
-        isClosed = true;
-        onClose();
-    }
-
-    protected void onClose() throws IOException {
-        for (Closeable forumUpdateOperationsFileReader : forumUpdateOperationsFileReaders) {
-            forumUpdateOperationsFileReader.close();
-        }
-
-        for (Closeable personUpdateOperationsFileReader : personUpdateOperationsFileReaders) {
-            personUpdateOperationsFileReader.close();
-        }
-
+    @Override
+    protected synchronized void onClose() throws IOException {
         for (Closeable readOperationFileReader : readOperationFileReaders) {
             readOperationFileReader.close();
         }
     }
 
-    public final WorkloadStreams streams(GeneratorFactory gf, boolean hasDbConnected) throws WorkloadException {
-        if (!isInitialized) {
-            throw new WorkloadException("Workload has not been initialized");
-        }
-        return getStreams(gf, hasDbConnected);
-    }
-
-    protected WorkloadStreams getStreams(GeneratorFactory gf, boolean hasDbConnected)
-            throws WorkloadException {
+    @Override
+    protected WorkloadStreams getStreams(GeneratorFactory gf, boolean hasDbConnected) throws WorkloadException {
         long workloadStartTimeAsMilli = Long.MAX_VALUE;
         WorkloadStreams ldbcSnbInteractiveWorkloadStreams = new WorkloadStreams();
         List<Iterator<?>> asynchronousDependencyStreamsList = new ArrayList<>();
         List<Iterator<?>> asynchronousNonDependencyStreamsList = new ArrayList<>();
         Set<Class<? extends Operation<?>>> dependentAsynchronousOperationTypes = Sets.newHashSet();
         Set<Class<? extends Operation<?>>> dependencyAsynchronousOperationTypes = Sets.newHashSet();
-
-        /* *******
-         * *******
-         * *******
-         *  WRITES
-         * *******
-         * *******
-         * *******/
-
-        // TODO put person/forum update stream pairs into same streams, to half required thread count
-        /*
-         * Create person write operation streams
-         */
-        if (enabledWriteOperationTypes.contains(LdbcUpdate1AddPerson.class)) {
-            for (File personUpdateOperationFile : personUpdateOperationFiles) {
-                Iterator<Operation<?>> personUpdateOperationsParser;
-                try {
-                    Tuple2<Iterator<Operation<?>>, Closeable> parserAndCloseable =
-                            fileToWriteStreamParser(personUpdateOperationFile, parser);
-                    personUpdateOperationsParser = parserAndCloseable._1();
-                    personUpdateOperationsFileReaders.add(parserAndCloseable._2());
-                } catch (IOException e) {
-                    throw new WorkloadException(
-                            "Unable to open person update stream: " + personUpdateOperationFile.getAbsolutePath(), e);
-                }
-                if (!personUpdateOperationsParser.hasNext()) {
-                    // Update stream is empty
-                    System.out.println(
-                            format(""
-                                            + "***********************************************\n"
-                                            + "  !! WARMING !!\n"
-                                            + "  Update stream is empty: %s\n"
-                                            + "  Check that data generation process completed successfully\n"
-                                            + "***********************************************",
-                                    personUpdateOperationFile.getAbsolutePath()
-                            )
-                    );
-                    continue;
-                }
-                PeekingIterator<Operation<?>> unfilteredPersonUpdateOperations =
-                        Iterators.peekingIterator(personUpdateOperationsParser);
-
-                try {
-                    if (unfilteredPersonUpdateOperations.peek().scheduledStartTimeAsMilli() <
-                            workloadStartTimeAsMilli) {
-                        workloadStartTimeAsMilli = unfilteredPersonUpdateOperations.peek().scheduledStartTimeAsMilli();
-                    }
-                } catch (NoSuchElementException e) {
-                    // do nothing, exception just means that stream was empty
-                }
-
-                // Filter Write Operations
-                Predicate<Operation<?>> enabledWriteOperationsFilter = operation -> enabledWriteOperationTypes.contains(operation.getClass());
-                Iterator<Operation<?>> filteredPersonUpdateOperations =
-                        Iterators.filter(unfilteredPersonUpdateOperations, enabledWriteOperationsFilter);
-
-                Set<Class<? extends Operation<?>>> dependentPersonUpdateOperationTypes = Sets.newHashSet();
-                Set<Class<? extends Operation<?>>> dependencyPersonUpdateOperationTypes =
-                        Sets.newHashSet(
-                                LdbcUpdate1AddPerson.class
-                        );
-
-                ChildOperationGenerator personUpdateChildOperationGenerator = null;
-
-                ldbcSnbInteractiveWorkloadStreams.addBlockingStream(
-                        dependentPersonUpdateOperationTypes,
-                        dependencyPersonUpdateOperationTypes,
-                        filteredPersonUpdateOperations,
-                        Collections.emptyIterator(),
-                        null
-                );
-            }
-        }
-
-        /*
-         * Create forum write operation streams
-         */
-        if (enabledWriteOperationTypes.contains(LdbcUpdate2AddPostLike.class) ||
-                enabledWriteOperationTypes.contains(LdbcUpdate3AddCommentLike.class) ||
-                enabledWriteOperationTypes.contains(LdbcUpdate4AddForum.class) ||
-                enabledWriteOperationTypes.contains(LdbcUpdate5AddForumMembership.class) ||
-                enabledWriteOperationTypes.contains(LdbcUpdate6AddPost.class) ||
-                enabledWriteOperationTypes.contains(LdbcUpdate7AddComment.class) ||
-                enabledWriteOperationTypes.contains(LdbcUpdate8AddFriendship.class)
-        ) {
-            for (File forumUpdateOperationFile : forumUpdateOperationFiles) {
-                Iterator<Operation<?>> forumUpdateOperationsParser;
-                try {
-                    Tuple2<Iterator<Operation<?>>, Closeable> parserAndCloseable =
-                            fileToWriteStreamParser(forumUpdateOperationFile, parser);
-                    forumUpdateOperationsParser = parserAndCloseable._1();
-                    forumUpdateOperationsFileReaders.add(parserAndCloseable._2());
-                } catch (IOException e) {
-                    throw new WorkloadException(
-                            "Unable to open forum update stream: " + forumUpdateOperationFile.getAbsolutePath(), e);
-                }
-                if (!forumUpdateOperationsParser.hasNext()) {
-                    // Update stream is empty
-                    System.out.println(
-                            format(""
-                                            + "***********************************************\n"
-                                            + "  !! WARMING !!\n"
-                                            + "  Update stream is empty: %s\n"
-                                            + "  Check that data generation process completed successfully\n"
-                                            + "***********************************************",
-                                    forumUpdateOperationFile.getAbsolutePath()
-                            )
-                    );
-                    continue;
-                }
-                PeekingIterator<Operation<?>> unfilteredForumUpdateOperations =
-                        Iterators.peekingIterator(forumUpdateOperationsParser);
-
-                try {
-                    if (unfilteredForumUpdateOperations.peek().scheduledStartTimeAsMilli() < workloadStartTimeAsMilli) {
-                        workloadStartTimeAsMilli = unfilteredForumUpdateOperations.peek().scheduledStartTimeAsMilli();
-                    }
-                } catch (NoSuchElementException e) {
-                    // do nothing, exception just means that stream was empty
-                }
-
-                // Filter Write Operations
-                Predicate<Operation<?>> enabledWriteOperationsFilter = operation -> enabledWriteOperationTypes.contains(operation.getClass());
-                Iterator<Operation<?>> filteredForumUpdateOperations =
-                        Iterators.filter(unfilteredForumUpdateOperations, enabledWriteOperationsFilter);
-
-                Set<Class<? extends Operation<?>>> dependentForumUpdateOperationTypes =
-                        Sets.newHashSet(
-                                LdbcUpdate2AddPostLike.class,
-                                LdbcUpdate3AddCommentLike.class,
-                                LdbcUpdate4AddForum.class,
-                                LdbcUpdate5AddForumMembership.class,
-                                LdbcUpdate6AddPost.class,
-                                LdbcUpdate7AddComment.class,
-                                LdbcUpdate8AddFriendship.class
-                        );
-                Set<Class<? extends Operation<?>>> dependencyForumUpdateOperationTypes = Sets.newHashSet();
-
-                ChildOperationGenerator forumUpdateChildOperationGenerator = null;
-
-                ldbcSnbInteractiveWorkloadStreams.addBlockingStream(
-                        dependentForumUpdateOperationTypes,
-                        dependencyForumUpdateOperationTypes,
-                        Collections.emptyIterator(),
-                        filteredForumUpdateOperations,
-                        forumUpdateChildOperationGenerator
-                );
-            }
-        }
-
-        if (Long.MAX_VALUE == workloadStartTimeAsMilli) {
-            workloadStartTimeAsMilli = 0;
-        }
 
         /* *******
          * *******
@@ -1347,75 +1082,15 @@ public abstract class Workload implements Closeable {
          * Merge all dependency asynchronous operation streams, ordered by operation start times
          */
         Iterator<Operation<?>> asynchronousDependencyStreams = gf.mergeSortOperationsByTimeStamp(
-                asynchronousDependencyStreamsList.toArray(new Iterator[asynchronousDependencyStreamsList.size()])
+                asynchronousDependencyStreamsList.toArray( new Iterator[asynchronousDependencyStreamsList.size()] )
         );
         /*
          * Merge all non dependency asynchronous operation streams, ordered by operation start times
          */
         Iterator<Operation<?>> asynchronousNonDependencyStreams = gf.mergeSortOperationsByTimeStamp(
                 asynchronousNonDependencyStreamsList
-                        .toArray(new Iterator[asynchronousNonDependencyStreamsList.size()])
+                        .toArray( new Iterator[asynchronousNonDependencyStreamsList.size()] )
         );
-
-        /* *******
-         * *******
-         * *******
-         *  SHORT READS
-         * *******
-         * *******
-         * *******/
-
-        ChildOperationGenerator shortReadsChildGenerator = null;
-        if (!enabledShortReadOperationTypes.isEmpty()) {
-            Map<Integer, Long> longReadInterleavesAsMilli = new HashMap<>();
-            longReadInterleavesAsMilli.put(LdbcQuery1.TYPE, readOperation1InterleaveAsMilli);
-            longReadInterleavesAsMilli.put(LdbcQuery2.TYPE, readOperation2InterleaveAsMilli);
-            longReadInterleavesAsMilli.put(LdbcQuery3.TYPE, readOperation3InterleaveAsMilli);
-            longReadInterleavesAsMilli.put(LdbcQuery4.TYPE, readOperation4InterleaveAsMilli);
-            longReadInterleavesAsMilli.put(LdbcQuery5.TYPE, readOperation5InterleaveAsMilli);
-            longReadInterleavesAsMilli.put(LdbcQuery6.TYPE, readOperation6InterleaveAsMilli);
-            longReadInterleavesAsMilli.put(LdbcQuery7.TYPE, readOperation7InterleaveAsMilli);
-            longReadInterleavesAsMilli.put(LdbcQuery8.TYPE, readOperation8InterleaveAsMilli);
-            longReadInterleavesAsMilli.put(LdbcQuery9.TYPE, readOperation9InterleaveAsMilli);
-            longReadInterleavesAsMilli.put(LdbcQuery10.TYPE, readOperation10InterleaveAsMilli);
-            longReadInterleavesAsMilli.put(LdbcQuery11.TYPE, readOperation11InterleaveAsMilli);
-            longReadInterleavesAsMilli.put(LdbcQuery12.TYPE, readOperation12InterleaveAsMilli);
-            longReadInterleavesAsMilli.put(LdbcQuery13.TYPE, readOperation13InterleaveAsMilli);
-            longReadInterleavesAsMilli.put(LdbcQuery14.TYPE, readOperation14InterleaveAsMilli);
-
-            RandomDataGeneratorFactory randomFactory = new RandomDataGeneratorFactory(42l);
-            double initialProbability = 1.0;
-            Queue<Long> personIdBuffer = (hasDbConnected)
-                    ? LdbcSnbShortReadGenerator.synchronizedCircularQueueBuffer(1024)
-                    : LdbcSnbShortReadGenerator.constantBuffer(1);
-            Queue<Long> messageIdBuffer = (hasDbConnected)
-                    ? LdbcSnbShortReadGenerator.synchronizedCircularQueueBuffer(1024)
-                    : LdbcSnbShortReadGenerator.constantBuffer(1);
-            LdbcSnbShortReadGenerator.SCHEDULED_START_TIME_POLICY scheduledStartTimePolicy = (hasDbConnected)
-                    ?
-                    LdbcSnbShortReadGenerator.SCHEDULED_START_TIME_POLICY.PREVIOUS_OPERATION_ACTUAL_FINISH_TIME
-                    :
-                    LdbcSnbShortReadGenerator.SCHEDULED_START_TIME_POLICY.PREVIOUS_OPERATION_SCHEDULED_START_TIME;
-            LdbcSnbShortReadGenerator.BufferReplenishFun bufferReplenishFun = (hasDbConnected)
-                    ? new LdbcSnbShortReadGenerator
-                    .ResultBufferReplenishFun(
-                    personIdBuffer, messageIdBuffer)
-                    : new LdbcSnbShortReadGenerator
-                    .NoOpBufferReplenishFun();
-            shortReadsChildGenerator = new LdbcSnbShortReadGenerator(
-                    initialProbability,
-                    shortReadDissipationFactor,
-                    updateInterleaveAsMilli,
-                    enabledShortReadOperationTypes,
-                    compressionRatio,
-                    personIdBuffer,
-                    messageIdBuffer,
-                    randomFactory,
-                    longReadInterleavesAsMilli,
-                    scheduledStartTimePolicy,
-                    bufferReplenishFun
-            );
-        }
 
         /* **************
          * **************
@@ -1430,136 +1105,443 @@ public abstract class Workload implements Closeable {
                 dependencyAsynchronousOperationTypes,
                 asynchronousDependencyStreams,
                 asynchronousNonDependencyStreams,
-                shortReadsChildGenerator
+                null
         );
 
         return ldbcSnbInteractiveWorkloadStreams;
     }
 
-    private Tuple2<Iterator<Operation<?>>,Closeable> fileToWriteStreamParser( File updateOperationsFile,
-                                                                              LdbcSnbInteractiveWorkloadConfiguration.UpdateStreamParser parser ) throws IOException, WorkloadException
-    {
-        switch ( parser )
-        {
-            case REGEX:
-            {
-                SimpleCsvFileReader csvFileReader = new SimpleCsvFileReader( updateOperationsFile,
-                        SimpleCsvFileReader.DEFAULT_COLUMN_SEPARATOR_REGEX_STRING );
-                return Tuple.tuple2( WriteEventStreamReaderRegex.create( csvFileReader ),
-                        csvFileReader );
-            }
-            case CHAR_SEEKER:
-            {
-                int bufferSize = 1024 * 1024;
-//                BufferedCharSeeker charSeeker = new BufferedCharSeeker(Readables.wrap(new FileReader
-// (updateOperationsFile)), bufferSize);
-                BufferedCharSeeker charSeeker = new BufferedCharSeeker(
-                        Readables.wrap(
-                                new InputStreamReader( new FileInputStream( updateOperationsFile ), Charsets.UTF_8 )
-                        ),
-                        bufferSize
-                );
-                Extractors extractors = new Extractors( ';', ',' );
-                return Tuple.tuple2(
-                        WriteEventStreamReaderCharSeeker.create( charSeeker, extractors, '|' ), charSeeker );
-            }
-            case CHAR_SEEKER_THREAD:
-            {
-                int bufferSize = 1024 * 1024;
-                BufferedCharSeeker charSeeker = new BufferedCharSeeker(
-                        ThreadAheadReadable.threadAhead(
-                                Readables.wrap(
-                                        new InputStreamReader( new FileInputStream( updateOperationsFile ), Charsets.UTF_8 )
-                                ),
-                                bufferSize
-                        ),
-                        bufferSize
-                );
-                Extractors extractors = new Extractors( ';', ',' );
-                return Tuple.tuple2(
-                        WriteEventStreamReaderCharSeeker.create( charSeeker, extractors, '|' ), charSeeker );
-            }
-        }
-        SimpleCsvFileReader csvFileReader = new SimpleCsvFileReader( updateOperationsFile,
-                SimpleCsvFileReader.DEFAULT_COLUMN_SEPARATOR_REGEX_STRING );
-        return Tuple.tuple2( WriteEventStreamReaderRegex.create( csvFileReader ),
-                csvFileReader );
+    @Override
+    public DbValidationParametersFilter dbValidationParametersFilter(Integer requiredValidationParameterCount) {
+        final Set<Class<?>> multiResultOperations = Sets.newHashSet(
+                LdbcShortQuery2PersonPosts.class,
+                LdbcShortQuery3PersonFriends.class,
+                LdbcShortQuery7MessageReplies.class,
+                com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1.class,
+                com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery2.class,
+//                LdbcQuery3.class,
+                com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery4.class,
+                com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery5.class,
+                com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery6.class,
+                com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery7.class,
+                com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery8.class,
+                com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery9.class,
+                com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery10.class,
+                com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery11.class,
+                com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery12.class,
+                com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery14.class
+        );
+
+
+        final Map<Class<?>, Long> remainingRequiredResultsPerLongReadType = new HashMap<>();
+        long resultCountsAssignedForLongReadTypesSoFar = 0;
+//        for (Class longReadOperationType : enabledLongReadOperationTypes) {
+//            remainingRequiredResultsPerLongReadType.put(longReadOperationType, minimumResultCountPerOperationType);
+//            resultCountsAssignedForLongReadTypesSoFar =
+//                    resultCountsAssignedForLongReadTypesSoFar + minimumResultCountPerOperationType;
+//        }
+
+        return new LdbcSnbInteractiveDbValidationParametersFilter(
+                multiResultOperations,
+                0L,
+                new HashMap<>(),
+                remainingRequiredResultsPerLongReadType,
+                new HashSet<>()
+        );
     }
 
-    public DbValidationParametersFilter dbValidationParametersFilter(final Integer requiredValidationParameterCount) {
-        return new DbValidationParametersFilter() {
-            private final List<Operation<?>> injectedOperations = new ArrayList<>();
-            int validationParameterCount = 0;
+    @Override
+    public long maxExpectedInterleaveAsMilli()
+    {
+        return TimeUnit.HOURS.toMillis( 1 );
+    }
 
-            @Override
-            public boolean useOperation(Operation<?> operation) {
-                return true;
-            }
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final TypeReference TYPE_REFERENCE = new TypeReference<List<Object>>()
+    {
+    };
 
-            @Override
-            public DbValidationParametersFilterResult useOperationAndResultForValidation(
-                    Operation<?> operation,
-                    Object operationResult) {
-                if (validationParameterCount < requiredValidationParameterCount) {
-                    validationParameterCount++;
-                    return new DbValidationParametersFilterResult(
-                            DbValidationParametersFilterAcceptance.ACCEPT_AND_CONTINUE,
-                            injectedOperations
-                    );
-                } else {
-                    return new DbValidationParametersFilterResult(
-                            DbValidationParametersFilterAcceptance.REJECT_AND_FINISH,
-                            injectedOperations
-                    );
+    @Override
+    public String serializeOperation(Operation<?> operation) throws SerializingMarshallingException {
+        switch (operation.type()) {
+            case LdbcQuery1.TYPE: {
+                LdbcQuery1 ldbcQuery = (LdbcQuery1) operation;
+                List<Object> operationAsList = new ArrayList<>();
+                operationAsList.add(ldbcQuery.getClass().getName());
+                operationAsList.add(ldbcQuery.personId());
+                operationAsList.add(ldbcQuery.firstName());
+                try {
+                    return OBJECT_MAPPER.writeValueAsString(operationAsList);
+                } catch (IOException e) {
+                    throw new SerializingMarshallingException(
+                            format("Error while trying to serialize result\n%s", operationAsList.toString()), e);
                 }
             }
-        };
+            case LdbcQuery2.TYPE: {
+                LdbcQuery2 ldbcQuery = (LdbcQuery2) operation;
+                List<Object> operationAsList = new ArrayList<>();
+                operationAsList.add(ldbcQuery.getClass().getName());
+                operationAsList.add(ldbcQuery.personId());
+                operationAsList.add(ldbcQuery.maxDate());
+                try {
+                    return OBJECT_MAPPER.writeValueAsString(operationAsList);
+                } catch (IOException e) {
+                    throw new SerializingMarshallingException(
+                            format("Error while trying to serialize result\n%s", operationAsList.toString()), e);
+                }
+            }
+            case LdbcQuery3.TYPE: {
+                LdbcQuery3 ldbcQuery = (LdbcQuery3) operation;
+                List<Object> operationAsList = new ArrayList<>();
+                operationAsList.add(ldbcQuery.getClass().getName());
+                operationAsList.add(ldbcQuery.personId());
+                operationAsList.add(ldbcQuery.countryXName());
+                operationAsList.add(ldbcQuery.countryYName());
+                operationAsList.add(ldbcQuery.startDate());
+                operationAsList.add(ldbcQuery.durationDays());
+                try {
+                    return OBJECT_MAPPER.writeValueAsString(operationAsList);
+                } catch (IOException e) {
+                    throw new SerializingMarshallingException(
+                            format("Error while trying to serialize result\n%s", operationAsList.toString()), e);
+                }
+            }
+            case LdbcQuery4.TYPE: {
+                LdbcQuery4 ldbcQuery = (LdbcQuery4) operation;
+                List<Object> operationAsList = new ArrayList<>();
+                operationAsList.add(ldbcQuery.getClass().getName());
+                operationAsList.add(ldbcQuery.personId());
+                operationAsList.add(ldbcQuery.startDate());
+                operationAsList.add(ldbcQuery.durationDays());
+                try {
+                    return OBJECT_MAPPER.writeValueAsString(operationAsList);
+                } catch (IOException e) {
+                    throw new SerializingMarshallingException(
+                            format("Error while trying to serialize result\n%s", operationAsList.toString()), e);
+                }
+            }
+            case LdbcQuery5.TYPE: {
+                LdbcQuery5 ldbcQuery = (LdbcQuery5) operation;
+                List<Object> operationAsList = new ArrayList<>();
+                operationAsList.add(ldbcQuery.getClass().getName());
+                operationAsList.add(ldbcQuery.personId());
+                operationAsList.add(ldbcQuery.minDate());
+                try {
+                    return OBJECT_MAPPER.writeValueAsString(operationAsList);
+                } catch (IOException e) {
+                    throw new SerializingMarshallingException(
+                            format("Error while trying to serialize result\n%s", operationAsList.toString()), e);
+                }
+            }
+            case LdbcQuery6.TYPE: {
+                LdbcQuery6 ldbcQuery = (LdbcQuery6) operation;
+                List<Object> operationAsList = new ArrayList<>();
+                operationAsList.add(ldbcQuery.getClass().getName());
+                operationAsList.add(ldbcQuery.personId());
+                operationAsList.add(ldbcQuery.tagName());
+                try {
+                    return OBJECT_MAPPER.writeValueAsString(operationAsList);
+                } catch (IOException e) {
+                    throw new SerializingMarshallingException(
+                            format("Error while trying to serialize result\n%s", operationAsList.toString()), e);
+                }
+            }
+            case LdbcQuery7.TYPE: {
+                LdbcQuery7 ldbcQuery = (LdbcQuery7) operation;
+                List<Object> operationAsList = new ArrayList<>();
+                operationAsList.add(ldbcQuery.getClass().getName());
+                operationAsList.add(ldbcQuery.personId());
+                try {
+                    return OBJECT_MAPPER.writeValueAsString(operationAsList);
+                } catch (IOException e) {
+                    throw new SerializingMarshallingException(
+                            format("Error while trying to serialize result\n%s", operationAsList.toString()), e);
+                }
+            }
+            case LdbcQuery8.TYPE: {
+                LdbcQuery8 ldbcQuery = (LdbcQuery8) operation;
+                List<Object> operationAsList = new ArrayList<>();
+                operationAsList.add(ldbcQuery.getClass().getName());
+                operationAsList.add(ldbcQuery.personId());
+                try {
+                    return OBJECT_MAPPER.writeValueAsString(operationAsList);
+                } catch (IOException e) {
+                    throw new SerializingMarshallingException(
+                            format("Error while trying to serialize result\n%s", operationAsList.toString()), e);
+                }
+            }
+            case LdbcQuery9.TYPE: {
+                LdbcQuery9 ldbcQuery = (LdbcQuery9) operation;
+                List<Object> operationAsList = new ArrayList<>();
+                operationAsList.add(ldbcQuery.getClass().getName());
+                operationAsList.add(ldbcQuery.personId());
+                operationAsList.add(ldbcQuery.maxDate());
+                try {
+                    return OBJECT_MAPPER.writeValueAsString(operationAsList);
+                } catch (IOException e) {
+                    throw new SerializingMarshallingException(
+                            format("Error while trying to serialize result\n%s", operationAsList.toString()), e);
+                }
+            }
+            case LdbcQuery10.TYPE: {
+                LdbcQuery10 ldbcQuery = (LdbcQuery10) operation;
+                List<Object> operationAsList = new ArrayList<>();
+                operationAsList.add(ldbcQuery.getClass().getName());
+                operationAsList.add(ldbcQuery.personId());
+                operationAsList.add(ldbcQuery.month());
+                try {
+                    return OBJECT_MAPPER.writeValueAsString(operationAsList);
+                } catch (IOException e) {
+                    throw new SerializingMarshallingException(
+                            format("Error while trying to serialize result\n%s", operationAsList.toString()), e);
+                }
+            }
+            case LdbcQuery11.TYPE: {
+                LdbcQuery11 ldbcQuery = (LdbcQuery11) operation;
+                List<Object> operationAsList = new ArrayList<>();
+                operationAsList.add(ldbcQuery.getClass().getName());
+                operationAsList.add(ldbcQuery.personId());
+                operationAsList.add(ldbcQuery.countryName());
+                operationAsList.add(ldbcQuery.workFromYear());
+                try {
+                    return OBJECT_MAPPER.writeValueAsString(operationAsList);
+                } catch (IOException e) {
+                    throw new SerializingMarshallingException(
+                            format("Error while trying to serialize result\n%s", operationAsList.toString()), e);
+                }
+            }
+            case LdbcQuery12.TYPE: {
+                LdbcQuery12 ldbcQuery = (LdbcQuery12) operation;
+                List<Object> operationAsList = new ArrayList<>();
+                operationAsList.add(ldbcQuery.getClass().getName());
+                operationAsList.add(ldbcQuery.personId());
+                operationAsList.add(ldbcQuery.tagClassName());
+                try {
+                    return OBJECT_MAPPER.writeValueAsString(operationAsList);
+                } catch (IOException e) {
+                    throw new SerializingMarshallingException(
+                            format("Error while trying to serialize result\n%s", operationAsList.toString()), e);
+                }
+            }
+            case LdbcQuery13.TYPE: {
+                LdbcQuery13 ldbcQuery = (LdbcQuery13) operation;
+                List<Object> operationAsList = new ArrayList<>();
+                operationAsList.add(ldbcQuery.getClass().getName());
+                operationAsList.add(ldbcQuery.person1Id());
+                operationAsList.add(ldbcQuery.person2Id());
+                try {
+                    return OBJECT_MAPPER.writeValueAsString(operationAsList);
+                } catch (IOException e) {
+                    throw new SerializingMarshallingException(
+                            format("Error while trying to serialize result\n%s", operationAsList.toString()), e);
+                }
+            }
+            case LdbcQuery14.TYPE: {
+                LdbcQuery14 ldbcQuery = (LdbcQuery14) operation;
+                List<Object> operationAsList = new ArrayList<>();
+                operationAsList.add(ldbcQuery.getClass().getName());
+                operationAsList.add(ldbcQuery.person1Id());
+                operationAsList.add(ldbcQuery.person2Id());
+                try {
+                    return OBJECT_MAPPER.writeValueAsString(operationAsList);
+                } catch (IOException e) {
+                    throw new SerializingMarshallingException(
+                            format("Error while trying to serialize result\n%s", operationAsList.toString()), e);
+                }
+            }
+
+            default: {
+                throw new SerializingMarshallingException(
+                        format(
+                                "Workload does not know how to serialize operation\nWorkload: %s\nOperation Type: " +
+                                        "%s\nOperation: %s",
+                                getClass().getName(),
+                                operation.getClass().getName(),
+                                operation));
+            }
+        }
     }
 
-    public long maxExpectedInterleaveAsMilli() {
-        return DEFAULT_MAXIMUM_EXPECTED_INTERLEAVE_AS_MILLI;
-    }
-
-    public abstract String serializeOperation(Operation<?> operation) throws SerializingMarshallingException;
-
-    public abstract Operation<?> marshalOperation(String serializedOperation) throws SerializingMarshallingException;
-
-    public abstract boolean resultsEqual(Operation<?> operation, Object result1, Object result2)
-            throws WorkloadException;
-
-    public interface DbValidationParametersFilter {
-        boolean useOperation(Operation<?> operation);
-
-        DbValidationParametersFilterResult useOperationAndResultForValidation(
-                Operation<?> operation,
-                Object operationResult);
-    }
-
-    public enum DbValidationParametersFilterAcceptance {
-        ACCEPT_AND_CONTINUE,
-        ACCEPT_AND_FINISH,
-        REJECT_AND_CONTINUE,
-        REJECT_AND_FINISH;
-    }
-
-    public static class DbValidationParametersFilterResult {
-        private final DbValidationParametersFilterAcceptance acceptance;
-        private final List<Operation<?>> injectedOperations;
-
-        public DbValidationParametersFilterResult(
-                DbValidationParametersFilterAcceptance acceptance,
-                List<Operation<?>> injectedOperations) {
-            this.acceptance = acceptance;
-            this.injectedOperations = injectedOperations;
+    @Override
+    public Operation<?> marshalOperation( String serializedOperation ) throws SerializingMarshallingException
+    {
+        List<Object> operationAsList;
+        try {
+            operationAsList = OBJECT_MAPPER.readValue(serializedOperation, TYPE_REFERENCE);
+        } catch (IOException e) {
+            throw new SerializingMarshallingException(
+                    format("Error while parsing serialized results\n%s", serializedOperation), e);
         }
 
-        public DbValidationParametersFilterAcceptance acceptance() {
-            return acceptance;
+        String operationTypeName = (String) operationAsList.get(0);
+        if (operationTypeName.equals(LdbcQuery1.class.getName())) {
+            long personId = ((Number) operationAsList.get(1)).longValue();
+            String firstName = (String) operationAsList.get(2);
+            return new LdbcQuery1(personId, firstName);
         }
 
-        public List<Operation<?>> injectedOperations() {
-            return injectedOperations;
+        if (operationTypeName.equals(LdbcQuery2.class.getName())) {
+            long personId = ((Number) operationAsList.get(1)).longValue();
+            Date maxDate = new Date( ((Number) operationAsList.get( 2 )).longValue() );
+            return new LdbcQuery2(personId, maxDate);
         }
+
+        if (operationTypeName.equals(LdbcQuery3.class.getName())) {
+            long personId = ((Number) operationAsList.get(1)).longValue();
+            String countryXName = (String) operationAsList.get(2);
+            String countryYName = (String) operationAsList.get(3);
+            Date startDate = new Date( ((Number) operationAsList.get( 4 )).longValue() );
+            int durationDays = ((Number) operationAsList.get(5)).intValue();
+            return new LdbcQuery3(personId, countryXName, countryYName, startDate, durationDays);
+        }
+
+        if (operationTypeName.equals(LdbcQuery4.class.getName())) {
+            long personId = ((Number) operationAsList.get(1)).longValue();
+            Date startDate = new Date( ((Number) operationAsList.get( 2 )).longValue() );
+            int durationDays = ((Number) operationAsList.get(3)).intValue();
+            return new LdbcQuery4(personId, startDate, durationDays);
+        }
+
+        if (operationTypeName.equals(LdbcQuery5.class.getName())) {
+            long personId = ((Number) operationAsList.get(1)).longValue();
+            Date minDate = new Date( ((Number) operationAsList.get( 2 )).longValue() );
+            return new LdbcQuery5(personId, minDate);
+        }
+
+        if (operationTypeName.equals(LdbcQuery6.class.getName())) {
+            long personId = ((Number) operationAsList.get(1)).longValue();
+            String tagName = (String) operationAsList.get(2);
+            return new LdbcQuery6(personId, tagName);
+        }
+
+        if (operationTypeName.equals(LdbcQuery7.class.getName())) {
+            long personId = ((Number) operationAsList.get(1)).longValue();
+            return new LdbcQuery7(personId);
+        }
+
+        if (operationTypeName.equals(LdbcQuery8.class.getName())) {
+            long personId = ((Number) operationAsList.get(1)).longValue();
+            return new LdbcQuery8(personId);
+        }
+
+        if (operationTypeName.equals(LdbcQuery9.class.getName())) {
+            long personId = ((Number) operationAsList.get(1)).longValue();
+            Date maxDate = new Date( ((Number) operationAsList.get( 2 )).longValue() );
+            return new LdbcQuery9(personId, maxDate);
+        }
+
+        if (operationTypeName.equals(LdbcQuery10.class.getName())) {
+            long personId = ((Number) operationAsList.get(1)).longValue();
+            int month = ((Number) operationAsList.get(2)).intValue();
+            return new LdbcQuery10(personId, month);
+        }
+
+        if (operationTypeName.equals(LdbcQuery11.class.getName())) {
+            long personId = ((Number) operationAsList.get(1)).longValue();
+            String countryName = (String) operationAsList.get(2);
+            int workFromYear = ((Number) operationAsList.get(3)).intValue();
+            return new LdbcQuery11(personId, countryName, workFromYear);
+        }
+
+        if (operationTypeName.equals(LdbcQuery12.class.getName())) {
+            long personId = ((Number) operationAsList.get(1)).longValue();
+            String tagClassName = (String) operationAsList.get(2);
+            return new LdbcQuery12(personId, tagClassName);
+        }
+
+        if (operationTypeName.equals(LdbcQuery13.class.getName())) {
+            long person1Id = ((Number) operationAsList.get(1)).longValue();
+            long person2Id = ((Number) operationAsList.get(2)).longValue();
+            return new LdbcQuery13(person1Id, person2Id);
+        }
+
+        if (operationTypeName.equals(LdbcQuery14.class.getName())) {
+            long person1Id = ((Number) operationAsList.get(1)).longValue();
+            long person2Id = ((Number) operationAsList.get(2)).longValue();
+            return new com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery14(person1Id, person2Id);
+        }
+
+        throw new SerializingMarshallingException(
+                format(
+                        "Workload does not know how to marshal operation\nWorkload: %s\nAssumed Operation Type: " +
+                        "%s\nSerialized Operation: %s",
+                        getClass().getName(),
+                        operationTypeName,
+                        serializedOperation ) );
     }
 
+    private static final Equator<LdbcQuery14Result> LDBC_QUERY_14_RESULT_EQUATOR = new Equator<LdbcQuery14Result>() {
+        @Override
+        public boolean equate(LdbcQuery14Result result1, LdbcQuery14Result result2) {
+            return result1.equals(result2);
+        }
+
+        @Override
+        public int hash(LdbcQuery14Result result) {
+            return 1;
+        }
+    };
+
+    @Override
+    public boolean resultsEqual(Operation operation, Object result1, Object result2) throws WorkloadException {
+        if (null == result1 || null == result2) {
+            return false;
+        } else if (operation.type() == LdbcQuery14.TYPE) {
+            // TODO can this logic not be moved to LdbcQuery14Result class and performed in equals() method?
+            /*
+            Group results by weight, because results with same weight can come in any order
+                Convert
+                   [(weight, [ids...]), ...]
+                To
+                   Map<weight, [(weight, [ids...])]>
+             */
+            List<LdbcQuery14Result> typedResults1 = (List<LdbcQuery14Result>) result1;
+            Map<Double, List<LdbcQuery14Result>> results1ByWeight = new HashMap<>();
+            for (LdbcQuery14Result typedResult : typedResults1) {
+                List<LdbcQuery14Result> resultByWeight = results1ByWeight.get(typedResult.pathWeight());
+                if (null == resultByWeight) {
+                    resultByWeight = new ArrayList<>();
+                }
+                resultByWeight.add(typedResult);
+                results1ByWeight.put(typedResult.pathWeight(), resultByWeight);
+            }
+
+            List<LdbcQuery14Result> typedResults2 = (List<LdbcQuery14Result>) result2;
+            Map<Double, List<LdbcQuery14Result>> results2ByWeight = new HashMap<>();
+            for (LdbcQuery14Result typedResult : typedResults2) {
+                List<LdbcQuery14Result> resultByWeight = results2ByWeight.get(typedResult.pathWeight());
+                if (null == resultByWeight) {
+                    resultByWeight = new ArrayList<>();
+                }
+                resultByWeight.add(typedResult);
+                results2ByWeight.put(typedResult.pathWeight(), resultByWeight);
+            }
+
+            /*
+            Perform equality check
+                - compare set of keys
+                - convert list of lists to set of lists & compare contains all for set of lists for each key
+             */
+            // compare set of keys
+            if (!results1ByWeight.keySet().equals(results2ByWeight.keySet())) {
+                return false;
+            }
+            // convert list of lists to set of lists & compare contains all for set of lists for each key
+            for (Double weight : results1ByWeight.keySet()) {
+                if (results1ByWeight.get(weight).size() != results2ByWeight.get(weight).size()) {
+                    return false;
+                }
+
+                if (!CollectionUtils
+                        .isEqualCollection(results1ByWeight.get(weight), results2ByWeight.get(weight),
+                                LDBC_QUERY_14_RESULT_EQUATOR)) {
+                    return false;
+                }
+            }
+
+            return true;
+        } else {
+            return result1.equals(result2);
+        }
+    }
 }

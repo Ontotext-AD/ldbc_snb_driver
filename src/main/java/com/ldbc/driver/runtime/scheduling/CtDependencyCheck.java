@@ -21,7 +21,7 @@ public class CtDependencyCheck implements SpinnerCheck
     }
 
     @Override
-    public SpinnerCheckResult doCheck( Operation operation )
+    public SpinnerCheckResult doCheck( Operation<?> operation )
     {
         try
         {
@@ -40,7 +40,7 @@ public class CtDependencyCheck implements SpinnerCheck
     }
 
     @Override
-    public boolean handleFailedCheck( Operation operation )
+    public boolean handleFailedCheck( Operation<?> operation )
     {
         try
         {

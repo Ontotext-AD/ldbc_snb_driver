@@ -95,7 +95,7 @@ public class DummyLdbcSnbInteractiveDb extends Db
 
     private interface SleepFun
     {
-        void sleep( Operation operation, long sleepNs );
+        void sleep( Operation<?> operation, long sleepNs );
     }
 
     private static SleepFun sleepFun;
@@ -152,7 +152,7 @@ public class DummyLdbcSnbInteractiveDb extends Db
             sleepFun = new SleepFun()
             {
                 @Override
-                public void sleep( Operation operation, long sleepNs )
+                public void sleep( Operation<?> operation, long sleepNs )
                 {
                     if ( crashOnClass.equals( operation.getClass() ) )
                     {
@@ -166,7 +166,7 @@ public class DummyLdbcSnbInteractiveDb extends Db
             sleepFun = new SleepFun()
             {
                 @Override
-                public void sleep( Operation operation, long sleepNs )
+                public void sleep( Operation<?> operation, long sleepNs )
                 {
                     // do nothing
                 }
@@ -180,7 +180,7 @@ public class DummyLdbcSnbInteractiveDb extends Db
                 sleepFun = new SleepFun()
                 {
                     @Override
-                    public void sleep( Operation operation, long sleepNs )
+                    public void sleep( Operation<?> operation, long sleepNs )
                     {
                         try
                         {
@@ -197,7 +197,7 @@ public class DummyLdbcSnbInteractiveDb extends Db
                 sleepFun = new SleepFun()
                 {
                     @Override
-                    public void sleep( Operation operation, long sleepNs )
+                    public void sleep( Operation<?> operation, long sleepNs )
                     {
                         LockSupport.parkNanos( sleepNs );
                     }
@@ -207,7 +207,7 @@ public class DummyLdbcSnbInteractiveDb extends Db
                 sleepFun = new SleepFun()
                 {
                     @Override
-                    public void sleep( Operation operation, long sleepNs )
+                    public void sleep( Operation<?> operation, long sleepNs )
                     {
                         long endTimeAsNano = System.nanoTime() + sleepNs;
                         while ( System.nanoTime() < endTimeAsNano )
@@ -268,7 +268,7 @@ public class DummyLdbcSnbInteractiveDb extends Db
         return null;
     }
 
-    private static void sleep( Operation operation, long sleepNs )
+    private static void sleep( Operation<?> operation, long sleepNs )
     {
         sleepFun.sleep( operation, sleepNs );
     }

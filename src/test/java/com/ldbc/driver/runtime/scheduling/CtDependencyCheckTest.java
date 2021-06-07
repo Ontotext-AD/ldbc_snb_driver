@@ -17,7 +17,7 @@ public class CtDependencyCheckTest
         // Given
         long dependencyTimeAsMilli = 5;
         long scheduledStartTimeAsMilli = -1;
-        Operation operation =
+        Operation<?> operation =
                 new TimedNamedOperation1( scheduledStartTimeAsMilli, scheduledStartTimeAsMilli, dependencyTimeAsMilli,
                         null );
         DummyCompletionTimeReader dummyCompletionTimeReader = new DummyCompletionTimeReader();
