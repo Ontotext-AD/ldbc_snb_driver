@@ -30,7 +30,7 @@ public class DisruptorSbeMetricsServiceTest
     {
         ConcurrentErrorReporter errorReporter = new ConcurrentErrorReporter();
         ResultsLogWriter resultsLogWriter = new NullResultsLogWriter();
-        Map<Integer,Class<? extends Operation>> operationTypeToClassMapping = new HashMap<>();
+        Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping = new HashMap<>();
         operationTypeToClassMapping.put( LdbcQuery1.TYPE, LdbcQuery1.class );
         operationTypeToClassMapping.put( LdbcQuery2.TYPE, LdbcQuery2.class );
         MetricsService metricsService = new DisruptorSbeMetricsService(
@@ -60,7 +60,7 @@ public class DisruptorSbeMetricsServiceTest
     {
         ConcurrentErrorReporter errorReporter = new ConcurrentErrorReporter();
         ResultsLogWriter resultsLogWriter = new NullResultsLogWriter();
-        Map<Integer,Class<? extends Operation>> operationTypeToClassMapping = new HashMap<>();
+        Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping = new HashMap<>();
         operationTypeToClassMapping.put( LdbcQuery1.TYPE, LdbcQuery1.class );
         operationTypeToClassMapping.put( LdbcQuery2.TYPE, LdbcQuery2.class );
         MetricsService metricsService = new DisruptorSbeMetricsService(

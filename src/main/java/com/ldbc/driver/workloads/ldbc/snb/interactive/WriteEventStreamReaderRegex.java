@@ -19,9 +19,9 @@ public class WriteEventStreamReaderRegex
 {
     private static final List<String> EMPTY_LIST = new ArrayList<>();
 
-    public static Iterator<Operation> create( Iterator<String[]> csvRowIterator )
+    public static Iterator<Operation<?>> create( Iterator<String[]> csvRowIterator )
     {
-        Map<String,EventDecoder<Operation>> decoders = new HashMap<>();
+        Map<String,EventDecoder<Operation<?>>> decoders = new HashMap<>();
         decoders.put( "1", new EventDecoderAddPerson() );
         decoders.put( "2", new EventDecoderAddLikePost() );
         decoders.put( "3", new EventDecoderAddLikeComment() );
@@ -42,7 +42,7 @@ public class WriteEventStreamReaderRegex
         return new CsvEventStreamReaderTimedTypedCsvReader<>( csvRowIterator, decoders, decoderKeyExtractor );
     }
 
-    public static class EventDecoderAddPerson implements EventDecoder<Operation>
+    public static class EventDecoderAddPerson implements EventDecoder<Operation<?>>
     {
         private final Pattern collectionSeparatorPattern = Pattern.compile( ";" );
         private final Pattern tupleSeparatorPattern = Pattern.compile( "," );
@@ -52,7 +52,7 @@ public class WriteEventStreamReaderRegex
         }
 
         @Override
-        public Operation decodeEvent( String[] csvRow )
+        public Operation<?> decodeEvent( String[] csvRow )
         {
             long scheduledStartTimeAsMilli = Long.parseLong( csvRow[0] );
             long dependencyTimeAsMilli = Long.parseLong( csvRow[1] );
@@ -130,7 +130,7 @@ public class WriteEventStreamReaderRegex
                 }
             }
 
-            Operation operation = new LdbcUpdate1AddPerson(
+            Operation<?> operation = new LdbcUpdate1AddPerson(
                     personId,
                     firstName,
                     lastName,
@@ -152,14 +152,14 @@ public class WriteEventStreamReaderRegex
         }
     }
 
-    public static class EventDecoderAddLikePost implements EventDecoder<Operation>
+    public static class EventDecoderAddLikePost implements EventDecoder<Operation<?>>
     {
         public EventDecoderAddLikePost()
         {
         }
 
         @Override
-        public Operation decodeEvent( String[] csvRow )
+        public Operation<?> decodeEvent( String[] csvRow )
         {
             long scheduledStartTimeAsMilli = Long.parseLong( csvRow[0] );
             long dependencyTimeAsMilli = Long.parseLong( csvRow[1] );
@@ -171,7 +171,7 @@ public class WriteEventStreamReaderRegex
             String creationDateString = csvRow[5];
             Date creationDate = new Date( Long.parseLong( creationDateString ) );
 
-            Operation operation = new LdbcUpdate2AddPostLike( personId, postId, creationDate );
+            Operation<?> operation = new LdbcUpdate2AddPostLike( personId, postId, creationDate );
             operation.setScheduledStartTimeAsMilli( scheduledStartTimeAsMilli );
             operation.setTimeStamp( scheduledStartTimeAsMilli );
             operation.setDependencyTimeStamp( dependencyTimeAsMilli );
@@ -179,14 +179,14 @@ public class WriteEventStreamReaderRegex
         }
     }
 
-    public static class EventDecoderAddLikeComment implements EventDecoder<Operation>
+    public static class EventDecoderAddLikeComment implements EventDecoder<Operation<?>>
     {
         public EventDecoderAddLikeComment()
         {
         }
 
         @Override
-        public Operation decodeEvent( String[] csvRow )
+        public Operation<?> decodeEvent( String[] csvRow )
         {
             long scheduledStartTimeAsMilli = Long.parseLong( csvRow[0] );
             long dependencyTimeAsMilli = Long.parseLong( csvRow[1] );
@@ -198,7 +198,7 @@ public class WriteEventStreamReaderRegex
             String creationDateString = csvRow[5];
             Date creationDate = new Date( Long.parseLong( creationDateString ) );
 
-            Operation operation = new LdbcUpdate3AddCommentLike( personId, commentId, creationDate );
+            Operation<?> operation = new LdbcUpdate3AddCommentLike( personId, commentId, creationDate );
             operation.setScheduledStartTimeAsMilli( scheduledStartTimeAsMilli );
             operation.setTimeStamp( scheduledStartTimeAsMilli );
             operation.setDependencyTimeStamp( dependencyTimeAsMilli );
@@ -206,7 +206,7 @@ public class WriteEventStreamReaderRegex
         }
     }
 
-    public static class EventDecoderAddForum implements EventDecoder<Operation>
+    public static class EventDecoderAddForum implements EventDecoder<Operation<?>>
     {
         private final Pattern collectionSeparatorPattern = Pattern.compile( ";" );
 
@@ -215,7 +215,7 @@ public class WriteEventStreamReaderRegex
         }
 
         @Override
-        public Operation decodeEvent( String[] csvRow )
+        public Operation<?> decodeEvent( String[] csvRow )
         {
             long scheduledStartTimeAsMilli = Long.parseLong( csvRow[0] );
             long dependencyTimeAsMilli = Long.parseLong( csvRow[1] );
@@ -240,7 +240,7 @@ public class WriteEventStreamReaderRegex
                 }
             }
 
-            Operation operation =
+            Operation<?> operation =
                     new LdbcUpdate4AddForum( forumId, forumTitle, creationDate, moderatorPersonId, tagIds );
             operation.setScheduledStartTimeAsMilli( scheduledStartTimeAsMilli );
             operation.setTimeStamp( scheduledStartTimeAsMilli );
@@ -249,14 +249,14 @@ public class WriteEventStreamReaderRegex
         }
     }
 
-    public static class EventDecoderAddForumMembership implements EventDecoder<Operation>
+    public static class EventDecoderAddForumMembership implements EventDecoder<Operation<?>>
     {
         public EventDecoderAddForumMembership()
         {
         }
 
         @Override
-        public Operation decodeEvent( String[] csvRow )
+        public Operation<?> decodeEvent( String[] csvRow )
         {
             long scheduledStartTimeAsMilli = Long.parseLong( csvRow[0] );
             long dependencyTimeAsMilli = Long.parseLong( csvRow[1] );
@@ -268,7 +268,7 @@ public class WriteEventStreamReaderRegex
             String creationDateString = csvRow[5];
             Date creationDate = new Date( Long.parseLong( creationDateString ) );
 
-            Operation operation = new LdbcUpdate5AddForumMembership( forumId, personId, creationDate );
+            Operation<?> operation = new LdbcUpdate5AddForumMembership( forumId, personId, creationDate );
             operation.setScheduledStartTimeAsMilli( scheduledStartTimeAsMilli );
             operation.setTimeStamp( scheduledStartTimeAsMilli );
             operation.setDependencyTimeStamp( dependencyTimeAsMilli );
@@ -276,7 +276,7 @@ public class WriteEventStreamReaderRegex
         }
     }
 
-    public static class EventDecoderAddPost implements EventDecoder<Operation>
+    public static class EventDecoderAddPost implements EventDecoder<Operation<?>>
     {
         private final Pattern collectionSeparatorPattern = Pattern.compile( ";" );
 
@@ -285,7 +285,7 @@ public class WriteEventStreamReaderRegex
         }
 
         @Override
-        public Operation decodeEvent( String[] csvRow )
+        public Operation<?> decodeEvent( String[] csvRow )
         {
             long scheduledStartTimeAsMilli = Long.parseLong( csvRow[0] );
             long dependencyTimeAsMilli = Long.parseLong( csvRow[1] );
@@ -324,7 +324,7 @@ public class WriteEventStreamReaderRegex
                 }
             }
 
-            Operation operation = new LdbcUpdate6AddPost(
+            Operation<?> operation = new LdbcUpdate6AddPost(
                     postId,
                     imageFile,
                     creationDate,
@@ -344,7 +344,7 @@ public class WriteEventStreamReaderRegex
         }
     }
 
-    public static class EventDecoderAddComment implements EventDecoder<Operation>
+    public static class EventDecoderAddComment implements EventDecoder<Operation<?>>
     {
         private final Pattern collectionSeparatorPattern = Pattern.compile( ";" );
 
@@ -353,7 +353,7 @@ public class WriteEventStreamReaderRegex
         }
 
         @Override
-        public Operation decodeEvent( String[] csvRow )
+        public Operation<?> decodeEvent( String[] csvRow )
         {
             long scheduledStartTimeAsMilli = Long.parseLong( csvRow[0] );
             long dependencyTimeAsMilli = Long.parseLong( csvRow[1] );
@@ -390,7 +390,7 @@ public class WriteEventStreamReaderRegex
                 }
             }
 
-            Operation operation = new LdbcUpdate7AddComment(
+            Operation<?> operation = new LdbcUpdate7AddComment(
                     commentId,
                     creationDate,
                     locationIp,
@@ -409,14 +409,14 @@ public class WriteEventStreamReaderRegex
         }
     }
 
-    public static class EventDecoderAddFriendship implements EventDecoder<Operation>
+    public static class EventDecoderAddFriendship implements EventDecoder<Operation<?>>
     {
         public EventDecoderAddFriendship()
         {
         }
 
         @Override
-        public Operation decodeEvent( String[] csvRow )
+        public Operation<?> decodeEvent( String[] csvRow )
         {
             long scheduledStartTimeAsMilli = Long.parseLong( csvRow[0] );
             long dependencyTimeAsMilli = Long.parseLong( csvRow[1] );
@@ -428,7 +428,7 @@ public class WriteEventStreamReaderRegex
             String creationDateString = csvRow[5];
             Date creationDate = new Date( Long.parseLong( creationDateString ) );
 
-            Operation operation = new LdbcUpdate8AddFriendship( person1Id, person2Id, creationDate );
+            Operation<?> operation = new LdbcUpdate8AddFriendship( person1Id, person2Id, creationDate );
             operation.setScheduledStartTimeAsMilli( scheduledStartTimeAsMilli );
             operation.setTimeStamp( scheduledStartTimeAsMilli );
             operation.setDependencyTimeStamp( dependencyTimeAsMilli );

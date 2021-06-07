@@ -52,7 +52,7 @@ public class TimeMappingOperationGeneratorTest
     public void shouldOffset()
     {
         // Given
-        Iterator<Operation> operations = gf.limit(
+        Iterator<Operation<?>> operations = gf.limit(
                 new TimedNamedOperation1Factory(
                         // start times
                         gf.incrementing( 0L, 100L ),
@@ -63,7 +63,7 @@ public class TimeMappingOperationGeneratorTest
                 ),
                 11
         );
-        List<Operation> operationsList = ImmutableList.copyOf( operations );
+        List<Operation<?>> operationsList = ImmutableList.copyOf( operations );
         assertThat( operationsList.size(), is( 11 ) );
         assertThat( operationsList.get( 0 ).scheduledStartTimeAsMilli(), equalTo( 0L ) );
         assertThat( operationsList.get( 0 ).timeStamp(), equalTo( 0L ) );
@@ -101,7 +101,7 @@ public class TimeMappingOperationGeneratorTest
 
         // When
         long newStartTime = 500L;
-        List<Operation> offsetOperationsList =
+        List<Operation<?>> offsetOperationsList =
                 ImmutableList.copyOf( gf.timeOffset( operationsList.iterator(), newStartTime ) );
 
         // Then
@@ -145,7 +145,7 @@ public class TimeMappingOperationGeneratorTest
     public void shouldOffsetAndCompress()
     {
         // Given
-        Iterator<Operation> operations = gf.limit(
+        Iterator<Operation<?>> operations = gf.limit(
                 new TimedNamedOperation1Factory(
                         // start times
                         gf.incrementing( 1000L, 100L ),
@@ -156,7 +156,7 @@ public class TimeMappingOperationGeneratorTest
                 ),
                 11
         );
-        List<Operation> operationsList = ImmutableList.copyOf( operations );
+        List<Operation<?>> operationsList = ImmutableList.copyOf( operations );
 
         assertThat( operationsList.size(), is( 11 ) );
         assertThat( operationsList.get( 0 ).scheduledStartTimeAsMilli(), equalTo( 1000L ) );
@@ -196,7 +196,7 @@ public class TimeMappingOperationGeneratorTest
         // When
         long newStartTime = 500L;
         Double compressionRatio = 0.2;
-        List<Operation> offsetAndCompressedOperationsList = ImmutableList.copyOf(
+        List<Operation<?>> offsetAndCompressedOperationsList = ImmutableList.copyOf(
                 gf.timeOffsetAndCompress(
                         operationsList.iterator(),
                         newStartTime,
@@ -245,7 +245,7 @@ public class TimeMappingOperationGeneratorTest
     public void shouldOffsetAndCompressWhenTimesAreVeryCloseTogetherWithoutRoundingErrors()
     {
         // Given
-        Iterator<Operation> operations = gf.limit(
+        Iterator<Operation<?>> operations = gf.limit(
                 new TimedNamedOperation1Factory(
                         // start times
                         gf.incrementing( 0L, 1l ),
@@ -256,7 +256,7 @@ public class TimeMappingOperationGeneratorTest
                 ),
                 11
         );
-        List<Operation> operationsList = ImmutableList.copyOf( operations );
+        List<Operation<?>> operationsList = ImmutableList.copyOf( operations );
 
         assertThat( operationsList.size(), is( 11 ) );
         assertThat( operationsList.get( 0 ).scheduledStartTimeAsMilli(), equalTo( 0L ) );
@@ -296,7 +296,7 @@ public class TimeMappingOperationGeneratorTest
         // When
         long newStartTime = 0L;
         Double compressionRatio = 0.5;
-        List<Operation> offsetAndCompressedOperations = ImmutableList
+        List<Operation<?>> offsetAndCompressedOperations = ImmutableList
                 .copyOf( gf.timeOffsetAndCompress( operationsList.iterator(), newStartTime, compressionRatio ) );
 
         // Then
@@ -395,7 +395,7 @@ public class TimeMappingOperationGeneratorTest
         workload.init( configuration );
 
         GeneratorFactory gf = new GeneratorFactory( new RandomDataGeneratorFactory( 42L ) );
-        List<Operation> operations = Lists.newArrayList(
+        List<Operation<?>> operations = Lists.newArrayList(
                 gf.limit(
                         WorkloadStreams.mergeSortedByStartTimeExcludingChildOperationGenerators( gf,
                                 workload.streams( gf, false ) ),
@@ -403,16 +403,16 @@ public class TimeMappingOperationGeneratorTest
                 )
         );
         long prevOperationScheduledStartTime = operations.get( 0 ).scheduledStartTimeAsMilli() - 1;
-        for ( Operation operation : operations )
+        for ( Operation<?> operation : operations )
         {
             assertThat( operation.scheduledStartTimeAsMilli() >= prevOperationScheduledStartTime, is( true ) );
             prevOperationScheduledStartTime = operation.scheduledStartTimeAsMilli();
         }
 
-        List<Operation> offsetOperations =
+        List<Operation<?>> offsetOperations =
                 Lists.newArrayList( gf.timeOffset( operations.iterator(), timeSource.nowAsMilli() + 500 ) );
         long prevOffsetOperationScheduledStartTime = offsetOperations.get( 0 ).scheduledStartTimeAsMilli() - 1;
-        for ( Operation operation : offsetOperations )
+        for ( Operation<?> operation : offsetOperations )
         {
             assertThat( operation.scheduledStartTimeAsMilli() >= prevOffsetOperationScheduledStartTime, is( true ) );
             prevOffsetOperationScheduledStartTime = operation.scheduledStartTimeAsMilli();
@@ -424,7 +424,7 @@ public class TimeMappingOperationGeneratorTest
     public void shouldAlwaysProduceTheSameOutputWhenGivenTheSameInput()
     {
         // Given
-        List<Operation> operations = Lists.<Operation>newArrayList(
+        List<Operation<?>> operations = Lists.newArrayList(
                 new TimedNamedOperation2( 10L, 10L, 0L, "name2" ),
                 new TimedNamedOperation2( 11L, 11L, 1L, "name2" ),
                 new TimedNamedOperation1( 12L, 12L, 2L, "name1" )
@@ -432,10 +432,10 @@ public class TimeMappingOperationGeneratorTest
 
         long now = new SystemTimeSource().nowAsMilli();
 
-        List<Operation> offsetOperations1 = Lists.newArrayList( gf.timeOffset( operations.iterator(), now ) );
-        List<Operation> offsetOperations2 = Lists.newArrayList( gf.timeOffset( operations.iterator(), now ) );
-        List<Operation> offsetOperations3 = Lists.newArrayList( gf.timeOffset( operations.iterator(), now ) );
-        List<Operation> offsetOperations4 = Lists.newArrayList( gf.timeOffset( operations.iterator(), now ) );
+        List<Operation<?>> offsetOperations1 = Lists.newArrayList( gf.timeOffset( operations.iterator(), now ) );
+        List<Operation<?>> offsetOperations2 = Lists.newArrayList( gf.timeOffset( operations.iterator(), now ) );
+        List<Operation<?>> offsetOperations3 = Lists.newArrayList( gf.timeOffset( operations.iterator(), now ) );
+        List<Operation<?>> offsetOperations4 = Lists.newArrayList( gf.timeOffset( operations.iterator(), now ) );
 
         // When
         GeneratorFactory.OperationStreamComparisonResult stream1Stream2Comparison =

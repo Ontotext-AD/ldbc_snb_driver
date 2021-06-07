@@ -13,9 +13,9 @@ import java.util.Map;
 
 public class DummyWorkload extends Workload
 {
-    private static final Map<Integer,Class<? extends Operation>> createOperationTypeToClassMapping()
+    private static final Map<Integer,Class<? extends Operation<?>>> createOperationTypeToClassMapping()
     {
-        Map<Integer,Class<? extends Operation>> operationTypeToClassMapping = new HashMap<>();
+        Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping = new HashMap<>();
         operationTypeToClassMapping.put( NothingOperation.TYPE, NothingOperation.class );
         operationTypeToClassMapping.put( TimedNamedOperation1.TYPE, TimedNamedOperation1.class );
         operationTypeToClassMapping.put( TimedNamedOperation2.TYPE, TimedNamedOperation2.class );
@@ -23,7 +23,7 @@ public class DummyWorkload extends Workload
         return operationTypeToClassMapping;
     }
 
-    public static final Map<Integer,Class<? extends Operation>> OPERATION_TYPE_CLASS_MAPPING =
+    public static final Map<Integer,Class<? extends Operation<?>>> OPERATION_TYPE_CLASS_MAPPING =
             createOperationTypeToClassMapping();
 
     private final long maxExpectedInterleaveAsMilli;
@@ -37,7 +37,7 @@ public class DummyWorkload extends Workload
     }
 
     @Override
-    public Map<Integer,Class<? extends Operation>> operationTypeToClassMapping()
+    public Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping()
     {
         return OPERATION_TYPE_CLASS_MAPPING;
     }

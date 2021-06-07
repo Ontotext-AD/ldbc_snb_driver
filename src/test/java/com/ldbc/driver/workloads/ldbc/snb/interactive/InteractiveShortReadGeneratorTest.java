@@ -43,7 +43,7 @@ public class InteractiveShortReadGeneratorTest
         longReadInterleavesAsMilli.put(LdbcQuery13.TYPE, longReadInterleaveAsMilli);
         longReadInterleavesAsMilli.put(LdbcQuery14.TYPE, longReadInterleaveAsMilli);
 
-        Set<Class> enabledShortReadOperationTypes = Sets.<Class>newHashSet(
+        Set<Class<?>> enabledShortReadOperationTypes = Sets.newHashSet(
                 LdbcShortQuery1PersonProfile.class,
                 LdbcShortQuery2PersonPosts.class,
                 LdbcShortQuery3PersonFriends.class,
@@ -77,7 +77,7 @@ public class InteractiveShortReadGeneratorTest
         // When
         double state = shortReadGenerator.initialState();
         assertThat(state, is(initialProbability));
-        Operation operation = shortReadGenerator.nextOperation(
+        Operation<?> operation = shortReadGenerator.nextOperation(
                 state,
                 DummyLdbcSnbInteractiveOperationInstances.read1(),
                 Lists.newArrayList(
@@ -276,7 +276,7 @@ public class InteractiveShortReadGeneratorTest
         longReadInterleavesAsMilli.put(LdbcQuery13.TYPE, longReadInterleaveAsMilli);
         longReadInterleavesAsMilli.put(LdbcQuery14.TYPE, longReadInterleaveAsMilli);
 
-        Set<Class> enabledShortReadOperationTypes = Sets.<Class>newHashSet(
+        Set<Class<?>> enabledShortReadOperationTypes = Sets.newHashSet(
 //                LdbcShortQuery1PersonProfile.class,
                 LdbcShortQuery2PersonPosts.class,
 //                LdbcShortQuery3PersonFriends.class,
@@ -308,7 +308,7 @@ public class InteractiveShortReadGeneratorTest
         // When
         double state = shortReadGenerator.initialState();
         assertThat(state, is(initialProbability));
-        Operation operation = shortReadGenerator.nextOperation(
+        Operation<?> operation = shortReadGenerator.nextOperation(
                 state,
                 DummyLdbcSnbInteractiveOperationInstances.read2(),
                 Lists.newArrayList(
@@ -424,7 +424,7 @@ public class InteractiveShortReadGeneratorTest
         longReadInterleavesAsMilli.put(LdbcQuery13.TYPE, longReadInterleaveAsMilli);
         longReadInterleavesAsMilli.put(LdbcQuery14.TYPE, longReadInterleaveAsMilli);
 
-        Set<Class> enabledShortReadOperationTypes = Sets.<Class>newHashSet(
+        Set<Class<?>> enabledShortReadOperationTypes = Sets.newHashSet(
 //                LdbcShortQuery1PersonProfile.class,
 //                LdbcShortQuery2PersonPosts.class,
 //                LdbcShortQuery3PersonFriends.class,
@@ -456,7 +456,7 @@ public class InteractiveShortReadGeneratorTest
         // When
         double state = shortReadGenerator.initialState();
         assertThat(state, is(initialProbability));
-        Operation operation = shortReadGenerator.nextOperation(
+        Operation<?> operation = shortReadGenerator.nextOperation(
                 state,
                 DummyLdbcSnbInteractiveOperationInstances.read3(),
                 Lists.newArrayList(
@@ -556,7 +556,7 @@ public class InteractiveShortReadGeneratorTest
         longReadInterleavesAsMilli.put(LdbcQuery13.TYPE, longReadInterleaveAsMilli);
         longReadInterleavesAsMilli.put(LdbcQuery14.TYPE, longReadInterleaveAsMilli);
 
-        Set<Class> enabledShortReadOperationTypes = Sets.<Class>newHashSet(
+        Set<Class<?>> enabledShortReadOperationTypes = Sets.newHashSet(
 //                LdbcShortQuery1PersonProfile.class,
 //                LdbcShortQuery2PersonPosts.class,
 //                LdbcShortQuery3PersonFriends.class,
@@ -588,7 +588,7 @@ public class InteractiveShortReadGeneratorTest
         // When
         double state = shortReadGenerator.initialState();
         assertThat(state, is(initialProbability));
-        Operation operation = shortReadGenerator.nextOperation(
+        Operation<?> operation = shortReadGenerator.nextOperation(
                 state,
                 DummyLdbcSnbInteractiveOperationInstances.read1(),
                 Lists.newArrayList(
@@ -691,7 +691,7 @@ public class InteractiveShortReadGeneratorTest
         longReadInterleavesAsMilli.put(LdbcQuery13.TYPE, longReadInterleaveAsMilli);
         longReadInterleavesAsMilli.put(LdbcQuery14.TYPE, longReadInterleaveAsMilli);
 
-        Set<Class> enabledShortReadOperationTypes = Sets.newHashSet(
+        Set<Class<?>> enabledShortReadOperationTypes = Sets.newHashSet(
 //                LdbcShortQuery1PersonProfile.class,
 //                LdbcShortQuery2PersonPosts.class,
 //                LdbcShortQuery3PersonFriends.class,
@@ -723,7 +723,7 @@ public class InteractiveShortReadGeneratorTest
         // When
         double state = shortReadGenerator.initialState();
         assertThat(state, is(initialProbability));
-        Operation operation = shortReadGenerator.nextOperation(
+        Operation<?> operation = shortReadGenerator.nextOperation(
                 state,
                 DummyLdbcSnbInteractiveOperationInstances.read1(),
                 Lists.newArrayList(

@@ -5,9 +5,9 @@ import com.ldbc.driver.util.Function1;
 
 import java.util.Iterator;
 
-public class TimeMappingOperationGenerator extends Generator<Operation>
+public class TimeMappingOperationGenerator extends Generator<Operation<?>>
 {
-    private final Iterator<Operation> operations;
+    private final Iterator<Operation<?>> operations;
     private final long newStartTimeAsMilli;
     private final Double timeCompressionRatio;
 
@@ -15,7 +15,7 @@ public class TimeMappingOperationGenerator extends Generator<Operation>
     private Function1<Long,Long,RuntimeException> startTimeAsMilliCompressionFun = null;
 
     TimeMappingOperationGenerator(
-            Iterator<Operation> operations,
+            Iterator<Operation<?>> operations,
             long newStartTimeAsMilli,
             Double timeCompressionRatio )
     {
@@ -25,11 +25,11 @@ public class TimeMappingOperationGenerator extends Generator<Operation>
     }
 
     @Override
-    protected Operation doNext() throws GeneratorException
+    protected Operation<?> doNext() throws GeneratorException
     {
         if ( false == operations.hasNext() )
         { return null; }
-        Operation nextOperation = operations.next();
+        Operation<?> nextOperation = operations.next();
         if ( null == timeOffsetAsMilliFun )
         {
             // Create time offset function

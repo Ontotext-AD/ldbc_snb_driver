@@ -33,7 +33,7 @@ public class CreateValidationParamsMode implements ClientMode<Object>
 
     private Workload workload = null;
     private Db database = null;
-    private Iterator<Operation> timeMappedOperations = null;
+    private Iterator<Operation<?>> timeMappedOperations = null;
 
     public CreateValidationParamsMode( ControlService controlService, long randomSeed ) throws ClientException
     {

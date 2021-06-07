@@ -849,18 +849,18 @@ public class WorkloadRunnerTest
                     workload.operationTypeToClassMapping()
             );
             GeneratorFactory gf = new GeneratorFactory( new RandomDataGeneratorFactory( 42L ) );
-            Iterator<Operation> operations = gf.limit(
+            Iterator<Operation<?>> operations = gf.limit(
                     WorkloadStreams.mergeSortedByStartTimeExcludingChildOperationGenerators( gf,
                             workload.streams( gf, true ) ),
                     configuration.operationCount()
             );
-            Iterator<Operation> timeMappedOperations =
+            Iterator<Operation<?>> timeMappedOperations =
                     gf.timeOffsetAndCompress( operations, controlService.workloadStartTimeAsMilli(), 1.0 );
             WorkloadStreams workloadStreams = new WorkloadStreams();
             workloadStreams.setAsynchronousStream(
-                    new HashSet<Class<? extends Operation>>(),
-                    new HashSet<Class<? extends Operation>>(),
-                    Collections.<Operation>emptyIterator(),
+                    new HashSet<>(),
+                    new HashSet<>(),
+                    Collections.emptyIterator(),
                     timeMappedOperations,
                     null
             );

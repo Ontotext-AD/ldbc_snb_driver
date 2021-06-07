@@ -24,15 +24,15 @@ public class ValidationParamsGenerator extends Generator<ValidationParam>
 {
     private final Db db;
     private final DbValidationParametersFilter dbValidationParametersFilter;
-    private final Iterator<Operation> operations;
+    private final Iterator<Operation<?>> operations;
     private final ResultReporter resultReporter;
     private int entriesWrittenSoFar;
     private boolean needMoreValidationParameters;
-    private final List<Operation> injectedOperations;
+    private final List<Operation<?>> injectedOperations;
 
     public ValidationParamsGenerator( Db db,
             DbValidationParametersFilter dbValidationParametersFilter,
-            Iterator<Operation> operations )
+            Iterator<Operation<?>> operations )
     {
         this.db = db;
         this.dbValidationParametersFilter = dbValidationParametersFilter;
@@ -53,7 +53,7 @@ public class ValidationParamsGenerator extends Generator<ValidationParam>
     {
         while ( (injectedOperations.size() > 0 || operations.hasNext()) && needMoreValidationParameters )
         {
-            Operation operation;
+            Operation<?> operation;
             if ( injectedOperations.isEmpty() )
             {
                 operation = operations.next();
@@ -63,7 +63,7 @@ public class ValidationParamsGenerator extends Generator<ValidationParam>
                 operation = injectedOperations.remove( 0 );
             }
 
-            if ( false == dbValidationParametersFilter.useOperation( operation ) )
+            if (!dbValidationParametersFilter.useOperation(operation))
             { continue; }
 
             OperationHandlerRunnableContext operationHandlerRunner;

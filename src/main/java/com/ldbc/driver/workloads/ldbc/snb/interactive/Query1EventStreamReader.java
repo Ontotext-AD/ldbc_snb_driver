@@ -13,7 +13,7 @@ import java.util.Iterator;
 
 import static java.lang.String.format;
 
-public class Query1EventStreamReader implements Iterator<Operation>
+public class Query1EventStreamReader implements Iterator<Operation<?>>
 {
     private final Iterator<Object[]> csvRows;
 
@@ -29,10 +29,10 @@ public class Query1EventStreamReader implements Iterator<Operation>
     }
 
     @Override
-    public Operation next()
+    public Operation<?> next()
     {
         Object[] rowAsObjects = csvRows.next();
-        Operation operation = new LdbcQuery1(
+        Operation<?> operation = new LdbcQuery1(
                 (long) rowAsObjects[0],
                 (String) rowAsObjects[1],
                 LdbcQuery1.DEFAULT_LIMIT

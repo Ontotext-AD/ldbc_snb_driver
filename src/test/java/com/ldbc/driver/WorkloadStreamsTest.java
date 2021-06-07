@@ -344,7 +344,7 @@ public class WorkloadStreamsTest
     {
         GeneratorFactory gf = new GeneratorFactory( new RandomDataGeneratorFactory( 42l ) );
 
-        List<Operation> stream0 = Lists.<Operation>newArrayList(
+        List<Operation<?>> stream0 = Lists.newArrayList(
                 new TimedNamedOperation1( 0l, 0l, 0l, "0-1" ),
                 new TimedNamedOperation1( 1l, 1l, 0l, "0-2" ),
                 new TimedNamedOperation1( 2l, 2l, 0l, "0-3" ),
@@ -352,14 +352,14 @@ public class WorkloadStreamsTest
                 new TimedNamedOperation1( 7l, 7l, 0l, "0-5" )
         );
 
-        List<Operation> stream1 = Lists.<Operation>newArrayList(
+        List<Operation<?>> stream1 = Lists.newArrayList(
                 new TimedNamedOperation1( 0l, 0l, 0l, "1-1" ),
                 new TimedNamedOperation1( 3l, 3l, 0l, "1-2" ),
                 new TimedNamedOperation1( 4l, 4l, 0l, "1-3" ),
                 new TimedNamedOperation1( 9l, 9l, 0l, "1-4" )
         );
 
-        List<Operation> stream2 = Lists.<Operation>newArrayList(
+        List<Operation<?>> stream2 = Lists.newArrayList(
                 new TimedNamedOperation1( 1l, 1l, 0l, "2-1" ),
                 new TimedNamedOperation1( 3l, 3l, 0l, "2-2" ),
                 new TimedNamedOperation1( 4l, 4l, 0l, "2-3" ),
@@ -368,10 +368,10 @@ public class WorkloadStreamsTest
                 new TimedNamedOperation1( 9l, 9l, 0l, "2-6" )
         );
 
-        List<Operation> stream3 = Lists.newArrayList(
+        List<Operation<?>> stream3 = Lists.newArrayList(
         );
 
-        List<Operation> stream4 = Lists.newArrayList( gf.limit(
+        List<Operation<?>> stream4 = Lists.newArrayList( gf.limit(
                         new TimedNamedOperation1Factory(
                                 gf.incrementing( 10l, 1l ),
                                 gf.constant( 0l ),
@@ -381,7 +381,7 @@ public class WorkloadStreamsTest
                 )
         );
 
-        List<Iterator<Operation>> streams = Lists.newArrayList(
+        List<Iterator<Operation<?>>> streams = Lists.newArrayList(
                 stream0.iterator(),
                 stream1.iterator(),
                 stream2.iterator(),
@@ -412,7 +412,7 @@ public class WorkloadStreamsTest
         long[] countForIterator = kForIteratorAndMinimums._2();
         long minimumTimeStamp = kForIteratorAndMinimums._3();
 
-        List<Operation> topK = Lists.newArrayList(
+        List<Operation<?>> topK = Lists.newArrayList(
                 gf.mergeSortOperationsByTimeStamp(
                         gf.limit(
                                 stream0.iterator(),
@@ -464,29 +464,29 @@ public class WorkloadStreamsTest
     {
         GeneratorFactory gf = new GeneratorFactory( new RandomDataGeneratorFactory( 42l ) );
 
-        List<Operation> stream0 = Lists.<Operation>newArrayList(
+        List<Operation<?>> stream0 = Lists.newArrayList(
                 new TimedNamedOperation1( 0l, 0l, 0l, "0-1" ),
                 new TimedNamedOperation1( 1l, 1l, 0l, "0-2" ),
                 new TimedNamedOperation1( 2l, 2l, 0l, "0-3" ),
                 new TimedNamedOperation1( 6l, 6l, 0l, "0-4" )
         );
 
-        List<Operation> stream1 = Lists.<Operation>newArrayList(
+        List<Operation<?>> stream1 = Lists.newArrayList(
                 new TimedNamedOperation1( 0l, 0l, 0l, "1-1" ),
                 new TimedNamedOperation1( 3l, 3l, 0l, "1-2" ),
                 new TimedNamedOperation1( 4l, 4l, 0l, "1-3" )
         );
 
-        List<Operation> stream2 = Lists.<Operation>newArrayList(
+        List<Operation<?>> stream2 = Lists.newArrayList(
                 new TimedNamedOperation1( 1l, 1l, 0l, "2-1" ),
                 new TimedNamedOperation1( 3l, 3l, 0l, "2-2" ),
                 new TimedNamedOperation1( 4l, 4l, 0l, "2-3" )
         );
 
-        List<Operation> stream3 = Lists.newArrayList(
+        List<Operation<?>> stream3 = Lists.newArrayList(
         );
 
-        List<Operation> stream4 = Lists.newArrayList( gf.limit(
+        List<Operation<?>> stream4 = Lists.newArrayList( gf.limit(
                         new TimedNamedOperation1Factory(
                                 gf.incrementing( 10l, 1l ),
                                 gf.constant( 0l ),
@@ -496,7 +496,7 @@ public class WorkloadStreamsTest
                 )
         );
 
-        List<Iterator<Operation>> streams = Lists.newArrayList(
+        List<Iterator<Operation<?>>> streams = Lists.newArrayList(
                 stream0.iterator(),
                 stream1.iterator(),
                 stream2.iterator(),
@@ -579,7 +579,7 @@ public class WorkloadStreamsTest
     {
         GeneratorFactory gf = new GeneratorFactory( new RandomDataGeneratorFactory( 42l ) );
 
-        List<Operation> stream0 = Lists.<Operation>newArrayList(
+        List<Operation<?>> stream0 = Lists.newArrayList(
                 new TimedNamedOperation1( 0l, 0l, 0l, "0-1--0" ),
                 new TimedNamedOperation1( 1l, 1l, 0l, "0-2--1" ),
                 new TimedNamedOperation1( 2l, 2l, 0l, "0-3--2" ),
@@ -587,14 +587,14 @@ public class WorkloadStreamsTest
                 new TimedNamedOperation1( 7l, 7l, 0l, "0-5--7" )
         );
 
-        List<Operation> stream1 = Lists.<Operation>newArrayList(
+        List<Operation<?>> stream1 = Lists.newArrayList(
                 new TimedNamedOperation1( 0l, 0l, 0l, "1-1--0" ),
                 new TimedNamedOperation1( 3l, 3l, 0l, "1-2--3" ),
                 new TimedNamedOperation1( 4l, 4l, 0l, "1-3--4" ),
                 new TimedNamedOperation1( 9l, 9l, 0l, "1-4--9" )
         );
 
-        List<Operation> stream2 = Lists.<Operation>newArrayList(
+        List<Operation<?>> stream2 = Lists.newArrayList(
                 new TimedNamedOperation1( 1l, 1l, 0l, "2-1--1" ),
                 new TimedNamedOperation1( 3l, 3l, 0l, "2-2--3" ),
                 new TimedNamedOperation1( 4l, 4l, 0l, "2-3--4" ),
@@ -603,10 +603,10 @@ public class WorkloadStreamsTest
                 new TimedNamedOperation1( 9l, 9l, 0l, "2-6--9" )
         );
 
-        List<Operation> stream3 = Lists.newArrayList(
+        List<Operation<?>> stream3 = Lists.newArrayList(
         );
 
-        List<Operation> stream4 = Lists.newArrayList(
+        List<Operation<?>> stream4 = Lists.newArrayList(
                 gf.limit(
                         new TimedNamedOperation1Factory(
                                 gf.incrementing( 10l, 1l ),
@@ -617,7 +617,7 @@ public class WorkloadStreamsTest
                 )
         );
 
-        List<Iterator<Operation>> streams = Lists.newArrayList(
+        List<Iterator<Operation<?>>> streams = Lists.newArrayList(
                 stream0.iterator(),
                 stream1.iterator(),
                 stream2.iterator(),
@@ -648,7 +648,7 @@ public class WorkloadStreamsTest
         long[] countForIterator = kForIteratorAndMinimums._2();
         long minimumTimeStamp = kForIteratorAndMinimums._3();
 
-        List<Iterator<Operation>> offsetStreams = Lists.newArrayList(
+        List<Iterator<Operation<?>>> offsetStreams = Lists.newArrayList(
                 stream0.iterator(),
                 stream1.iterator(),
                 stream2.iterator(),
@@ -658,11 +658,11 @@ public class WorkloadStreamsTest
 
         for ( int i = 0; i < offsetStreams.size(); i++ )
         {
-            Iterator<Operation> offsetStream = offsetStreams.get( i );
+            Iterator<Operation<?>> offsetStream = offsetStreams.get( i );
             gf.consume( offsetStream, startForIterator[i] );
         }
 
-        List<Operation> topK = Lists.newArrayList(
+        List<Operation<?>> topK = Lists.newArrayList(
                 gf.mergeSortOperationsByTimeStamp(
                         gf.limit(
                                 offsetStreams.get( 0 ),
@@ -737,7 +737,7 @@ public class WorkloadStreamsTest
     {
         GeneratorFactory gf = new GeneratorFactory( new RandomDataGeneratorFactory( 42l ) );
 
-        List<Operation> stream0 = Lists.<Operation>newArrayList(
+        List<Operation<?>> stream0 = Lists.newArrayList(
                 new TimedNamedOperation1( 0l, 0l, 0l, "0-1--0" ),
                 new TimedNamedOperation1( 1l, 1l, 0l, "0-2--1" ),
                 new TimedNamedOperation1( 2l, 2l, 0l, "0-3--2" ),
@@ -745,14 +745,14 @@ public class WorkloadStreamsTest
                 new TimedNamedOperation1( 7l, 7l, 0l, "0-5--7" )
         );
 
-        List<Operation> stream1 = Lists.<Operation>newArrayList(
+        List<Operation<?>> stream1 = Lists.newArrayList(
                 new TimedNamedOperation1( 0l, 0l, 0l, "1-1--0" ),
                 new TimedNamedOperation1( 3l, 3l, 0l, "1-2--3" ),
                 new TimedNamedOperation1( 4l, 4l, 0l, "1-3--4" ),
                 new TimedNamedOperation1( 9l, 9l, 0l, "1-4--9" )
         );
 
-        List<Operation> stream2 = Lists.<Operation>newArrayList(
+        List<Operation<?>> stream2 = Lists.newArrayList(
                 new TimedNamedOperation1( 1l, 1l, 0l, "2-1--1" ),
                 new TimedNamedOperation1( 3l, 3l, 0l, "2-2--3" ),
                 new TimedNamedOperation1( 4l, 4l, 0l, "2-3--4" ),
@@ -761,10 +761,10 @@ public class WorkloadStreamsTest
                 new TimedNamedOperation1( 9l, 9l, 0l, "2-6--9" )
         );
 
-        List<Operation> stream3 = Lists.newArrayList(
+        List<Operation<?>> stream3 = Lists.newArrayList(
         );
 
-        List<Iterator<Operation>> streams = Lists.newArrayList(
+        List<Iterator<Operation<?>>> streams = Lists.newArrayList(
                 stream0.iterator(),
                 stream1.iterator(),
                 stream2.iterator(),
@@ -794,7 +794,7 @@ public class WorkloadStreamsTest
         long[] countForIterator = kForIteratorAndMinimums._2();
         long minimumTimeStamp = kForIteratorAndMinimums._3();
 
-        List<Iterator<Operation>> offsetStreams = Lists.newArrayList(
+        List<Iterator<Operation<?>>> offsetStreams = Lists.newArrayList(
                 stream0.iterator(),
                 stream1.iterator(),
                 stream2.iterator(),
@@ -803,11 +803,11 @@ public class WorkloadStreamsTest
 
         for ( int i = 0; i < offsetStreams.size(); i++ )
         {
-            Iterator<Operation> offsetStream = offsetStreams.get( i );
+            Iterator<Operation<?>> offsetStream = offsetStreams.get( i );
             gf.consume( offsetStream, startForIterator[i] );
         }
 
-        List<Operation> topK = Lists.newArrayList(
+        List<Operation<?>> topK = Lists.newArrayList(
                 gf.mergeSortOperationsByTimeStamp(
                         gf.limit(
                                 offsetStreams.get( 0 ),
@@ -885,9 +885,9 @@ public class WorkloadStreamsTest
     {
 
         @Override
-        public Map<Integer,Class<? extends Operation>> operationTypeToClassMapping()
+        public Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping()
         {
-            Map<Integer,Class<? extends Operation>> operationTypeToClassMapping = new HashMap<>();
+            Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping = new HashMap<>();
             operationTypeToClassMapping.put( NothingOperation.TYPE, NothingOperation.class );
             operationTypeToClassMapping.put( TimedNamedOperation1.TYPE, TimedNamedOperation1.class );
             operationTypeToClassMapping.put( TimedNamedOperation2.TYPE, TimedNamedOperation2.class );
@@ -941,54 +941,54 @@ public class WorkloadStreamsTest
     private WorkloadStreams getWorkloadStreams()
     {
         GeneratorFactory gf = new GeneratorFactory( new RandomDataGeneratorFactory( 42l ) );
-        Iterator<Operation> asyncDependencyStream = new TimedNamedOperation1Factory(
+        Iterator<Operation<?>> asyncDependencyStream = new TimedNamedOperation1Factory(
                 gf.incrementing( 0l, 10l ),
                 gf.incrementing( 0l, 10l ),
                 gf.constant( "ad" )
         );
-        Iterator<Operation> asyncNonDependencyStream = new TimedNamedOperation1Factory(
+        Iterator<Operation<?>> asyncNonDependencyStream = new TimedNamedOperation1Factory(
                 gf.incrementing( 2l, 100l ),
                 gf.incrementing( 2l, 100l ),
                 gf.constant( "an" )
         );
-        Iterator<Operation> blockingDependencyStream1 = new TimedNamedOperation2Factory(
+        Iterator<Operation<?>> blockingDependencyStream1 = new TimedNamedOperation2Factory(
                 gf.incrementing( 4l, 1000l ),
                 gf.incrementing( 4l, 1000l ),
                 gf.constant( "bd1" )
         );
-        Iterator<Operation> blockingNonDependencyStream1 = new TimedNamedOperation2Factory(
+        Iterator<Operation<?>> blockingNonDependencyStream1 = new TimedNamedOperation2Factory(
                 gf.incrementing( 6l, 10000l ),
                 gf.incrementing( 6l, 10000l ),
                 gf.constant( "bn1" )
         );
-        Iterator<Operation> blockingDependencyStream2 = new TimedNamedOperation3Factory(
+        Iterator<Operation<?>> blockingDependencyStream2 = new TimedNamedOperation3Factory(
                 gf.incrementing( 8l, 10000l ),
                 gf.incrementing( 8l, 10000l ),
                 gf.constant( "bd2" )
         );
-        Iterator<Operation> blockingNonDependencyStream2 = new TimedNamedOperation3Factory(
+        Iterator<Operation<?>> blockingNonDependencyStream2 = new TimedNamedOperation3Factory(
                 gf.incrementing( 10l, 100000l ),
                 gf.incrementing( 10l, 100000l ),
                 gf.constant( "bn2" )
         );
         WorkloadStreams workloadStreams = new WorkloadStreams();
         workloadStreams.setAsynchronousStream(
-                new HashSet<Class<? extends Operation>>(),
-                Sets.<Class<? extends Operation>>newHashSet( TimedNamedOperation1.class ),
+                new HashSet<>(),
+                Sets.newHashSet( TimedNamedOperation1.class ),
                 asyncDependencyStream,
                 asyncNonDependencyStream,
                 null
         );
         workloadStreams.addBlockingStream(
-                new HashSet<Class<? extends Operation>>(),
-                Sets.<Class<? extends Operation>>newHashSet( TimedNamedOperation2.class ),
+                new HashSet<>(),
+                Sets.newHashSet( TimedNamedOperation2.class ),
                 blockingDependencyStream1,
                 blockingNonDependencyStream1,
                 null
         );
         workloadStreams.addBlockingStream(
-                new HashSet<Class<? extends Operation>>(),
-                Sets.<Class<? extends Operation>>newHashSet( TimedNamedOperation3.class ),
+                new HashSet<>(),
+                Sets.newHashSet( TimedNamedOperation3.class ),
                 blockingDependencyStream2,
                 blockingNonDependencyStream2,
                 null

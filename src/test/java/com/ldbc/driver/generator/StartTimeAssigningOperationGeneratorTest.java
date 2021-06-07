@@ -22,7 +22,7 @@ public class StartTimeAssigningOperationGeneratorTest
         GeneratorFactory gf = new GeneratorFactory( new RandomDataGeneratorFactory( 42l ) );
 
         // When
-        Iterator<Operation> operations = gf.limit( new NothingOperationFactory(), testIterations );
+        Iterator<Operation<?>> operations = gf.limit( new NothingOperationFactory(), testIterations );
         Function1<Long,Long,RuntimeException> timeFromLongFun = new Function1<Long,Long,RuntimeException>()
         {
             @Override
@@ -34,7 +34,7 @@ public class StartTimeAssigningOperationGeneratorTest
 
         Iterator<Long> countGenerator = gf.incrementing( firstMilliTime, incrementMilliTimeBy );
         Iterator<Long> counterStartTimeGenerator = gf.map( countGenerator, timeFromLongFun );
-        Iterator<Operation> startTimeOperationGenerator = gf.assignStartTimes( counterStartTimeGenerator, operations );
+        Iterator<Operation<?>> startTimeOperationGenerator = gf.assignStartTimes( counterStartTimeGenerator, operations );
 
         // Then
         int count = 0;

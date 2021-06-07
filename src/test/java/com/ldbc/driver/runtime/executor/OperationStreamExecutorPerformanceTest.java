@@ -92,7 +92,7 @@ public class OperationStreamExecutorPerformanceTest
         List<Long> singleThreadExecutorTimes = new ArrayList<>();
         List<Long> sameThreadExecutorTimes = new ArrayList<>();
 
-        List<Operation> operations = Lists.newArrayList( getOperations( operationCount ) );
+        List<Operation<?>> operations = Lists.newArrayList( getOperations( operationCount ) );
 
         while ( experimentRepetitions-- > 0 )
         {
@@ -105,7 +105,7 @@ public class OperationStreamExecutorPerformanceTest
                 DummyDb db = new DummyDb();
                 Map<String,String> dummyDbParameters = new HashMap<>();
                 dummyDbParameters.put( DummyDb.ALLOWED_DEFAULT_ARG, Boolean.toString( true ) );
-                db.init( dummyDbParameters, loggingService, new HashMap<Integer,Class<? extends Operation>>() );
+                db.init( dummyDbParameters, loggingService, new HashMap<>() );
                 CompletionTimeWriter completionTimeWriter = new DummyCompletionTimeWriter();
                 MetricsService metricsService = new DummyCountingMetricsService();
                 DummyCompletionTimeReader completionTimeReader = new DummyCompletionTimeReader();
@@ -116,9 +116,9 @@ public class OperationStreamExecutorPerformanceTest
 
                 WorkloadStreams.WorkloadStreamDefinition streamDefinition =
                         new WorkloadStreams.WorkloadStreamDefinition(
-                                new HashSet<Class<? extends Operation>>(),
-                                new HashSet<Class<? extends Operation>>(),
-                                Collections.<Operation>emptyIterator(),
+                                new HashSet<Class<? extends Operation<?>>>(),
+                                new HashSet<Class<? extends Operation<?>>>(),
+                                Collections.<Operation<?>>emptyIterator(),
                                 operations.iterator(),
                                 null
                         );
@@ -159,7 +159,7 @@ public class OperationStreamExecutorPerformanceTest
                 DummyDb db = new DummyDb();
                 Map<String,String> dummyDbParameters = new HashMap<>();
                 dummyDbParameters.put( DummyDb.ALLOWED_DEFAULT_ARG, Boolean.toString( true ) );
-                db.init( dummyDbParameters, loggingService, new HashMap<Integer,Class<? extends Operation>>() );
+                db.init( dummyDbParameters, loggingService, new HashMap<>() );
                 CompletionTimeWriter completionTimeWriter = new DummyCompletionTimeWriter();
                 MetricsService metricsService = new DummyCountingMetricsService();
                 DummyCompletionTimeReader completionTimeReader = new DummyCompletionTimeReader();
@@ -170,9 +170,9 @@ public class OperationStreamExecutorPerformanceTest
 
                 WorkloadStreams.WorkloadStreamDefinition streamDefinition =
                         new WorkloadStreams.WorkloadStreamDefinition(
-                                new HashSet<Class<? extends Operation>>(),
-                                new HashSet<Class<? extends Operation>>(),
-                                Collections.<Operation>emptyIterator(),
+                                new HashSet<>(),
+                                new HashSet<>(),
+                                Collections.emptyIterator(),
                                 operations.iterator(),
                                 null
                         );
@@ -212,7 +212,7 @@ public class OperationStreamExecutorPerformanceTest
                 DummyDb db = new DummyDb();
                 Map<String,String> dummyDbParameters = new HashMap<>();
                 dummyDbParameters.put( DummyDb.ALLOWED_DEFAULT_ARG, Boolean.toString( true ) );
-                db.init( dummyDbParameters, loggingService, new HashMap<Integer,Class<? extends Operation>>() );
+                db.init( dummyDbParameters, loggingService, new HashMap<>() );
                 CompletionTimeWriter completionTimeWriter = new DummyCompletionTimeWriter();
                 MetricsService metricsService = new DummyCountingMetricsService();
                 DummyCompletionTimeReader completionTimeReader = new DummyCompletionTimeReader();
@@ -223,9 +223,9 @@ public class OperationStreamExecutorPerformanceTest
 
                 WorkloadStreams.WorkloadStreamDefinition streamDefinition =
                         new WorkloadStreams.WorkloadStreamDefinition(
-                                new HashSet<Class<? extends Operation>>(),
-                                new HashSet<Class<? extends Operation>>(),
-                                Collections.<Operation>emptyIterator(),
+                                new HashSet<>(),
+                                new HashSet<>(),
+                                Collections.emptyIterator(),
                                 operations.iterator(),
                                 null
                         );
@@ -313,12 +313,12 @@ public class OperationStreamExecutorPerformanceTest
         return benchmarkDuration;
     }
 
-    private Iterator<Operation> getOperations( long count )
+    private Iterator<Operation<?>> getOperations( long count )
     {
         Iterator<Long> scheduledStartTimes = gf.constant( 1L );
         Iterator<Long> dependencyTimes = gf.constant( 0L );
         Iterator<String> names = gf.constant( "name" );
-        Iterator<Operation> operations =
+        Iterator<Operation<?>> operations =
                 gf.limit( new TimedNamedOperation1Factory( scheduledStartTimes, dependencyTimes, names ), count );
         return operations;
     }

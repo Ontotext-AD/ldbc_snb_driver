@@ -243,7 +243,7 @@ public abstract class LdbcSnbInteractiveWorkloadConfiguration
             WRITE_OPERATION_8_ENABLE_KEY
     );
 
-    private static String asEnableKey( Class<? extends Operation> operation )
+    private static String asEnableKey( Class<? extends Operation<?>> operation )
     {
         return LDBC_SNB_INTERACTIVE_PARAM_NAME_PREFIX + operation.getSimpleName() + ENABLE_SUFFIX;
     }
@@ -362,7 +362,7 @@ public abstract class LdbcSnbInteractiveWorkloadConfiguration
 
     public static Map<String,String> withOnly(
             Map<String,String> originalParams,
-            Class<? extends Operation>... operationClasses )
+            Class<? extends Operation<?>>... operationClasses )
             throws DriverConfigurationException, IOException
     {
         Map<String,String> params = withoutWrites(
@@ -370,7 +370,7 @@ public abstract class LdbcSnbInteractiveWorkloadConfiguration
                         withoutLongReads( originalParams )
                 )
         );
-        for ( Class<? extends Operation> operationClass : operationClasses )
+        for ( Class<? extends Operation<?>> operationClass : operationClasses )
         {
             params.put( asEnableKey( operationClass ), "true" );
         }
@@ -473,9 +473,9 @@ public abstract class LdbcSnbInteractiveWorkloadConfiguration
         return ConsoleAndFileDriverConfiguration.convertLongKeysToShortKeys( params );
     }
 
-    public static Map<Integer,Class<? extends Operation>> operationTypeToClassMapping()
+    public static Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping()
     {
-        Map<Integer,Class<? extends Operation>> operationTypeToClassMapping = new HashMap<>();
+        Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping = new HashMap<>();
         operationTypeToClassMapping.put( LdbcQuery1.TYPE, LdbcQuery1.class );
         operationTypeToClassMapping.put( LdbcQuery2.TYPE, LdbcQuery2.class );
         operationTypeToClassMapping.put( LdbcQuery3.TYPE, LdbcQuery3.class );
@@ -508,18 +508,18 @@ public abstract class LdbcSnbInteractiveWorkloadConfiguration
         return operationTypeToClassMapping;
     }
 
-    static String removeSuffix( String original, String suffix )
+    public static String removeSuffix(String original, String suffix)
     {
         return (!original.contains( suffix )) ? original : original.substring( 0, original.lastIndexOf( suffix ) );
     }
 
-    static String removePrefix( String original, String prefix )
+    public static String removePrefix(String original, String prefix)
     {
         return (!original.contains( prefix )) ? original : original
                 .substring( original.lastIndexOf( prefix ) + prefix.length(), original.length() );
     }
 
-    static Set<String> missingParameters( Map<String,String> properties, Iterable<String> compulsoryPropertyKeys )
+    public static Set<String> missingParameters(Map<String, String> properties, Iterable<String> compulsoryPropertyKeys)
     {
         Set<String> missingPropertyKeys = new HashSet<>();
         for ( String compulsoryKey : compulsoryPropertyKeys )
@@ -530,7 +530,7 @@ public abstract class LdbcSnbInteractiveWorkloadConfiguration
         return missingPropertyKeys;
     }
 
-    static boolean isValidParser( String parserString ) throws WorkloadException
+    public static boolean isValidParser(String parserString) throws WorkloadException
     {
         try
         {

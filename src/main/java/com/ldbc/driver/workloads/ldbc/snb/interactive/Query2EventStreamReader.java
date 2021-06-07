@@ -14,7 +14,7 @@ import java.util.Iterator;
 
 import static java.lang.String.format;
 
-public class Query2EventStreamReader implements Iterator<Operation>
+public class Query2EventStreamReader implements Iterator<Operation<?>>
 {
     private final Iterator<Object[]> csvRows;
 
@@ -30,10 +30,10 @@ public class Query2EventStreamReader implements Iterator<Operation>
     }
 
     @Override
-    public Operation next()
+    public Operation<?> next()
     {
         Object[] rowAsObjects = csvRows.next();
-        Operation operation = new LdbcQuery2(
+        Operation<?> operation = new LdbcQuery2(
                 (long) rowAsObjects[0],
                 (Date) rowAsObjects[1],
                 LdbcQuery2.DEFAULT_LIMIT
