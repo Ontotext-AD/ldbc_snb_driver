@@ -771,10 +771,10 @@ public class LdbcSnbInteractiveGraphDb extends Db {
 		@Override
 		public void executeOperation(LdbcQuery14 operation, GraphDbConnectionState dbConnectionState,
 									 ResultReporter resultReporter) throws DbException {
-			sleep(operation, sleepDurationAsNano);
-			List<BindingSet> results = dbConnectionState.getGraphDbClient().execute(QUERY_14, operation.parameterMap());
-
-			resultReporter.report(0, GraphDBLdbcSnbInteractiveOperationResultSets.read14Results(results), operation);
+//			sleep(operation, sleepDurationAsNano);
+//			List<BindingSet> results = dbConnectionState.getGraphDbClient().execute(QUERY_14, operation.parameterMap());
+//
+//			resultReporter.report(0, GraphDBLdbcSnbInteractiveOperationResultSets.read14Results(results), operation);
 		}
 	}
 }

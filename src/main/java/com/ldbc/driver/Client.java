@@ -98,7 +98,7 @@ public class Client
             {
                 missingParams.add( ConsoleAndFileDriverConfiguration.OPERATION_COUNT_ARG );
             }
-            if ( false == missingParams.isEmpty() )
+            if (!missingParams.isEmpty())
             {
                 throw new ClientException( format( "Missing required parameters: %s", missingParams.toString() ) );
             }

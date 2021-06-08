@@ -2,18 +2,9 @@ package com.ldbc.driver.workloads.ldbc.snb.interactive;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Charsets;
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 import com.google.common.collect.*;
 import com.ldbc.driver.*;
-import com.ldbc.driver.csv.charseeker.*;
-import com.ldbc.driver.csv.simple.SimpleCsvFileReader;
-import com.ldbc.driver.generator.CsvEventStreamReaderBasicCharSeeker;
-import com.ldbc.driver.generator.GeneratorFactory;
-import com.ldbc.driver.generator.RandomDataGeneratorFactory;
-import com.ldbc.driver.util.Tuple;
-import com.ldbc.driver.util.Tuple2;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.Equator;
 
@@ -44,7 +35,7 @@ public class LdbcSnbInteractiveWorkload extends Workload
                 LdbcSnbInteractiveWorkloadConfiguration.missingParameters(params, compulsoryKeys);
         if (!missingPropertyParameters.isEmpty()) {
             throw new WorkloadException(format("Workload could not initialize due to missing parameters: %s",
-                    missingPropertyParameters.toString()));
+                    missingPropertyParameters));
         }
         super.onInit(params);
     }
@@ -1134,5 +1125,10 @@ public class LdbcSnbInteractiveWorkload extends Workload
         {
             return result1.equals( result2 );
         }
+    }
+
+    @Override
+    protected BENCHMARK_MODE getMode() {
+        return BENCHMARK_MODE.DEFAULT_BENCHMARK_MODE;
     }
 }

@@ -913,19 +913,19 @@ public class WorkloadStreamsTest
         }
 
         @Override
-        public String serializeOperation( Operation operation ) throws SerializingMarshallingException
+        public String serializeOperation( Operation<?> operation ) throws SerializingMarshallingException
         {
             return null;
         }
 
         @Override
-        public Operation marshalOperation( String serializedOperation ) throws SerializingMarshallingException
+        public Operation<?> marshalOperation( String serializedOperation ) throws SerializingMarshallingException
         {
             return null;
         }
 
         @Override
-        public boolean resultsEqual( Operation operation, Object result1, Object result2 ) throws WorkloadException
+        public boolean resultsEqual( Operation<?> operation, Object result1, Object result2 ) throws WorkloadException
         {
             if ( null == result1 || null == result2 )
             {
@@ -935,6 +935,11 @@ public class WorkloadStreamsTest
             {
                 return result1.equals( result2 );
             }
+        }
+
+        @Override
+        protected BENCHMARK_MODE getMode() {
+            return BENCHMARK_MODE.DEFAULT_BENCHMARK_MODE;
         }
     }
 

@@ -124,6 +124,11 @@ public class DummyWorkload extends Workload
     }
 
     @Override
+    protected BENCHMARK_MODE getMode() {
+        return BENCHMARK_MODE.DEFAULT_BENCHMARK_MODE;
+    }
+
+    @Override
     public boolean resultsEqual( Operation operation, Object result1, Object result2 ) throws WorkloadException
     {
         if ( null == result1 || null == result2 )
