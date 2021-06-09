@@ -938,7 +938,7 @@ public class WorkloadStreamsTest
         }
 
         @Override
-        protected BENCHMARK_MODE getMode() {
+        protected BENCHMARK_MODE getBenchmarkMode() {
             return BENCHMARK_MODE.DEFAULT_BENCHMARK_MODE;
         }
     }

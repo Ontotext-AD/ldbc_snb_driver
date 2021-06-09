@@ -30,6 +30,8 @@ import static java.lang.String.format;
 
 public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 
+	public static final String ERROR_WHILE_TRYING_TO_SERIALIZE_RESULT_N_S = "Error while trying to serialize result%n%s";
+
 	@Override
 	public Map<Integer, Class<? extends Operation<?>>> operationTypeToClassMapping() {
 		Map<Integer, Class<? extends Operation<?>>> operationTypeToClassMapping = new HashMap<>();
@@ -63,6 +65,8 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 			throw new WorkloadException(format("Workload could not initialize due to missing parameters: %s",
 					missingPropertyParameters));
 		}
+
+		getQueries(params);
 
         super.onInit(params);
 	}
@@ -112,7 +116,7 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 	}
 
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-	private static final TypeReference TYPE_REFERENCE = new TypeReference<List<Object>>() {
+	private static final TypeReference<List<Object>> TYPE_REFERENCE = new TypeReference<List<Object>>() {
 	};
 
 	@Override
@@ -128,7 +132,7 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 					return OBJECT_MAPPER.writeValueAsString(operationAsList);
 				} catch (IOException e) {
 					throw new SerializingMarshallingException(
-							format("Error while trying to serialize result\n%s", operationAsList.toString()), e);
+							format(ERROR_WHILE_TRYING_TO_SERIALIZE_RESULT_N_S, operationAsList), e);
 				}
 			}
 			case LdbcQuery2.TYPE: {
@@ -141,7 +145,7 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 					return OBJECT_MAPPER.writeValueAsString(operationAsList);
 				} catch (IOException e) {
 					throw new SerializingMarshallingException(
-							format("Error while trying to serialize result\n%s", operationAsList.toString()), e);
+							format(ERROR_WHILE_TRYING_TO_SERIALIZE_RESULT_N_S, operationAsList), e);
 				}
 			}
 			case LdbcQuery3.TYPE: {
@@ -157,7 +161,7 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 					return OBJECT_MAPPER.writeValueAsString(operationAsList);
 				} catch (IOException e) {
 					throw new SerializingMarshallingException(
-							format("Error while trying to serialize result\n%s", operationAsList.toString()), e);
+							format(ERROR_WHILE_TRYING_TO_SERIALIZE_RESULT_N_S, operationAsList), e);
 				}
 			}
 			case LdbcQuery4.TYPE: {
@@ -171,7 +175,7 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 					return OBJECT_MAPPER.writeValueAsString(operationAsList);
 				} catch (IOException e) {
 					throw new SerializingMarshallingException(
-							format("Error while trying to serialize result\n%s", operationAsList.toString()), e);
+							format(ERROR_WHILE_TRYING_TO_SERIALIZE_RESULT_N_S, operationAsList), e);
 				}
 			}
 			case LdbcQuery5.TYPE: {
@@ -184,7 +188,7 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 					return OBJECT_MAPPER.writeValueAsString(operationAsList);
 				} catch (IOException e) {
 					throw new SerializingMarshallingException(
-							format("Error while trying to serialize result\n%s", operationAsList.toString()), e);
+							format(ERROR_WHILE_TRYING_TO_SERIALIZE_RESULT_N_S, operationAsList), e);
 				}
 			}
 			case LdbcQuery6.TYPE: {
@@ -197,7 +201,7 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 					return OBJECT_MAPPER.writeValueAsString(operationAsList);
 				} catch (IOException e) {
 					throw new SerializingMarshallingException(
-							format("Error while trying to serialize result\n%s", operationAsList.toString()), e);
+							format(ERROR_WHILE_TRYING_TO_SERIALIZE_RESULT_N_S, operationAsList), e);
 				}
 			}
 			case LdbcQuery7.TYPE: {
@@ -209,7 +213,7 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 					return OBJECT_MAPPER.writeValueAsString(operationAsList);
 				} catch (IOException e) {
 					throw new SerializingMarshallingException(
-							format("Error while trying to serialize result\n%s", operationAsList.toString()), e);
+							format(ERROR_WHILE_TRYING_TO_SERIALIZE_RESULT_N_S, operationAsList), e);
 				}
 			}
 			case LdbcQuery8.TYPE: {
@@ -221,7 +225,7 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 					return OBJECT_MAPPER.writeValueAsString(operationAsList);
 				} catch (IOException e) {
 					throw new SerializingMarshallingException(
-							format("Error while trying to serialize result\n%s", operationAsList.toString()), e);
+							format(ERROR_WHILE_TRYING_TO_SERIALIZE_RESULT_N_S, operationAsList), e);
 				}
 			}
 			case LdbcQuery9.TYPE: {
@@ -234,7 +238,7 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 					return OBJECT_MAPPER.writeValueAsString(operationAsList);
 				} catch (IOException e) {
 					throw new SerializingMarshallingException(
-							format("Error while trying to serialize result\n%s", operationAsList.toString()), e);
+							format(ERROR_WHILE_TRYING_TO_SERIALIZE_RESULT_N_S, operationAsList), e);
 				}
 			}
 			case LdbcQuery10.TYPE: {
@@ -247,7 +251,7 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 					return OBJECT_MAPPER.writeValueAsString(operationAsList);
 				} catch (IOException e) {
 					throw new SerializingMarshallingException(
-							format("Error while trying to serialize result\n%s", operationAsList.toString()), e);
+							format(ERROR_WHILE_TRYING_TO_SERIALIZE_RESULT_N_S, operationAsList), e);
 				}
 			}
 			case LdbcQuery11.TYPE: {
@@ -261,7 +265,7 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 					return OBJECT_MAPPER.writeValueAsString(operationAsList);
 				} catch (IOException e) {
 					throw new SerializingMarshallingException(
-							format("Error while trying to serialize result\n%s", operationAsList.toString()), e);
+							format(ERROR_WHILE_TRYING_TO_SERIALIZE_RESULT_N_S, operationAsList), e);
 				}
 			}
 			case LdbcQuery12.TYPE: {
@@ -274,7 +278,7 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 					return OBJECT_MAPPER.writeValueAsString(operationAsList);
 				} catch (IOException e) {
 					throw new SerializingMarshallingException(
-							format("Error while trying to serialize result\n%s", operationAsList.toString()), e);
+							format(ERROR_WHILE_TRYING_TO_SERIALIZE_RESULT_N_S, operationAsList), e);
 				}
 			}
 			case LdbcQuery13.TYPE: {
@@ -287,7 +291,7 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 					return OBJECT_MAPPER.writeValueAsString(operationAsList);
 				} catch (IOException e) {
 					throw new SerializingMarshallingException(
-							format("Error while trying to serialize result\n%s", operationAsList.toString()), e);
+							format(ERROR_WHILE_TRYING_TO_SERIALIZE_RESULT_N_S, operationAsList), e);
 				}
 			}
 			case LdbcQuery14.TYPE: {
@@ -300,15 +304,15 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 					return OBJECT_MAPPER.writeValueAsString(operationAsList);
 				} catch (IOException e) {
 					throw new SerializingMarshallingException(
-							format("Error while trying to serialize result\n%s", operationAsList.toString()), e);
+							format(ERROR_WHILE_TRYING_TO_SERIALIZE_RESULT_N_S, operationAsList), e);
 				}
 			}
 
 			default: {
 				throw new SerializingMarshallingException(
 						format(
-								"Workload does not know how to serialize operation\nWorkload: %s\nOperation Type: " +
-										"%s\nOperation: %s",
+								"Workload does not know how to serialize operation%nWorkload: %s%nOperation Type: " +
+										"%s%nOperation: %s",
 								getClass().getName(),
 								operation.getClass().getName(),
 								operation));
@@ -323,7 +327,7 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 			operationAsList = OBJECT_MAPPER.readValue(serializedOperation, TYPE_REFERENCE);
 		} catch (IOException e) {
 			throw new SerializingMarshallingException(
-					format("Error while parsing serialized results\n%s", serializedOperation), e);
+					format("Error while parsing serialized results%n%s", serializedOperation), e);
 		}
 
 		String operationTypeName = (String) operationAsList.get(0);
@@ -424,7 +428,7 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 	}
 
     @Override
-    protected BENCHMARK_MODE getMode() {
+    protected BENCHMARK_MODE getBenchmarkMode() {
         return BENCHMARK_MODE.GRAPHDB_BENCHMARK_MODE;
     }
 
@@ -488,5 +492,8 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 		} else {
 			return result1.equals(result2);
 		}
+	}
+
+	private void getQueries(Map<String, String> params) {
 	}
 }

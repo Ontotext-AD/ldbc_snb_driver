@@ -5,6 +5,7 @@ import com.ldbc.driver.SerializingMarshallingException;
 import com.ldbc.driver.Workload;
 import com.ldbc.driver.WorkloadException;
 import com.ldbc.driver.WorkloadStreams;
+import com.ldbc.driver.generator.CsvEventStreamReaderBasicCharSeeker;
 import com.ldbc.driver.generator.GeneratorFactory;
 
 import java.io.IOException;
@@ -64,7 +65,7 @@ public class DummyWorkload extends Workload
     }
 
     @Override
-    public String serializeOperation( Operation operation ) throws SerializingMarshallingException
+    public String serializeOperation( Operation<?> operation ) throws SerializingMarshallingException
     {
         if ( operation.getClass().equals( NothingOperation.class ) )
         { return NothingOperation.class.getName(); }
@@ -96,7 +97,7 @@ public class DummyWorkload extends Workload
     }
 
     @Override
-    public Operation marshalOperation( String serializedOperation ) throws SerializingMarshallingException
+    public Operation<?> marshalOperation( String serializedOperation ) throws SerializingMarshallingException
     {
         if ( serializedOperation.startsWith( NothingOperation.class.getName() ) )
         { return new NothingOperation(); }
@@ -124,12 +125,12 @@ public class DummyWorkload extends Workload
     }
 
     @Override
-    protected BENCHMARK_MODE getMode() {
+    protected BENCHMARK_MODE getBenchmarkMode() {
         return BENCHMARK_MODE.DEFAULT_BENCHMARK_MODE;
     }
 
     @Override
-    public boolean resultsEqual( Operation operation, Object result1, Object result2 ) throws WorkloadException
+    public boolean resultsEqual( Operation<?> operation, Object result1, Object result2 ) throws WorkloadException
     {
         if ( null == result1 || null == result2 )
         { return false; }

@@ -292,7 +292,7 @@ public class SimpleWorkload extends Workload
             {
                 throw new SerializingMarshallingException(
                         format(
-                                "Workload does not know how to serialize operation\nWorkload: %s\nOperation Type: " +
+                                "Workload does not know how to serialize operation%nWorkload: %s%nOperation Type: " +
                                 "%s\nOperation: %s",
                                 getClass().getName(),
                                 operation.getClass().getName(),
@@ -302,7 +302,7 @@ public class SimpleWorkload extends Workload
         }
         catch ( IOException e )
         {
-            throw new SerializingMarshallingException( format( "Error serializing operation\n%s", operation ), e );
+            throw new SerializingMarshallingException( format( "Error serializing operation%n%s", operation ), e );
         }
     }
 
@@ -317,7 +317,7 @@ public class SimpleWorkload extends Workload
         catch ( IOException e )
         {
             throw new SerializingMarshallingException(
-                    format( "Error while parsing serialized results\n%s", serializedOperation ), e );
+                    format( "Error while parsing serialized results%n%s", serializedOperation ), e );
         }
         String operationClassName = (String) operationAsList.get( 0 );
 
@@ -327,7 +327,7 @@ public class SimpleWorkload extends Workload
                     (String) operationAsList.get( 1 ),
                     (String) operationAsList.get( 2 ),
                     // TODO
-                    new HashMap<String,Iterator<Byte>>()
+                    new HashMap<>()
             );
         }
         else if ( operationClassName.equals( ReadOperation.class.getName() ) )
@@ -344,7 +344,7 @@ public class SimpleWorkload extends Workload
                     (String) operationAsList.get( 1 ),
                     (String) operationAsList.get( 2 ),
                     // TODO
-                    new HashMap<String,Iterator<Byte>>()
+                    new HashMap<>()
             );
         }
         else if ( operationClassName.equals( ScanOperation.class.getName() ) )
@@ -363,7 +363,7 @@ public class SimpleWorkload extends Workload
                     (String) operationAsList.get( 2 ),
                     (List<String>) operationAsList.get( 3 ),
                     // TODO
-                    new HashMap<String,Iterator<Byte>>()
+                    new HashMap<>()
             );
         }
 
@@ -377,12 +377,12 @@ public class SimpleWorkload extends Workload
     }
 
     @Override
-    protected BENCHMARK_MODE getMode() {
+    protected BENCHMARK_MODE getBenchmarkMode() {
         return BENCHMARK_MODE.DEFAULT_BENCHMARK_MODE;
     }
 
     @Override
-    public boolean resultsEqual( Operation operation, Object result1, Object result2 ) throws WorkloadException
+    public boolean resultsEqual( Operation<?> operation, Object result1, Object result2 ) throws WorkloadException
     {
         if ( null == result1 || null == result2 )
         { return false; }

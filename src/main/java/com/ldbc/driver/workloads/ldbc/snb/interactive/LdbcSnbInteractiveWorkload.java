@@ -5,6 +5,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Function;
 import com.google.common.collect.*;
 import com.ldbc.driver.*;
+import com.ldbc.driver.generator.CsvEventStreamReaderBasicCharSeeker;
+import com.ldbc.driver.workloads.common.Query10EventStreamReader;
+import com.ldbc.driver.workloads.common.Query11EventStreamReader;
+import com.ldbc.driver.workloads.common.Query12EventStreamReader;
+import com.ldbc.driver.workloads.common.Query13EventStreamReader;
+import com.ldbc.driver.workloads.common.Query14EventStreamReader;
+import com.ldbc.driver.workloads.common.Query1EventStreamReader;
+import com.ldbc.driver.workloads.common.Query2EventStreamReader;
+import com.ldbc.driver.workloads.common.Query3EventStreamReader;
+import com.ldbc.driver.workloads.common.Query4EventStreamReader;
+import com.ldbc.driver.workloads.common.Query5EventStreamReader;
+import com.ldbc.driver.workloads.common.Query6EventStreamReader;
+import com.ldbc.driver.workloads.common.Query7EventStreamReader;
+import com.ldbc.driver.workloads.common.Query8EventStreamReader;
+import com.ldbc.driver.workloads.common.Query9EventStreamReader;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.Equator;
 
@@ -1128,7 +1143,7 @@ public class LdbcSnbInteractiveWorkload extends Workload
     }
 
     @Override
-    protected BENCHMARK_MODE getMode() {
+    protected BENCHMARK_MODE getBenchmarkMode() {
         return BENCHMARK_MODE.DEFAULT_BENCHMARK_MODE;
     }
 }

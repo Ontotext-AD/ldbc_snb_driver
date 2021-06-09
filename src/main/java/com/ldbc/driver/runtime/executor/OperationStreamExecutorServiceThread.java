@@ -43,7 +43,7 @@ class OperationStreamExecutorServiceThread extends Thread
         {
             while ( initiatedTimeSubmittingOperationRetriever.hasNextOperation() && !forcedTerminate.get() )
             {
-                Operation operation = initiatedTimeSubmittingOperationRetriever.nextOperation();
+                Operation<?> operation = initiatedTimeSubmittingOperationRetriever.nextOperation();
                 // --- BLOCKING CALL (when bounded queue is full) ---
                 operationExecutor.execute( operation );
             }

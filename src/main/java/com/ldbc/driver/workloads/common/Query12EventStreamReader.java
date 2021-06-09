@@ -1,24 +1,31 @@
-package com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive;
+package com.ldbc.driver.workloads.common;
 
 
 import com.ldbc.driver.Operation;
+import com.ldbc.driver.Workload;
 import com.ldbc.driver.csv.charseeker.CharSeeker;
 import com.ldbc.driver.csv.charseeker.Extractors;
 import com.ldbc.driver.csv.charseeker.Mark;
 import com.ldbc.driver.generator.CsvEventStreamReaderBasicCharSeeker;
 import com.ldbc.driver.generator.GeneratorException;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.LdbcQuery12;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.Iterator;
 
 import static java.lang.String.format;
 
-public class Query9EventStreamReader implements Iterator<Operation<?>> {
+public class Query12EventStreamReader implements Iterator<Operation<?>> {
+	private final Workload.BENCHMARK_MODE benchmarkMode;
 	private final Iterator<Object[]> csvRows;
 
-	public Query9EventStreamReader(Iterator<Object[]> csvRows) {
+	public Query12EventStreamReader(Iterator<Object[]> csvRows) {
+		this(csvRows, Workload.BENCHMARK_MODE.DEFAULT_BENCHMARK_MODE);
+	}
+
+	public Query12EventStreamReader(Iterator<Object[]> csvRows, Workload.BENCHMARK_MODE mode) {
 		this.csvRows = csvRows;
+		this.benchmarkMode = mode;
 	}
 
 	@Override
@@ -29,9 +36,12 @@ public class Query9EventStreamReader implements Iterator<Operation<?>> {
 	@Override
 	public Operation<?> next() {
 		Object[] rowAsObjects = csvRows.next();
-		Operation<?> operation = new LdbcQuery9(
-				(long) rowAsObjects[0],
-				(Date) rowAsObjects[1]);
+		long personId = (long) rowAsObjects[0];
+		String tagClassName = (String) rowAsObjects[1];
+		Operation<?> operation =
+				benchmarkMode == Workload.BENCHMARK_MODE.DEFAULT_BENCHMARK_MODE ?
+						new com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery12(personId, tagClassName, com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery12.DEFAULT_LIMIT) :
+						new LdbcQuery12(personId, tagClassName);
 		operation.setDependencyTimeStamp(0);
 		return operation;
 	}
@@ -41,10 +51,10 @@ public class Query9EventStreamReader implements Iterator<Operation<?>> {
 		throw new UnsupportedOperationException(format("%s does not support remove()", getClass().getSimpleName()));
 	}
 
-	public static class Query9Decoder implements CsvEventStreamReaderBasicCharSeeker.EventDecoder<Object[]> {
+	public static class Query12Decoder implements CsvEventStreamReaderBasicCharSeeker.EventDecoder<Object[]> {
 		/*
-		personId|maxDate
-		14293655512417|1339632000
+		personId|tagClassName
+		1236219|Cyclist
 		*/
 		@Override
 		public Object[] decodeEvent(CharSeeker charSeeker, Extractors extractors, int[] columnDelimiters, Mark mark)
@@ -57,14 +67,14 @@ public class Query9EventStreamReader implements Iterator<Operation<?>> {
 				return null;
 			}
 
-			Date date;
+			String tagType;
 			if (charSeeker.seek(mark, columnDelimiters)) {
-				date = new Date(charSeeker.extract(mark, extractors.long_()).longValue());
+				tagType = charSeeker.extract(mark, extractors.string()).value();
 			} else {
-				throw new GeneratorException("Error retrieving date");
+				throw new GeneratorException("Error retrieving tag type");
 			}
 
-			return new Object[]{personId, date};
+			return new Object[]{personId, tagType};
 		}
 	}
 }

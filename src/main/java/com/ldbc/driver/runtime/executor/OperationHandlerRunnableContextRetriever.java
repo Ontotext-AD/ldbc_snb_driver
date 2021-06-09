@@ -54,7 +54,7 @@ class OperationHandlerRunnableContextRetriever
         this.ctDependencyCheck = new CtDependencyCheck( completionTimeReader, errorReporter );
     }
 
-    OperationHandlerRunnableContext getInitializedHandlerFor( Operation operation )
+    OperationHandlerRunnableContext getInitializedHandlerFor( Operation<?> operation )
             throws OperationExecutorException, CompletionTimeException, DbException
     {
         OperationHandlerRunnableContext operationHandlerRunnableContext;

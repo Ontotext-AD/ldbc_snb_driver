@@ -18,6 +18,20 @@ import com.ldbc.driver.util.ClassLoadingException;
 import com.ldbc.driver.util.Tuple;
 import com.ldbc.driver.util.Tuple2;
 import com.ldbc.driver.validation.ResultsLogValidationTolerances;
+import com.ldbc.driver.workloads.common.Query10EventStreamReader;
+import com.ldbc.driver.workloads.common.Query11EventStreamReader;
+import com.ldbc.driver.workloads.common.Query12EventStreamReader;
+import com.ldbc.driver.workloads.common.Query13EventStreamReader;
+import com.ldbc.driver.workloads.common.Query14EventStreamReader;
+import com.ldbc.driver.workloads.common.Query1EventStreamReader;
+import com.ldbc.driver.workloads.common.Query2EventStreamReader;
+import com.ldbc.driver.workloads.common.Query3EventStreamReader;
+import com.ldbc.driver.workloads.common.Query4EventStreamReader;
+import com.ldbc.driver.workloads.common.Query5EventStreamReader;
+import com.ldbc.driver.workloads.common.Query6EventStreamReader;
+import com.ldbc.driver.workloads.common.Query7EventStreamReader;
+import com.ldbc.driver.workloads.common.Query8EventStreamReader;
+import com.ldbc.driver.workloads.common.Query9EventStreamReader;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.*;
 
 import java.io.*;
@@ -121,11 +135,11 @@ public abstract class Workload implements Closeable {
 					params.get(LdbcSnbInteractiveWorkloadConfiguration.UPDATES_DIRECTORY).trim();
 			File updatesDirectory = new File(updatesDirectoryPath);
 			if (!updatesDirectory.exists()) {
-				throw new WorkloadException(format("Updates directory does not exist\nDirectory: %s",
+				throw new WorkloadException(format("Updates directory does not exist%nDirectory: %s",
 						updatesDirectory.getAbsolutePath()));
 			}
 			if (!updatesDirectory.isDirectory()) {
-				throw new WorkloadException(format("Updates directory is not a directory\nDirectory: %s",
+				throw new WorkloadException(format("Updates directory is not a directory%nDirectory: %s",
 						updatesDirectory.getAbsolutePath()));
 			}
 			forumUpdateOperationFiles = LdbcSnbInteractiveWorkloadConfiguration
@@ -186,7 +200,7 @@ public abstract class Workload implements Closeable {
 				.LONG_READ_OPERATION_ENABLE_KEYS) {
 			String longReadOperationEnabledString = params.get(longReadOperationEnableKey).trim();
 			boolean longReadOperationEnabled = Boolean.parseBoolean(longReadOperationEnabledString);
-			String packagePrefix = getMode() == BENCHMARK_MODE.GRAPHDB_BENCHMARK_MODE ?
+			String packagePrefix = getBenchmarkMode() == BENCHMARK_MODE.GRAPHDB_BENCHMARK_MODE ?
 					LdbcSnbInteractiveWorkloadConfiguration.LDBC_GRAPHDB_INTERACTIVE_PACKAGE_PREFIX :
 					LdbcSnbInteractiveWorkloadConfiguration.LDBC_INTERACTIVE_PACKAGE_PREFIX;
 			String longReadOperationClassName =
@@ -206,7 +220,7 @@ public abstract class Workload implements Closeable {
 			} catch (ClassLoadingException e) {
 				throw new WorkloadException(
 						format(
-								"Unable to load operation class for parameter: %s\nGuessed incorrect class name: %s",
+								"Unable to load operation class for parameter: %s%nGuessed incorrect class name: %s",
 								longReadOperationEnableKey, longReadOperationClassName),
 						e
 				);
@@ -214,7 +228,7 @@ public abstract class Workload implements Closeable {
 		}
 
 		enabledShortReadOperationTypes = new HashSet<>();
-		if (getMode() != BENCHMARK_MODE.GRAPHDB_BENCHMARK_MODE) {
+		if (getBenchmarkMode() != BENCHMARK_MODE.GRAPHDB_BENCHMARK_MODE) {
 			for (String shortReadOperationEnableKey : LdbcSnbInteractiveWorkloadConfiguration
 					.SHORT_READ_OPERATION_ENABLE_KEYS) {
 				String shortReadOperationEnabledString = params.get(shortReadOperationEnableKey).trim();
@@ -237,7 +251,7 @@ public abstract class Workload implements Closeable {
 				} catch (ClassLoadingException e) {
 					throw new WorkloadException(
 							format(
-									"Unable to load operation class for parameter: %s\nGuessed incorrect class name: %s",
+									"Unable to load operation class for parameter: %s%nGuessed incorrect class name: %s",
 									shortReadOperationEnableKey, shortReadOperationClassName),
 							e
 					);
@@ -255,12 +269,12 @@ public abstract class Workload implements Closeable {
 			if (shortReadDissipationFactor < 0 || shortReadDissipationFactor > 1) {
 				throw new WorkloadException(
 						format("Configuration parameter %s should be in interval [1.0,0.0] but is: %s",
-								shortReadDissipationFactor));
+								LdbcSnbInteractiveWorkloadConfiguration.SHORT_READ_DISSIPATION, shortReadDissipationFactor));
 			}
 		}
 
 		enabledWriteOperationTypes = new HashSet<>();
-		if (getMode() != BENCHMARK_MODE.GRAPHDB_BENCHMARK_MODE) {
+		if (getBenchmarkMode() != BENCHMARK_MODE.GRAPHDB_BENCHMARK_MODE) {
 			for (String writeOperationEnableKey : LdbcSnbInteractiveWorkloadConfiguration.WRITE_OPERATION_ENABLE_KEYS) {
 				String writeOperationEnabledString = params.get(writeOperationEnableKey).trim();
 				boolean writeOperationEnabled = Boolean.parseBoolean(writeOperationEnabledString);
@@ -281,7 +295,7 @@ public abstract class Workload implements Closeable {
 				} catch (ClassLoadingException e) {
 					throw new WorkloadException(
 							format(
-									"Unable to load operation class for parameter: %s\nGuessed incorrect class name: %s",
+									"Unable to load operation class for parameter: %s%nGuessed incorrect class name: %s",
 									writeOperationEnableKey, writeOperationClassName),
 							e
 					);
@@ -617,7 +631,7 @@ public abstract class Workload implements Closeable {
 									decoder,
 									columnDelimiter
 							)
-					)
+					), getBenchmarkMode()
 			);
 
 			Iterator<Long> operation1StartTimes =
@@ -669,7 +683,7 @@ public abstract class Workload implements Closeable {
 									decoder,
 									columnDelimiter
 							)
-					)
+					), getBenchmarkMode()
 			);
 
 			Iterator<Long> operation2StartTimes =
@@ -724,7 +738,7 @@ public abstract class Workload implements Closeable {
 									decoder,
 									columnDelimiter
 							)
-					)
+					), getBenchmarkMode()
 			);
 
 			Iterator<Long> operation3StartTimes =
@@ -777,7 +791,7 @@ public abstract class Workload implements Closeable {
 									decoder,
 									columnDelimiter
 							)
-					)
+					), getBenchmarkMode()
 			);
 
 			Iterator<Long> operation4StartTimes =
@@ -829,7 +843,7 @@ public abstract class Workload implements Closeable {
 									decoder,
 									columnDelimiter
 							)
-					)
+					), getBenchmarkMode()
 			);
 
 			Iterator<Long> operation5StartTimes =
@@ -881,7 +895,7 @@ public abstract class Workload implements Closeable {
 									decoder,
 									columnDelimiter
 							)
-					)
+					), getBenchmarkMode()
 			);
 
 			Iterator<Long> operation6StartTimes =
@@ -932,7 +946,7 @@ public abstract class Workload implements Closeable {
 									decoder,
 									columnDelimiter
 							)
-					)
+					), getBenchmarkMode()
 			);
 
 			Iterator<Long> operation7StartTimes =
@@ -983,7 +997,7 @@ public abstract class Workload implements Closeable {
 									decoder,
 									columnDelimiter
 							)
-					)
+					), getBenchmarkMode()
 			);
 
 			Iterator<Long> operation8StartTimes =
@@ -1035,7 +1049,7 @@ public abstract class Workload implements Closeable {
 									decoder,
 									columnDelimiter
 							)
-					)
+					), getBenchmarkMode()
 			);
 
 			Iterator<Long> operation9StartTimes =
@@ -1087,7 +1101,7 @@ public abstract class Workload implements Closeable {
 									decoder,
 									columnDelimiter
 							)
-					)
+					), getBenchmarkMode()
 			);
 
 			Iterator<Long> operation10StartTimes =
@@ -1140,7 +1154,7 @@ public abstract class Workload implements Closeable {
 									decoder,
 									columnDelimiter
 							)
-					)
+					), getBenchmarkMode()
 			);
 
 			Iterator<Long> operation11StartTimes =
@@ -1192,7 +1206,7 @@ public abstract class Workload implements Closeable {
 									decoder,
 									columnDelimiter
 							)
-					)
+					), getBenchmarkMode()
 			);
 
 			Iterator<Long> operation12StartTimes =
@@ -1244,7 +1258,7 @@ public abstract class Workload implements Closeable {
 									decoder,
 									columnDelimiter
 							)
-					)
+					), getBenchmarkMode()
 			);
 
 			Iterator<Long> operation13StartTimes =
@@ -1296,7 +1310,7 @@ public abstract class Workload implements Closeable {
 									decoder,
 									columnDelimiter
 							)
-					)
+					), getBenchmarkMode()
 			);
 
 			Iterator<Long> operation14StartTimes =
@@ -1533,7 +1547,7 @@ public abstract class Workload implements Closeable {
 	public abstract boolean resultsEqual(Operation<?> operation, Object result1, Object result2)
 			throws WorkloadException;
 
-	protected abstract BENCHMARK_MODE getMode();
+	protected abstract BENCHMARK_MODE getBenchmarkMode();
 
 	public interface DbValidationParametersFilter {
 		boolean useOperation(Operation<?> operation);
@@ -1570,9 +1584,13 @@ public abstract class Workload implements Closeable {
 		}
 	}
 
-	private String getClassNameByMode(String className) {
-		return ((getMode() == BENCHMARK_MODE.DEFAULT_BENCHMARK_MODE ?
-				LdbcSnbInteractiveWorkloadConfiguration.LDBC_INTERACTIVE_PACKAGE_PREFIX :
-				LdbcSnbInteractiveWorkloadConfiguration.LDBC_GRAPHDB_INTERACTIVE_PACKAGE_PREFIX) + className);
+	private Class<?> getClassNameByMode(String className) {
+		try {
+			return ClassLoaderHelper.loadClass(((getBenchmarkMode() == BENCHMARK_MODE.DEFAULT_BENCHMARK_MODE ?
+					LdbcSnbInteractiveWorkloadConfiguration.LDBC_INTERACTIVE_PACKAGE_PREFIX :
+					LdbcSnbInteractiveWorkloadConfiguration.LDBC_GRAPHDB_INTERACTIVE_PACKAGE_PREFIX) + className));
+		} catch (ClassLoadingException ex) {
+			throw new RuntimeException("Could not load class", ex);
+		}
 	}
 }

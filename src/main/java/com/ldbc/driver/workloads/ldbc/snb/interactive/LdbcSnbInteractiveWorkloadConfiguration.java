@@ -25,7 +25,7 @@ import static java.lang.String.format;
 public abstract class LdbcSnbInteractiveWorkloadConfiguration {
 	public static final int WRITE_OPERATION_NO_RESULT_DEFAULT_RESULT = -1;
 	public static final String LDBC_SNB_INTERACTIVE_PARAM_NAME_PREFIX = "ldbc.snb.interactive.";
-	public static final String LDBC_SNB_ONTOTEXT_PREFIX = "ontotext.";
+	public static final String LDBC_SNB_QUERY_DIR = "queryDir";
 	// directory that contains the substitution parameters files
 	public static final String PARAMETERS_DIRECTORY = LDBC_SNB_INTERACTIVE_PARAM_NAME_PREFIX + "parameters_dir";
 	// directory containing forum and person update event streams
