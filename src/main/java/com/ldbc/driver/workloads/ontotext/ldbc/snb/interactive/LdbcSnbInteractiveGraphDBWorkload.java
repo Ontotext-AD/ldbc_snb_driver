@@ -8,6 +8,7 @@ import com.ldbc.driver.Operation;
 import com.ldbc.driver.SerializingMarshallingException;
 import com.ldbc.driver.Workload;
 import com.ldbc.driver.WorkloadException;
+import com.ldbc.driver.workloads.common.LdbcUtils;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery2PersonPosts;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery3PersonFriends;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery7MessageReplies;
@@ -74,9 +75,6 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 	@Override
 	public DbValidationParametersFilter dbValidationParametersFilter(Integer requiredValidationParameterCount) {
 		final Set<Class<?>> multiResultOperations = Sets.newHashSet(
-				LdbcShortQuery2PersonPosts.class,
-				LdbcShortQuery3PersonFriends.class,
-				LdbcShortQuery7MessageReplies.class,
 				LdbcQuery1.class,
 				LdbcQuery2.class,
                 LdbcQuery3.class,
@@ -92,14 +90,20 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 				LdbcQuery14.class
 		);
 
+		int operationTypeCount = enabledLongReadOperationTypes.size() + enabledWriteOperationTypes.size();
+		long minimumResultCountPerOperationType = Math.max(
+				1,
+				Math.round( Math.floor(
+						requiredValidationParameterCount.doubleValue() / (double) operationTypeCount) )
+		);
 
 		final Map<Class<?>, Long> remainingRequiredResultsPerLongReadType = new HashMap<>();
 		long resultCountsAssignedForLongReadTypesSoFar = 0;
-//        for (Class longReadOperationType : enabledLongReadOperationTypes) {
-//            remainingRequiredResultsPerLongReadType.put(longReadOperationType, minimumResultCountPerOperationType);
-//            resultCountsAssignedForLongReadTypesSoFar =
-//                    resultCountsAssignedForLongReadTypesSoFar + minimumResultCountPerOperationType;
-//        }
+        for (Class longReadOperationType : enabledLongReadOperationTypes) {
+            remainingRequiredResultsPerLongReadType.put(longReadOperationType, minimumResultCountPerOperationType);
+            resultCountsAssignedForLongReadTypesSoFar =
+                    resultCountsAssignedForLongReadTypesSoFar + minimumResultCountPerOperationType;
+        }
 
 		return new LdbcSnbInteractiveDbValidationParametersFilter(
 				multiResultOperations,
@@ -332,90 +336,90 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 
 		String operationTypeName = (String) operationAsList.get(0);
 		if (operationTypeName.equals(LdbcQuery1.class.getName())) {
-			long personId = ((Number) operationAsList.get(1)).longValue();
+			long personId = LdbcUtils.convertToLong(operationAsList.get(1));
 			String firstName = (String) operationAsList.get(2);
 			return new LdbcQuery1(personId, firstName);
 		}
 
 		if (operationTypeName.equals(LdbcQuery2.class.getName())) {
-			long personId = ((Number) operationAsList.get(1)).longValue();
-			Date maxDate = new Date(((Number) operationAsList.get(2)).longValue());
+			long personId = LdbcUtils.convertToLong(operationAsList.get(1));
+			Date maxDate = LdbcUtils.convertDateTimeStringToDate(operationAsList.get(2));
 			return new LdbcQuery2(personId, maxDate);
 		}
 
 		if (operationTypeName.equals(LdbcQuery3.class.getName())) {
-			long personId = ((Number) operationAsList.get(1)).longValue();
+			long personId = LdbcUtils.convertToLong(operationAsList.get(1));
 			String countryXName = (String) operationAsList.get(2);
 			String countryYName = (String) operationAsList.get(3);
-			Date startDate = new Date(((Number) operationAsList.get(4)).longValue());
+			Date startDate = LdbcUtils.convertDateTimeStringToDate(operationAsList.get(4));
 			int durationDays = ((Number) operationAsList.get(5)).intValue();
 			return new LdbcQuery3(personId, countryXName, countryYName, startDate, durationDays);
 		}
 
 		if (operationTypeName.equals(LdbcQuery4.class.getName())) {
-			long personId = ((Number) operationAsList.get(1)).longValue();
-			Date startDate = new Date(((Number) operationAsList.get(2)).longValue());
+			long personId = LdbcUtils.convertToLong(operationAsList.get(1));
+			Date startDate = LdbcUtils.convertDateTimeStringToDate(operationAsList.get(2));
 			int durationDays = ((Number) operationAsList.get(3)).intValue();
 			return new LdbcQuery4(personId, startDate, durationDays);
 		}
 
 		if (operationTypeName.equals(LdbcQuery5.class.getName())) {
-			long personId = ((Number) operationAsList.get(1)).longValue();
-			Date minDate = new Date(((Number) operationAsList.get(2)).longValue());
+			long personId = LdbcUtils.convertToLong(operationAsList.get(1));
+			Date minDate = LdbcUtils.convertDateTimeStringToDate(operationAsList.get(2));
 			return new LdbcQuery5(personId, minDate);
 		}
 
 		if (operationTypeName.equals(LdbcQuery6.class.getName())) {
-			long personId = ((Number) operationAsList.get(1)).longValue();
+			long personId = LdbcUtils.convertToLong(operationAsList.get(1));
 			String tagName = (String) operationAsList.get(2);
 			return new LdbcQuery6(personId, tagName);
 		}
 
 		if (operationTypeName.equals(LdbcQuery7.class.getName())) {
-			long personId = ((Number) operationAsList.get(1)).longValue();
+			long personId = LdbcUtils.convertToLong(operationAsList.get(1));
 			return new LdbcQuery7(personId);
 		}
 
 		if (operationTypeName.equals(LdbcQuery8.class.getName())) {
-			long personId = ((Number) operationAsList.get(1)).longValue();
+			long personId = LdbcUtils.convertToLong(operationAsList.get(1));
 			return new LdbcQuery8(personId);
 		}
 
 		if (operationTypeName.equals(LdbcQuery9.class.getName())) {
-			long personId = ((Number) operationAsList.get(1)).longValue();
-			Date maxDate = new Date(((Number) operationAsList.get(2)).longValue());
+			long personId = LdbcUtils.convertToLong(operationAsList.get(1));
+			Date maxDate = LdbcUtils.convertDateTimeStringToDate(operationAsList.get(2));
 			return new LdbcQuery9(personId, maxDate);
 		}
 
 		if (operationTypeName.equals(LdbcQuery10.class.getName())) {
-			long personId = ((Number) operationAsList.get(1)).longValue();
-			int month = ((Number) operationAsList.get(2)).intValue();
+			long personId = LdbcUtils.convertToLong(operationAsList.get(1));
+			int month = LdbcUtils.convertToInt(operationAsList.get(2));
 			return new LdbcQuery10(personId, month);
 		}
 
 		if (operationTypeName.equals(LdbcQuery11.class.getName())) {
-			long personId = ((Number) operationAsList.get(1)).longValue();
+			long personId = LdbcUtils.convertToLong(operationAsList.get(1));
 			String countryName = (String) operationAsList.get(2);
-			int workFromYear = ((Number) operationAsList.get(3)).intValue();
+			int workFromYear = LdbcUtils.convertToInt(operationAsList.get(3));
 			return new LdbcQuery11(personId, countryName, workFromYear);
 		}
 
 		if (operationTypeName.equals(LdbcQuery12.class.getName())) {
-			long personId = ((Number) operationAsList.get(1)).longValue();
+			long personId = LdbcUtils.convertToLong(operationAsList.get(1));
 			String tagClassName = (String) operationAsList.get(2);
 			return new LdbcQuery12(personId, tagClassName);
 		}
 
 		if (operationTypeName.equals(LdbcQuery13.class.getName())) {
-			long person1Id = ((Number) operationAsList.get(1)).longValue();
-			long person2Id = ((Number) operationAsList.get(2)).longValue();
+			long person1Id = LdbcUtils.convertToLong(operationAsList.get(1));
+			long person2Id = LdbcUtils.convertToLong(operationAsList.get(2));
 			return new LdbcQuery13(person1Id, person2Id);
 		}
 
 		if (operationTypeName.equals(LdbcQuery14.class.getName())) {
-			long person1Id = ((Number) operationAsList.get(1)).longValue();
-			long person2Id = ((Number) operationAsList.get(2)).longValue();
-			return new com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery14(person1Id, person2Id);
+			long person1Id = LdbcUtils.convertToLong(operationAsList.get(1));
+			long person2Id = LdbcUtils.convertToLong(operationAsList.get(2));
+			return new LdbcQuery14(person1Id, person2Id);
 		}
 
 		throw new SerializingMarshallingException(

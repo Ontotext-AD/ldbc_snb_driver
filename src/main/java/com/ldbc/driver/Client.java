@@ -100,7 +100,7 @@ public class Client
             }
             if (!missingParams.isEmpty())
             {
-                throw new ClientException( format( "Missing required parameters: %s", missingParams.toString() ) );
+                throw new ClientException( format( "Missing required parameters: %s", missingParams ) );
             }
             return new CreateValidationParamsMode( controlService, RANDOM_SEED );
         }
@@ -117,7 +117,7 @@ public class Client
             {
                 missingParams.add( ConsoleAndFileDriverConfiguration.WORKLOAD_ARG );
             }
-            if ( false == missingParams.isEmpty() )
+            if (!missingParams.isEmpty())
             {
                 throw new ClientException( format( "Missing required parameters: %s", missingParams.toString() ) );
             }
@@ -136,7 +136,7 @@ public class Client
             {
                 missingParams.add( ConsoleAndFileDriverConfiguration.OPERATION_COUNT_ARG );
             }
-            if ( false == missingParams.isEmpty() )
+            if (!missingParams.isEmpty())
             {
                 throw new ClientException( format( "Missing required parameters: %s", missingParams.toString() ) );
             }
@@ -159,7 +159,7 @@ public class Client
             {
                 missingParams.add( ConsoleAndFileDriverConfiguration.OPERATION_COUNT_ARG );
             }
-            if ( false == missingParams.isEmpty() )
+            if (!missingParams.isEmpty())
             {
                 throw new ClientException( format( "Missing required parameters: %s", missingParams.toString() ) );
             }

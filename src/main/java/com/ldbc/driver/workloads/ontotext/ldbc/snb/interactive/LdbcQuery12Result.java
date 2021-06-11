@@ -56,7 +56,7 @@ public class LdbcQuery12Result {
 			return false;
 		if (!Objects.equals(personLastName, that.personLastName))
 			return false;
-		return !Objects.equals(tagNames, that.tagNames);
+		return Objects.equals(tagNames, that.tagNames);
 	}
 
 	@Override

@@ -87,12 +87,12 @@ public class LdbcQuery10 extends Operation<List<LdbcQuery10Result>> {
 			});
 		} catch (IOException e) {
 			throw new SerializingMarshallingException(
-					format("Error while parsing serialized results\n%s", serializedResults), e);
+					format("Error while parsing serialized results%n%s", serializedResults), e);
 		}
 
 		List<LdbcQuery10Result> results = new ArrayList<>();
 		for (List<Object> resultAsList : resultsAsList) {
-			IRI friendId = LdbcUtils.createIRI((String) resultAsList.get(0));
+			IRI friendId = LdbcUtils.createIRI(resultAsList.get(0));
 			String personFirstName = (String) resultAsList.get(1);
 			String personLastName = (String) resultAsList.get(2);
 			int commonInterestScore = ((Number) resultAsList.get(3)).intValue();

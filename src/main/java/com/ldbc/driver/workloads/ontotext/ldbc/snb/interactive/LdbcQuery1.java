@@ -93,11 +93,11 @@ public class LdbcQuery1 extends Operation<List<LdbcQuery1Result>> {
 
 		List<LdbcQuery1Result> results = new ArrayList<>();
 		for (List<Object> resultAsList : resultsAsList) {
-			IRI friendId = LdbcUtils.createIRI((String) resultAsList.get(0));
+			IRI friendId = LdbcUtils.createIRI(resultAsList.get(0));
 			String friendLastName = (String) resultAsList.get(1);
 			int distanceFromPerson = (Integer) resultAsList.get(2);
-			Literal friendBirthday = LdbcUtils.createLiteral((String) resultAsList.get(3));
-			Literal friendCreationDate = LdbcUtils.createLiteral((String) resultAsList.get(4));
+			Literal friendBirthday = LdbcUtils.createLiteral(resultAsList.get(3));
+			Literal friendCreationDate = LdbcUtils.createLiteral(resultAsList.get(4));
 			String friendGender = (String) resultAsList.get(5);
 			String friendBrowserUsed = (String) resultAsList.get(6);
 			String friendLocationIp = (String) resultAsList.get(7);
@@ -153,7 +153,7 @@ public class LdbcQuery1 extends Operation<List<LdbcQuery1Result>> {
 			return OBJECT_MAPPER.writeValueAsString(resultsFields);
 		} catch (IOException e) {
 			throw new SerializingMarshallingException(
-					format("Error while trying to serialize result\n%s", results.toString()), e);
+					format("Error while trying to serialize result%n%s", results.toString()), e);
 		}
 	}
 

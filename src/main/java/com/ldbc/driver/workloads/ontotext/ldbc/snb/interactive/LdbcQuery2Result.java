@@ -53,7 +53,7 @@ public class LdbcQuery2Result {
 
         LdbcQuery2Result result = (LdbcQuery2Result) o;
 
-        if (personId != result.personId) return false;
+        if (!Objects.equals(personId, result.personId)) return false;
         if (!Objects.equals(messageCreationDate, result.messageCreationDate)) return false;
         if (!Objects.equals(messageId, result.messageId)) return false;
         if (!Objects.equals(personFirstName, result.personFirstName))

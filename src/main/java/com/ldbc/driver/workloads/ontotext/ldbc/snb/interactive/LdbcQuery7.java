@@ -74,16 +74,16 @@ public class LdbcQuery7 extends Operation<List<LdbcQuery7Result>> {
 			});
 		} catch (IOException e) {
 			throw new SerializingMarshallingException(
-					format("Error parsing serialized result\n%s", serializedResult), e);
+					format("Error parsing serialized result%n%s", serializedResult), e);
 		}
 
 		List<LdbcQuery7Result> result = new ArrayList<>();
 		for (List<Object> row : resultsAsList) {
-			IRI friendId = LdbcUtils.createIRI((String) row.get(0));
+			IRI friendId = LdbcUtils.createIRI(row.get(0));
 			String personFirstName = (String) row.get(1);
 			String personLastName = (String) row.get(2);
-			Literal likeCreationDate = LdbcUtils.createLiteral((String) row.get(3));
-			IRI messageId = LdbcUtils.createIRI((String) row.get(4));
+			Literal likeCreationDate = LdbcUtils.createLiteral(row.get(3));
+			IRI messageId = LdbcUtils.createIRI(row.get(4));
 			String messageContent = (String) row.get(5);
 			int minutesLatency = ((Number) row.get(6)).intValue();
 			boolean isNew = (Boolean) row.get(7);
@@ -107,8 +107,7 @@ public class LdbcQuery7 extends Operation<List<LdbcQuery7Result>> {
 	public String serializeResult(Object resultsObject) throws SerializingMarshallingException {
 		List<LdbcQuery7Result> results = (List<LdbcQuery7Result>) resultsObject;
 		List<List<Object>> resultsFields = new ArrayList<>();
-		for (int i = 0; i < results.size(); i++) {
-			LdbcQuery7Result result = results.get(i);
+		for (LdbcQuery7Result result : results) {
 			List<Object> resultFields = new ArrayList<>();
 			resultFields.add(result.personId());
 			resultFields.add(result.personFirstName());

@@ -92,19 +92,13 @@ public class LdbcQuery14 extends Operation<List<LdbcQuery14Result>> {
 			);
 		} catch (IOException e) {
 			throw new SerializingMarshallingException(
-					format("Error while parsing serialized results\n%s", serializedResults), e);
+					format("Error while parsing serialized results%n%s", serializedResults), e);
 		}
 
 		List<LdbcQuery14Result> results = new ArrayList<>();
-		for (int i = 0; i < resultsAsList.size(); i++) {
-			List<Object> resultAsList = resultsAsList.get(i);
+		for (List<Object> resultAsList : resultsAsList) {
 			Iterable<Long> personsIdsInPath =
-					Iterables.transform((List<Number>) resultAsList.get(0), new Function<Number, Long>() {
-						@Override
-						public Long apply(Number number) {
-							return number.longValue();
-						}
-					});
+					Iterables.transform((List<Number>) resultAsList.get(0), number -> number.longValue());
 			double pathWeight = ((Number) resultAsList.get(1)).doubleValue();
 
 			results.add(
@@ -133,7 +127,7 @@ public class LdbcQuery14 extends Operation<List<LdbcQuery14Result>> {
 			return OBJECT_MAPPER.writeValueAsString(resultsFields);
 		} catch (IOException e) {
 			throw new SerializingMarshallingException(
-					format("Error while trying to serialize result\n%s", results.toString()), e);
+					format("Error while trying to serialize result%n%s", results.toString()), e);
 		}
 	}
 

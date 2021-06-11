@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static java.lang.String.format;
 
@@ -74,10 +75,7 @@ public class LdbcQuery2 extends Operation<List<LdbcQuery2Result>>
         { return false; }
         if ( personId != that.personId )
         { return false; }
-        if ( maxDate != null ? !maxDate.equals( that.maxDate ) : that.maxDate != null )
-        { return false; }
-
-        return true;
+        return Objects.equals(maxDate, that.maxDate);
     }
 
     @Override

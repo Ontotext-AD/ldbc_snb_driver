@@ -62,19 +62,19 @@ public class InteractiveWorkloadTest extends WorkloadTest
     public List<Tuple2<Operation,Object>> operationsAndResults() throws Exception
     {
         return Lists.newArrayList(
-                Tuple.<Operation,Object>tuple2(
+                Tuple.tuple2(
                         DummyLdbcSnbInteractiveOperationInstances.read1(),
                         DummyLdbcSnbInteractiveOperationResultSets.read1Results()
                 ),
-                Tuple.<Operation,Object>tuple2(
+                Tuple.tuple2(
                         DummyLdbcSnbInteractiveOperationInstances.read2(),
                         DummyLdbcSnbInteractiveOperationResultSets.read2Results()
                 ),
-                Tuple.<Operation,Object>tuple2(
+                Tuple.tuple2(
                         DummyLdbcSnbInteractiveOperationInstances.read3(),
                         DummyLdbcSnbInteractiveOperationResultSets.read3Results()
                 ),
-                Tuple.<Operation,Object>tuple2(
+                Tuple.tuple2(
                         DummyLdbcSnbInteractiveOperationInstances.read4(),
                         DummyLdbcSnbInteractiveOperationResultSets.read4Results()
                 ),

@@ -133,7 +133,7 @@ public class LdbcQuery3 extends Operation<List<LdbcQuery3Result>> {
 
 		List<LdbcQuery3Result> results = new ArrayList<>();
 		for (List<Object> resultAsList : resultsAsList) {
-			IRI friendId = LdbcUtils.createIRI((String) resultAsList.get(0));
+			IRI friendId = LdbcUtils.createIRI(resultAsList.get(0));
 			String personFirstName = (String) resultAsList.get(1);
 			String personLastName = (String) resultAsList.get(2);
 			long xCount = ((Number) resultAsList.get(3)).longValue();

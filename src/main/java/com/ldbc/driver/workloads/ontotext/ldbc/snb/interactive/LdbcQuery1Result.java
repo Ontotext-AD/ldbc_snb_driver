@@ -128,7 +128,7 @@ public class LdbcQuery1Result {
 			return false;
 		if (!Objects.equals(friendLocationIp, other.friendLocationIp))
 			return false;
-		return !Objects.equals(friendUniversities, other.friendUniversities);
+		return Objects.equals(friendUniversities, other.friendUniversities);
 	}
 
 	@Override

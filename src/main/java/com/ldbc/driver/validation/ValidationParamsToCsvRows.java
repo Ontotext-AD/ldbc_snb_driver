@@ -46,7 +46,7 @@ public class ValidationParamsToCsvRows implements Iterator<String[]>
         {
             throw new GeneratorException(
                     format(
-                            "Workload(%s) unable to serialize operation\n"
+                            "Workload(%s) unable to serialize operation%n"
                             + "Operation: %s",
                             operation ),
                     e );
@@ -61,8 +61,8 @@ public class ValidationParamsToCsvRows implements Iterator<String[]>
         {
             throw new GeneratorException(
                     format(
-                            "Error serializing operation result\n"
-                            + "Operation: %s\n"
+                            "Error serializing operation result%n"
+                            + "Operation: %s%n"
                             + "Operation Result: %s",
                             operation, operationResult ),
                     e );
@@ -80,9 +80,9 @@ public class ValidationParamsToCsvRows implements Iterator<String[]>
             {
                 throw new GeneratorException(
                         format( ""
-                                + "Error marshalling serialized operation result\n"
-                                + "Operation: %s\n"
-                                + "Operation Result: %s\n"
+                                + "Error marshalling serialized operation result%n"
+                                + "Operation: %s%n"
+                                + "Operation Result: %s%n"
                                 + "Serialized Result: %s",
                                 operation, operationResult, serializedOperationResult ),
                         e );
@@ -91,10 +91,10 @@ public class ValidationParamsToCsvRows implements Iterator<String[]>
             {
                 throw new GeneratorException(
                         format( ""
-                                + "Operation result and serialized-then-marshaled operation result do not equal\n"
-                                + "Operation: %s\n"
-                                + "Actual Result: %s\n"
-                                + "Serialized Result: %s\n"
+                                + "Operation result and serialized-then-marshaled operation result do not equal%n"
+                                + "Operation: %s%n"
+                                + "Actual Result: %s%n"
+                                + "Serialized Result: %s%n"
                                 + "Marshaled Result: %s",
                                 operation, operationResult, serializedOperationResult, marshaledOperationResult )
                 );

@@ -2,6 +2,8 @@ package com.ldbc.driver.validation;
 
 import com.ldbc.driver.Operation;
 
+import java.util.Objects;
+
 public class ValidationParam {
     private final Operation operation;
     private final Object operationResult;
@@ -34,8 +36,8 @@ public class ValidationParam {
 
         ValidationParam that = (ValidationParam) o;
 
-        if (operation != null ? !operation.equals(that.operation) : that.operation != null) return false;
-        if (operationResult != null ? !operationResult.equals(that.operationResult) : that.operationResult != null)
+        if (!Objects.equals(operation, that.operation)) return false;
+        if (!Objects.equals(operationResult, that.operationResult))
             return false;
 
         return true;

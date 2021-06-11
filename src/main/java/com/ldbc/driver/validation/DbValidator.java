@@ -33,7 +33,7 @@ public class DbValidator
         int validationParamsCrashedSoFar = 0;
         int validationParamsIncorrectSoFar = 0;
 
-        Operation operation = null;
+        Operation<?> operation = null;
         while ( true )
         {
             if (null != operation) {
@@ -96,7 +96,7 @@ public class DbValidator
 
             Object actualOperationResult = resultReporter.result();
 
-            if ( false == workload.resultsEqual( operation, expectedOperationResult, actualOperationResult ) )
+            if (!workload.resultsEqual(operation, expectedOperationResult, actualOperationResult))
             {
                 validationParamsIncorrectSoFar++;
                 dbValidationResult

@@ -2,6 +2,8 @@ package com.ldbc.driver.workloads.common;
 
 import com.github.jsonldjava.shaded.com.google.common.base.CharMatcher;
 import com.ldbc.driver.DbException;
+import com.ldbc.driver.SerializingMarshallingException;
+import com.ldbc.driver.WorkloadException;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
@@ -13,8 +15,10 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class LdbcUtils {
@@ -42,17 +46,42 @@ public class LdbcUtils {
 		return queryString;
 	}
 
-	public static IRI createIRI(String str) {
-		return VF.createIRI(str);
+	public static IRI createIRI(Object result) throws SerializingMarshallingException {
+		if (result instanceof Map) {
+			Map<String, String> res = (Map<String, String>) result;
+			return VF.createIRI(res.get("namespace"), res.get("localName"));
+		}
+		throw new SerializingMarshallingException("Could not create IRI from result");
 	}
 
-	public static Literal createLiteral(String str) {
-		return VF.createLiteral(str);
+	public static Literal createLiteral(Object result) throws SerializingMarshallingException {
+		if (result instanceof Map) {
+			Map<String, String> res = (Map<String, String>) result;
+			return VF.createLiteral(res.get("label"), createIRI(res.get("datatype")));
+		}
+		throw new SerializingMarshallingException("Could not create Literal from result");
+	}
+
+	public static Date convertDateTimeStringToDate(Object dateTime) throws SerializingMarshallingException {
+		try {
+			return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
+					.parse((String) dateTime);
+		} catch (ParseException e) {
+			throw new SerializingMarshallingException("Could not convert date from provided string");
+		}
 	}
 
 	public static String convertToDateAsString(Date date) {
 		return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
 				.format(date);
+	}
+
+	public static int convertToInt(Object value) {
+		return Integer.parseInt((String) value);
+	}
+
+	public static long convertToLong(Object value) {
+		return Long.parseLong((String) value);
 	}
 
 	public static void loadQueriesFromDirectory(Map<Integer, String> queries, String queryDir) throws DbException {

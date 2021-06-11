@@ -80,7 +80,7 @@ public class DbValidatorTest
         Iterator<ValidationParam> validationParams = correctValidationParamsList.iterator();
         Db db = new DummyLdbcSnbInteractiveDb();
         db.init(
-                new HashMap<String,String>(),
+                new HashMap<>(),
                 loggingService,
                 workload.operationTypeToClassMapping()
         );

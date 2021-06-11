@@ -94,12 +94,12 @@ public class LdbcQuery2 extends Operation<List<LdbcQuery2Result>> {
 
 		List<LdbcQuery2Result> results = new ArrayList<>();
 		for (List<Object> resultAsList : resultsAsList) {
-			IRI friendId = LdbcUtils.createIRI((String) resultAsList.get(0));
+			IRI friendId = LdbcUtils.createIRI(resultAsList.get(0));
 			String personFirstName = (String) resultAsList.get(1);
 			String personLastName = (String) resultAsList.get(2);
-			IRI messageId = LdbcUtils.createIRI((String) resultAsList.get(3));
+			IRI messageId = LdbcUtils.createIRI(resultAsList.get(3));
 			String messageContent = (String) resultAsList.get(4);
-			Literal messageCreationDate = LdbcUtils.createLiteral((String) resultAsList.get(5));
+			Literal messageCreationDate = LdbcUtils.createLiteral(resultAsList.get(5));
 
 			results.add(new LdbcQuery2Result(
 					friendId,
@@ -118,8 +118,7 @@ public class LdbcQuery2 extends Operation<List<LdbcQuery2Result>> {
 	public String serializeResult(Object resultsObject) throws SerializingMarshallingException {
 		List<LdbcQuery2Result> results = (List<LdbcQuery2Result>) resultsObject;
 		List<List<Object>> resultsFields = new ArrayList<>();
-		for (int i = 0; i < results.size(); i++) {
-			LdbcQuery2Result result = results.get(i);
+		for (LdbcQuery2Result result : results) {
 			List<Object> resultFields = new ArrayList<>();
 			resultFields.add(result.personId());
 			resultFields.add(result.personFirstName());

@@ -11,6 +11,7 @@ import org.eclipse.rdf4j.model.Literal;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -74,16 +75,16 @@ public class LdbcQuery8 extends Operation<List<LdbcQuery8Result>> {
 			});
 		} catch (IOException e) {
 			throw new SerializingMarshallingException(
-					format("Error while parsing serialized results\n%s", serializedResults), e);
+					format("Error while parsing serialized results%n%s", serializedResults), e);
 		}
 
 		List<LdbcQuery8Result> results = new ArrayList<>();
 		for (List<Object> resultAsList : resultsAsList) {
-			IRI friendId = LdbcUtils.createIRI((String) resultAsList.get(0));
+			IRI friendId = LdbcUtils.createIRI(resultAsList.get(0));
 			String personFirstName = (String) resultAsList.get(1);
 			String personLastName = (String) resultAsList.get(2);
-			Literal commentCreationDate = LdbcUtils.createLiteral((String) resultAsList.get(3));
-			IRI commentId = LdbcUtils.createIRI((String) resultAsList.get(4));
+			Literal commentCreationDate = LdbcUtils.createLiteral(resultAsList.get(3));
+			IRI commentId = LdbcUtils.createIRI(resultAsList.get(4));
 			String commentContent = (String) resultAsList.get(5);
 
 			results.add(new LdbcQuery8Result(

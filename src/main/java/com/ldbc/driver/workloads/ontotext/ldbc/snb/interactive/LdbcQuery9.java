@@ -94,12 +94,12 @@ public class LdbcQuery9 extends Operation<List<LdbcQuery9Result>> {
 
 		List<LdbcQuery9Result> results = new ArrayList<>();
 		for (List<Object> resultAsList : resultsAsList) {
-			IRI friendId = LdbcUtils.createIRI((String) resultAsList.get(0));
+			IRI friendId = LdbcUtils.createIRI(resultAsList.get(0));
 			String personFirstName = (String) resultAsList.get(1);
 			String personLastName = (String) resultAsList.get(2);
-			IRI messageId = LdbcUtils.createIRI((String) resultAsList.get(3));
+			IRI messageId = LdbcUtils.createIRI(resultAsList.get(3));
 			String messageContent = (String) resultAsList.get(4);
-			Literal messageCreationDate = LdbcUtils.createLiteral((String) resultAsList.get(5));
+			Literal messageCreationDate = LdbcUtils.createLiteral(resultAsList.get(5));
 
 			results.add(new LdbcQuery9Result(
 					friendId,
