@@ -1,8 +1,11 @@
 package com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive;
 
 import com.google.common.collect.Lists;
+import com.ldbc.driver.SerializingMarshallingException;
+import com.ldbc.driver.workloads.common.LdbcUtils;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.impl.SimpleIRI;
 import org.eclipse.rdf4j.query.BindingSet;
 
 import java.util.ArrayList;
@@ -262,7 +265,7 @@ public class GraphDBLdbcSnbInteractiveOperationResultSets {
 		return new LdbcQuery13Result(-1);
 	}
 
-	public static LdbcQuery14Result read14Results(List<BindingSet> bindingSets) {
+	public static LdbcQuery14Result read14Results(List<BindingSet> bindingSets) throws SerializingMarshallingException {
 		List<Integer> results = new ArrayList<>();
 //		for (BindingSet binding : bindingSets) {
 //			IRI friendId = (IRI) binding.getValue("fr");
@@ -294,6 +297,6 @@ public class GraphDBLdbcSnbInteractiveOperationResultSets {
 //					friendUniversities,
 //					friendCompanies));
 //		}
-		return new LdbcQuery14Result(Lists.newArrayList(1l, 2l), 2);
+		return new LdbcQuery14Result(Lists.newArrayList(LdbcUtils.createIRI("dfsasdf"), LdbcUtils.createIRI("dfsadf")), 2);
 	}
 }

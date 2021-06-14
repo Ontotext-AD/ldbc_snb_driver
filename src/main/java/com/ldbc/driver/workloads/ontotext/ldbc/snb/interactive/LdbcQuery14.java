@@ -2,13 +2,12 @@ package com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.ldbc.driver.Operation;
 import com.ldbc.driver.SerializingMarshallingException;
 import com.ldbc.driver.workloads.common.LdbcUtils;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery14Result;
+import org.eclipse.rdf4j.model.IRI;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -97,8 +96,14 @@ public class LdbcQuery14 extends Operation<List<LdbcQuery14Result>> {
 
 		List<LdbcQuery14Result> results = new ArrayList<>();
 		for (List<Object> resultAsList : resultsAsList) {
-			Iterable<Long> personsIdsInPath =
-					Iterables.transform((List<Number>) resultAsList.get(0), number -> number.longValue());
+			Iterable<IRI> personsIdsInPath =
+					Iterables.transform((List<Map<String, String>>) resultAsList.get(0), result -> {
+						try {
+							return LdbcUtils.createIRI(result);
+						} catch (SerializingMarshallingException e) {
+							throw new RuntimeException(e.getMessage());
+						}
+					});
 			double pathWeight = ((Number) resultAsList.get(1)).doubleValue();
 
 			results.add(
@@ -115,8 +120,7 @@ public class LdbcQuery14 extends Operation<List<LdbcQuery14Result>> {
 	public String serializeResult(Object resultsObject) throws SerializingMarshallingException {
 		List<LdbcQuery14Result> results = (List<LdbcQuery14Result>) resultsObject;
 		List<List<Object>> resultsFields = new ArrayList<>();
-		for (int i = 0; i < results.size(); i++) {
-			LdbcQuery14Result result = results.get(i);
+		for (LdbcQuery14Result result : results) {
 			List<Object> resultFields = new ArrayList<>();
 			resultFields.add(result.personsIdsInPath());
 			resultFields.add(result.pathWeight());

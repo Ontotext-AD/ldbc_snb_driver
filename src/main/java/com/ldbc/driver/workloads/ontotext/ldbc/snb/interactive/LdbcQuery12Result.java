@@ -1,11 +1,7 @@
 package com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive;
 
-import com.google.common.collect.Lists;
-import com.ldbc.driver.util.ListUtils;
 import org.eclipse.rdf4j.model.IRI;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 
 public class LdbcQuery12Result {
