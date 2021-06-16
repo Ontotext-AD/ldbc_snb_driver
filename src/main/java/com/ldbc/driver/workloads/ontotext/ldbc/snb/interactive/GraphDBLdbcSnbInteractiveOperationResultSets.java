@@ -259,44 +259,32 @@ public class GraphDBLdbcSnbInteractiveOperationResultSets {
 	}
 
 	public static LdbcQuery13Result read13Results(List<BindingSet> bindingSets) {
-		for (BindingSet binding : bindingSets) {
-			return new LdbcQuery13Result(((Literal) binding.getValue("dist")).intValue());
+		int dist = -1;
+		if (bindingSets.size() == 1) {
+			dist = ((Literal) bindingSets.get(0).getValue("dist")).intValue();
 		}
-		return new LdbcQuery13Result(-1);
+		return new LdbcQuery13Result(dist);
 	}
 
-	public static LdbcQuery14Result read14Results(List<BindingSet> bindingSets) throws SerializingMarshallingException {
-		List<Integer> results = new ArrayList<>();
-//		for (BindingSet binding : bindingSets) {
-//			IRI friendId = (IRI) binding.getValue("fr");
-//			String friendLastName = binding.getValue("last").stringValue();
-//			int distanceFromPerson = ((Literal) binding.getValue("mindist")).intValue();
-//			Literal friendBirthday = (Literal) binding.getValue("bday");
-//			Literal friendCreationDate = (Literal) binding.getValue("since");
-//			String friendGender = binding.getValue("gen").stringValue();
-//			String friendBrowserUsed = binding.getValue("browser").stringValue();
-//			String friendLocationIp = binding.getValue("locationIP").stringValue();
-//			String friendEmails = binding.getValue("emails").stringValue();
-//			String friendLanguages = binding.getValue("lngs").stringValue();
-//			String friendCityName = binding.getValue("based").stringValue();
-//			String friendUniversities = binding.getValue("studyAt").stringValue();
-//			String friendCompanies = binding.getValue("workAt").stringValue();
-//
-//			results.add(new LdbcQuery14Result(
-//					friendId,
-//					friendLastName,
-//					distanceFromPerson,
-//					friendBirthday,
-//					friendCreationDate,
-//					friendGender,
-//					friendBrowserUsed,
-//					friendLocationIp,
-//					friendEmails,
-//					friendLanguages,
-//					friendCityName,
-//					friendUniversities,
-//					friendCompanies));
-//		}
-		return new LdbcQuery14Result(Lists.newArrayList(LdbcUtils.createIRI("dfsasdf"), LdbcUtils.createIRI("dfsadf")), 2);
+	public static List<LdbcQuery14Result> read14Results(List<BindingSet> bindingSets) {
+		List<LdbcQuery14Result> results = new ArrayList<>();
+		for (BindingSet binding : bindingSets) {
+			List<IRI> idx = new ArrayList<>();
+			IRI target = (IRI) binding.getValue("start");
+			if (target != null) {
+				idx.add(target);
+			}
+			IRI fr2 = (IRI) binding.getValue("end");
+			if (fr2 != null) {
+				idx.add(fr2);
+			}
+
+			double pathWeight = ((Literal) binding.getValue("pathWeight")).doubleValue();
+
+			results.add(new LdbcQuery14Result(
+					idx,
+					pathWeight));
+		}
+		return results;
 	}
 }
