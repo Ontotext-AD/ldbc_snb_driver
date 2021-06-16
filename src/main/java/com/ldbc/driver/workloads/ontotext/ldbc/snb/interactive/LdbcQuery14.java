@@ -3,7 +3,6 @@ package com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
 import com.ldbc.driver.Operation;
 import com.ldbc.driver.SerializingMarshallingException;
 import com.ldbc.driver.workloads.common.LdbcUtils;
@@ -14,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
@@ -97,13 +97,13 @@ public class LdbcQuery14 extends Operation<List<LdbcQuery14Result>> {
 		List<LdbcQuery14Result> results = new ArrayList<>();
 		for (List<Object> resultAsList : resultsAsList) {
 			Iterable<IRI> personsIdsInPath =
-					Iterables.transform((List<Map<String, String>>) resultAsList.get(0), result -> {
+					((List<Map<String, String>>) resultAsList.get(0)).stream().map(result -> {
 						try {
 							return LdbcUtils.createIRI(result);
 						} catch (SerializingMarshallingException e) {
 							throw new RuntimeException(e.getMessage());
 						}
-					});
+					}).collect(Collectors.toList());
 			double pathWeight = ((Number) resultAsList.get(1)).doubleValue();
 
 			results.add(

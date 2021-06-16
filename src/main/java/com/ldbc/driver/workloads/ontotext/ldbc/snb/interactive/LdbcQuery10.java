@@ -116,8 +116,7 @@ public class LdbcQuery10 extends Operation<List<LdbcQuery10Result>> {
 	public String serializeResult(Object resultsObject) throws SerializingMarshallingException {
 		List<LdbcQuery10Result> results = (List<LdbcQuery10Result>) resultsObject;
 		List<List<Object>> resultsFields = new ArrayList<>();
-		for (int i = 0; i < results.size(); i++) {
-			LdbcQuery10Result result = results.get(i);
+		for (LdbcQuery10Result result : results) {
 			List<Object> resultFields = new ArrayList<>();
 			resultFields.add(result.personId());
 			resultFields.add(result.personFirstName());
