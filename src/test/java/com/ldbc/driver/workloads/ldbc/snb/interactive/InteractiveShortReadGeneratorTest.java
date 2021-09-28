@@ -77,7 +77,7 @@ public class InteractiveShortReadGeneratorTest
         // When
         double state = shortReadGenerator.initialState();
         assertThat(state, is(initialProbability));
-        Operation<?> operation = shortReadGenerator.nextOperation(
+        Operation operation = shortReadGenerator.nextOperation(
                 state,
                 DummyLdbcSnbInteractiveOperationInstances.read1(),
                 Lists.newArrayList(
@@ -308,7 +308,7 @@ public class InteractiveShortReadGeneratorTest
         // When
         double state = shortReadGenerator.initialState();
         assertThat(state, is(initialProbability));
-        Operation<?> operation = shortReadGenerator.nextOperation(
+        Operation operation = shortReadGenerator.nextOperation(
                 state,
                 DummyLdbcSnbInteractiveOperationInstances.read2(),
                 Lists.newArrayList(
@@ -456,7 +456,7 @@ public class InteractiveShortReadGeneratorTest
         // When
         double state = shortReadGenerator.initialState();
         assertThat(state, is(initialProbability));
-        Operation<?> operation = shortReadGenerator.nextOperation(
+        Operation operation = shortReadGenerator.nextOperation(
                 state,
                 DummyLdbcSnbInteractiveOperationInstances.read3(),
                 Lists.newArrayList(
@@ -588,7 +588,7 @@ public class InteractiveShortReadGeneratorTest
         // When
         double state = shortReadGenerator.initialState();
         assertThat(state, is(initialProbability));
-        Operation<?> operation = shortReadGenerator.nextOperation(
+        Operation operation = shortReadGenerator.nextOperation(
                 state,
                 DummyLdbcSnbInteractiveOperationInstances.read1(),
                 Lists.newArrayList(
@@ -723,7 +723,7 @@ public class InteractiveShortReadGeneratorTest
         // When
         double state = shortReadGenerator.initialState();
         assertThat(state, is(initialProbability));
-        Operation<?> operation = shortReadGenerator.nextOperation(
+        Operation operation = shortReadGenerator.nextOperation(
                 state,
                 DummyLdbcSnbInteractiveOperationInstances.read1(),
                 Lists.newArrayList(

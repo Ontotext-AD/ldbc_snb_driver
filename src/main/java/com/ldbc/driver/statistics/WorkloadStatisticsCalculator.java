@@ -65,7 +65,7 @@ public class WorkloadStatisticsCalculator
             }
         }
 
-        List<Iterator<Operation<?>>> operationIterators = new ArrayList<>();
+        List<Iterator<Operation>> operationIterators = new ArrayList<>();
         operationIterators.add(
                 new StreamWithChildOperationGenerator( workloadStreams.asynchronousStream().dependencyOperations(),
                         workloadStreams.asynchronousStream().childOperationGenerator() )
@@ -157,15 +157,15 @@ public class WorkloadStatisticsCalculator
                 lowestDependencyDurationAsMilliByOperationType );
     }
 
-    private static class StreamWithChildOperationGenerator implements Iterator<Operation<?>>
+    private static class StreamWithChildOperationGenerator implements Iterator<Operation>
     {
         private static final Object RESULT = null;
-        private final Iterator<Operation<?>> stream;
+        private final Iterator<Operation> stream;
         private final ChildOperationGenerator childOperationGenerator;
         private double childOperationGeneratorState;
-        private Operation<?> nextChildOperation;
+        private Operation nextChildOperation;
 
-        private StreamWithChildOperationGenerator( Iterator<Operation<?>> stream,
+        private StreamWithChildOperationGenerator( Iterator<Operation> stream,
                 ChildOperationGenerator childOperationGenerator )
         {
             this.stream = stream;
@@ -184,9 +184,9 @@ public class WorkloadStatisticsCalculator
         }
 
         @Override
-        public Operation<?> next()
+        public Operation next()
         {
-            Operation<?> next = (null != nextChildOperation)
+            Operation next = (null != nextChildOperation)
                              ? nextChildOperation
                              : stream.next();
 

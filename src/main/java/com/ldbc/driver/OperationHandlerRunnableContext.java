@@ -24,7 +24,7 @@ public class OperationHandlerRunnableContext implements Runnable, Poolable
     // set by DependencyAndNonDependencyHandlersRetriever
     private TimeSource timeSource = null;
     private Spinner spinner = null;
-    private Operation<?> operation = null;
+    private Operation operation = null;
     private CompletionTimeWriter completionTimeWriter = null;
     private ConcurrentErrorReporter errorReporter = null;
     private MetricsService.MetricsServiceWriter metricsServiceWriter = null;
@@ -43,7 +43,7 @@ public class OperationHandlerRunnableContext implements Runnable, Poolable
 
     public final void init( TimeSource timeSource,
             Spinner spinner,
-            Operation<?> operation,
+            Operation operation,
             CompletionTimeWriter completionTimeWriter,
             ConcurrentErrorReporter errorReporter,
             MetricsService metricsService ) throws OperationException

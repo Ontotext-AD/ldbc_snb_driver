@@ -25,7 +25,7 @@ import static org.junit.Assert.assertThat;
 
 public class OperationTest
 {
-    public static <O extends Operation<?>> void assertCorrectParameterMap( O operation )
+    public static <O extends Operation> void assertCorrectParameterMap( O operation )
     {
         Map<String,Object> params = operation.parameterMap();
 

@@ -34,7 +34,7 @@ class DisruptorSbeMetricsEventHandler implements EventHandler<DirectBuffer>
             TimeUnit unit,
             TimeSource timeSource,
             long maxRuntimeDurationAsNano,
-            Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping,
+            Map<Integer,Class<? extends Operation>> operationTypeToClassMapping,
             LoggingServiceFactory loggingServiceFactory ) throws MetricsCollectionException
     {
         this.errorReporter = errorReporter;

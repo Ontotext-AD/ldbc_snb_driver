@@ -34,7 +34,7 @@ public class ValidationParamsToCsvRows implements Iterator<String[]>
     public String[] next()
     {
         ValidationParam validationParam = validationParams.next();
-        Operation<?> operation = validationParam.operation();
+        Operation operation = validationParam.operation();
         Object operationResult = validationParam.operationResult();
 
         String serializedOperation;

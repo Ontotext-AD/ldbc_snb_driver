@@ -31,7 +31,7 @@ public class ThreadedQueuedMetricsServiceTest
     {
         ConcurrentErrorReporter errorReporter = new ConcurrentErrorReporter();
         SimpleCsvFileWriter csvResultsLogWriter = null;
-        Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping = new HashMap<>();
+        Map<Integer,Class<? extends Operation>> operationTypeToClassMapping = new HashMap<>();
         operationTypeToClassMapping.put( LdbcQuery1.TYPE, LdbcQuery1.class );
         operationTypeToClassMapping.put( LdbcQuery2.TYPE, LdbcQuery2.class );
         LoggingServiceFactory loggingServiceFactory = new Log4jLoggingServiceFactory( false );
@@ -64,7 +64,7 @@ public class ThreadedQueuedMetricsServiceTest
     {
         ConcurrentErrorReporter errorReporter = new ConcurrentErrorReporter();
         SimpleCsvFileWriter csvResultsLogWriter = null;
-        Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping = new HashMap<>();
+        Map<Integer,Class<? extends Operation>> operationTypeToClassMapping = new HashMap<>();
         operationTypeToClassMapping.put( LdbcQuery1.TYPE, LdbcQuery1.class );
         operationTypeToClassMapping.put( LdbcQuery2.TYPE, LdbcQuery2.class );
         LoggingServiceFactory loggingServiceFactory = new Log4jLoggingServiceFactory( false );
@@ -97,7 +97,7 @@ public class ThreadedQueuedMetricsServiceTest
     {
         ConcurrentErrorReporter errorReporter = new ConcurrentErrorReporter();
         SimpleCsvFileWriter csvResultsLogWriter = null;
-        Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping = new HashMap<>();
+        Map<Integer,Class<? extends Operation>> operationTypeToClassMapping = new HashMap<>();
         operationTypeToClassMapping.put( LdbcQuery1.TYPE, LdbcQuery1.class );
         operationTypeToClassMapping.put( LdbcQuery2.TYPE, LdbcQuery2.class );
         LoggingServiceFactory loggingServiceFactory = new Log4jLoggingServiceFactory( false );
@@ -127,7 +127,7 @@ public class ThreadedQueuedMetricsServiceTest
     {
         ConcurrentErrorReporter errorReporter = new ConcurrentErrorReporter();
         SimpleCsvFileWriter csvResultsLogWriter = null;
-        Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping = new HashMap<>();
+        Map<Integer,Class<? extends Operation>> operationTypeToClassMapping = new HashMap<>();
         operationTypeToClassMapping.put( LdbcQuery1.TYPE, LdbcQuery1.class );
         operationTypeToClassMapping.put( LdbcQuery2.TYPE, LdbcQuery2.class );
         LoggingServiceFactory loggingServiceFactory = new Log4jLoggingServiceFactory( false );

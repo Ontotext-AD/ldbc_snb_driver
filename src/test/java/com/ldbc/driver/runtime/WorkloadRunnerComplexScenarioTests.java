@@ -114,7 +114,7 @@ public class WorkloadRunnerComplexScenarioTests
         LoggingService loggingService = new Log4jLoggingServiceFactory( false ).loggingServiceFor( "Test" );
         ConcurrentErrorReporter errorReporter = new ConcurrentErrorReporter();
         SimpleCsvFileWriter csvResultsLogWriter = null;
-        Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping = new HashMap<>();
+        Map<Integer,Class<? extends Operation>> operationTypeToClassMapping = new HashMap<>();
         operationTypeToClassMapping.put( TimedNamedOperation1.TYPE, TimedNamedOperation1.class );
         operationTypeToClassMapping.put( TimedNamedOperation2.TYPE, TimedNamedOperation2.class );
         operationTypeToClassMapping.put( TimedNamedOperation3.TYPE, TimedNamedOperation3.class );
@@ -133,15 +133,15 @@ public class WorkloadRunnerComplexScenarioTests
                 completionTimeServiceAssistant.newSynchronizedCompletionTimeService();
 
         WorkloadStreams workloadStreams = new WorkloadStreams();
-        Set<Class<? extends Operation<?>>> asynchronousDependentOperationTypes =
+        Set<Class<? extends Operation>> asynchronousDependentOperationTypes =
                 Sets.newHashSet(
                         TimedNamedOperation1.class
                 );
-        Set<Class<? extends Operation<?>>> asynchronousDependencyOperationTypes = Sets.newHashSet(
+        Set<Class<? extends Operation>> asynchronousDependencyOperationTypes = Sets.newHashSet(
                 // nothing
         );
-        Iterator<Operation<?>> asynchronousDependencyOperations = Collections.emptyIterator();
-        Iterator<Operation<?>> asynchronousNonDependencyOperations = Lists.<Operation<?>>newArrayList(
+        Iterator<Operation> asynchronousDependencyOperations = Collections.emptyIterator();
+        Iterator<Operation> asynchronousNonDependencyOperations = Lists.<Operation>newArrayList(
                 new TimedNamedOperation1( 2, 2, 0, "S(2)D(0)" ),
                 new TimedNamedOperation1( 3, 3, 0, "S(3)D(0)" ),
                 new TimedNamedOperation1( 7, 7, 0, "S(7)D(0)" )
@@ -153,17 +153,17 @@ public class WorkloadRunnerComplexScenarioTests
                 asynchronousNonDependencyOperations,
                 null
         );
-        Set<Class<? extends Operation<?>>> blockingDependentOperationTypes = Sets.newHashSet(
+        Set<Class<? extends Operation>> blockingDependentOperationTypes = Sets.newHashSet(
                 TimedNamedOperation2.class
         );
-        Set<Class<? extends Operation<?>>> blockingDependencyOperationTypes = Sets.newHashSet(
+        Set<Class<? extends Operation>> blockingDependencyOperationTypes = Sets.newHashSet(
                 TimedNamedOperation2.class
         );
-        Iterator<Operation<?>> blockingDependencyOperations = Lists.<Operation<?>>newArrayList(
+        Iterator<Operation> blockingDependencyOperations = Lists.<Operation>newArrayList(
                 new TimedNamedOperation2( 4, 4, 0, "S(4)D(0)" ),
                 new TimedNamedOperation2( 5, 5, 0, "S(5)D(0)" )
         ).iterator();
-        Iterator<Operation<?>> blockingNonDependencyOperations = Lists.<Operation<?>>newArrayList(
+        Iterator<Operation> blockingNonDependencyOperations = Lists.<Operation>newArrayList(
         ).iterator();
         workloadStreams.addBlockingStream(
                 blockingDependentOperationTypes,
@@ -353,7 +353,7 @@ public class WorkloadRunnerComplexScenarioTests
         ConcurrentErrorReporter errorReporter = new ConcurrentErrorReporter();
 
         SimpleCsvFileWriter csvResultsLogWriter = null;
-        Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping = new HashMap<>();
+        Map<Integer,Class<? extends Operation>> operationTypeToClassMapping = new HashMap<>();
         operationTypeToClassMapping.put( TimedNamedOperation1.TYPE, TimedNamedOperation1.class );
         operationTypeToClassMapping.put( TimedNamedOperation2.TYPE, TimedNamedOperation2.class );
         operationTypeToClassMapping.put( TimedNamedOperation3.TYPE, TimedNamedOperation3.class );
@@ -372,19 +372,19 @@ public class WorkloadRunnerComplexScenarioTests
                 completionTimeServiceAssistant.newSynchronizedCompletionTimeService();
 
         WorkloadStreams workloadStreams = new WorkloadStreams();
-        Set<Class<? extends Operation<?>>> asynchronousDependentOperationTypes =
+        Set<Class<? extends Operation>> asynchronousDependentOperationTypes =
                 Sets.newHashSet(
                         TimedNamedOperation1.class
                 );
-        Set<Class<? extends Operation<?>>> asynchronousDependencyOperationTypes =
+        Set<Class<? extends Operation>> asynchronousDependencyOperationTypes =
                 Sets.newHashSet(
                         TimedNamedOperation1.class
                 );
-        Iterator<Operation<?>> asynchronousDependencyOperations = Lists.<Operation<?>>newArrayList(
+        Iterator<Operation> asynchronousDependencyOperations = Lists.<Operation>newArrayList(
                 new TimedNamedOperation1( 2, 2, 0, "read1" ),
                 new TimedNamedOperation1( 5, 5, 0, "read2" )
         ).iterator();
-        Iterator<Operation<?>> asynchronousNonDependencyOperations = Lists.<Operation<?>>newArrayList(
+        Iterator<Operation> asynchronousNonDependencyOperations = Lists.<Operation>newArrayList(
         ).iterator();
         workloadStreams.setAsynchronousStream(
                 asynchronousDependentOperationTypes,
@@ -393,18 +393,18 @@ public class WorkloadRunnerComplexScenarioTests
                 asynchronousNonDependencyOperations,
                 null
         );
-        Set<Class<? extends Operation<?>>> blockingDependentOperationTypes = Sets.newHashSet(
+        Set<Class<? extends Operation>> blockingDependentOperationTypes = Sets.newHashSet(
                 TimedNamedOperation2.class
         );
-        Set<Class<? extends Operation<?>>> blockingDependencyOperationTypes = Sets.newHashSet(
+        Set<Class<? extends Operation>> blockingDependencyOperationTypes = Sets.newHashSet(
                 TimedNamedOperation2.class
         );
-        List<Operation<?>> blockingDependencyOperationsList = Lists.newArrayList(
+        List<Operation> blockingDependencyOperationsList = Lists.newArrayList(
                 new TimedNamedOperation2( 3, 3, 0, "readwrite1" )
         );
 
         int operationCountAtTime4 = 1000000;
-        Iterator<Operation<?>> manyReadWriteOperationsAtTime4 = gf.limit(
+        Iterator<Operation> manyReadWriteOperationsAtTime4 = gf.limit(
                 new TimedNamedOperation2Factory(
                         gf.constant( 4L ),
                         gf.constant( 0L ),
@@ -412,8 +412,8 @@ public class WorkloadRunnerComplexScenarioTests
                 operationCountAtTime4 );
         blockingDependencyOperationsList.addAll( Lists.newArrayList( manyReadWriteOperationsAtTime4 ) );
 
-        Iterator<Operation<?>> blockingDependencyOperations = blockingDependencyOperationsList.iterator();
-        Iterator<Operation<?>> blockingNonDependencyOperations = Lists.<Operation<?>>newArrayList(
+        Iterator<Operation> blockingDependencyOperations = blockingDependencyOperationsList.iterator();
+        Iterator<Operation> blockingNonDependencyOperations = Lists.<Operation>newArrayList(
         ).iterator();
         workloadStreams.addBlockingStream(
                 blockingDependentOperationTypes,
@@ -566,7 +566,7 @@ public class WorkloadRunnerComplexScenarioTests
         ConcurrentErrorReporter errorReporter = new ConcurrentErrorReporter();
 
         SimpleCsvFileWriter csvResultsLogWriter = null;
-        Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping = new HashMap<>();
+        Map<Integer,Class<? extends Operation>> operationTypeToClassMapping = new HashMap<>();
         operationTypeToClassMapping.put( TimedNamedOperation1.TYPE, TimedNamedOperation1.class );
         operationTypeToClassMapping.put( TimedNamedOperation2.TYPE, TimedNamedOperation2.class );
         operationTypeToClassMapping.put( TimedNamedOperation3.TYPE, TimedNamedOperation3.class );
@@ -585,21 +585,21 @@ public class WorkloadRunnerComplexScenarioTests
                 completionTimeServiceAssistant.newSynchronizedCompletionTimeService();
 
         WorkloadStreams workloadStreams = new WorkloadStreams();
-        Set<Class<? extends Operation<?>>> asynchronousDependentOperationTypes =
+        Set<Class<? extends Operation>> asynchronousDependentOperationTypes =
                 Sets.newHashSet(
                         TimedNamedOperation1.class,
                         TimedNamedOperation2.class
                 );
-        Set<Class<? extends Operation<?>>> asynchronousDependencyOperationTypes =
+        Set<Class<? extends Operation>> asynchronousDependencyOperationTypes =
                 Sets.newHashSet(
                         TimedNamedOperation2.class
                 );
-        Iterator<Operation<?>> asynchronousDependencyOperations = Lists.<Operation<?>>newArrayList(
+        Iterator<Operation> asynchronousDependencyOperations = Lists.<Operation>newArrayList(
                 new TimedNamedOperation2( 3, 3, 0, "readwrite1" ),
                 new TimedNamedOperation2( 6, 6, 0, "readwrite2" ),
                 new TimedNamedOperation2( 9, 9, 3, "readwrite3" )
         ).iterator();
-        Iterator<Operation<?>> asynchronousNonDependencyOperations = Lists.<Operation<?>>newArrayList(
+        Iterator<Operation> asynchronousNonDependencyOperations = Lists.<Operation>newArrayList(
                 new TimedNamedOperation1( 2, 2, 0, "read1" ),
                 new TimedNamedOperation1( 4, 4, 0, "read2" ),
                 new TimedNamedOperation1( 7, 7, 3, "read3" ),
@@ -613,16 +613,16 @@ public class WorkloadRunnerComplexScenarioTests
                 asynchronousNonDependencyOperations,
                 null
         );
-        Set<Class<? extends Operation<?>>> blockingDependentOperationTypes = Sets.newHashSet(
+        Set<Class<? extends Operation>> blockingDependentOperationTypes = Sets.newHashSet(
                 // nothing
         );
-        Set<Class<? extends Operation<?>>> blockingDependencyOperationTypes = Sets.newHashSet(
+        Set<Class<? extends Operation>> blockingDependencyOperationTypes = Sets.newHashSet(
                 // nothing
         );
-        Iterator<Operation<?>> blockingDependencyOperations = Lists.<Operation<?>>newArrayList(
+        Iterator<Operation> blockingDependencyOperations = Lists.<Operation>newArrayList(
                 // nothing
         ).iterator();
-        Iterator<Operation<?>> blockingNonDependencyOperations = Lists.<Operation<?>>newArrayList(
+        Iterator<Operation> blockingNonDependencyOperations = Lists.<Operation>newArrayList(
                 // nothing
         ).iterator();
         workloadStreams.addBlockingStream(
@@ -853,7 +853,7 @@ public class WorkloadRunnerComplexScenarioTests
         ConcurrentErrorReporter errorReporter = new ConcurrentErrorReporter();
 
         SimpleCsvFileWriter csvResultsLogWriter = null;
-        Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping = new HashMap<>();
+        Map<Integer,Class<? extends Operation>> operationTypeToClassMapping = new HashMap<>();
         operationTypeToClassMapping.put( TimedNamedOperation1.TYPE, TimedNamedOperation1.class );
         operationTypeToClassMapping.put( TimedNamedOperation2.TYPE, TimedNamedOperation2.class );
         operationTypeToClassMapping.put( TimedNamedOperation3.TYPE, TimedNamedOperation3.class );
@@ -872,17 +872,17 @@ public class WorkloadRunnerComplexScenarioTests
                 completionTimeServiceAssistant.newSynchronizedCompletionTimeService();
 
         WorkloadStreams workloadStreams = new WorkloadStreams();
-        Set<Class<? extends Operation<?>>> asynchronousDependentOperationTypes =
+        Set<Class<? extends Operation>> asynchronousDependentOperationTypes =
                 Sets.newHashSet(
                         TimedNamedOperation1.class
                 );
-        Set<Class<? extends Operation<?>>> asynchronousDependencyOperationTypes =
+        Set<Class<? extends Operation>> asynchronousDependencyOperationTypes =
                 Sets.newHashSet(
                 );
-        Iterator<Operation<?>> asynchronousDependencyOperations = Lists.<Operation<?>>newArrayList(
+        Iterator<Operation> asynchronousDependencyOperations = Lists.<Operation>newArrayList(
                 // nothing
         ).iterator();
-        Iterator<Operation<?>> asynchronousNonDependencyOperations = Lists.<Operation<?>>newArrayList(
+        Iterator<Operation> asynchronousNonDependencyOperations = Lists.<Operation>newArrayList(
                 new TimedNamedOperation1( 2, 2, 0, "read1" ),
                 new TimedNamedOperation1( 4, 4, 0, "read2" ),
                 new TimedNamedOperation1( 7, 7, 3, "read3" ),
@@ -896,18 +896,18 @@ public class WorkloadRunnerComplexScenarioTests
                 asynchronousNonDependencyOperations,
                 null
         );
-        Set<Class<? extends Operation<?>>> blockingDependentOperationTypes = Sets.newHashSet(
+        Set<Class<? extends Operation>> blockingDependentOperationTypes = Sets.newHashSet(
                 TimedNamedOperation2.class
         );
-        Set<Class<? extends Operation<?>>> blockingDependencyOperationTypes = Sets.newHashSet(
+        Set<Class<? extends Operation>> blockingDependencyOperationTypes = Sets.newHashSet(
                 TimedNamedOperation2.class
         );
-        Iterator<Operation<?>> blockingDependencyOperations = Lists.<Operation<?>>newArrayList(
+        Iterator<Operation> blockingDependencyOperations = Lists.<Operation>newArrayList(
                 new TimedNamedOperation2( 3, 3, 0, "readwrite1" ),
                 new TimedNamedOperation2( 6, 6, 0, "readwrite2" ),
                 new TimedNamedOperation2( 9, 9, 3, "readwrite3" )
         ).iterator();
-        Iterator<Operation<?>> blockingNonDependencyOperations = Lists.<Operation<?>>newArrayList(
+        Iterator<Operation> blockingNonDependencyOperations = Lists.<Operation>newArrayList(
                 // nothing
         ).iterator();
         workloadStreams.addBlockingStream(
@@ -1177,7 +1177,7 @@ public class WorkloadRunnerComplexScenarioTests
         ConcurrentErrorReporter errorReporter = new ConcurrentErrorReporter();
 
         SimpleCsvFileWriter csvResultsLogWriter = null;
-        Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping = new HashMap<>();
+        Map<Integer,Class<? extends Operation>> operationTypeToClassMapping = new HashMap<>();
         operationTypeToClassMapping.put( TimedNamedOperation1.TYPE, TimedNamedOperation1.class );
         operationTypeToClassMapping.put( TimedNamedOperation2.TYPE, TimedNamedOperation2.class );
         operationTypeToClassMapping.put( TimedNamedOperation3.TYPE, TimedNamedOperation3.class );
@@ -1196,20 +1196,20 @@ public class WorkloadRunnerComplexScenarioTests
                 completionTimeServiceAssistant.newSynchronizedCompletionTimeService();
 
         WorkloadStreams workloadStreams = new WorkloadStreams();
-        Set<Class<? extends Operation<?>>> asynchronousDependentOperationTypes =
+        Set<Class<? extends Operation>> asynchronousDependentOperationTypes =
                 Sets.newHashSet(
                         TimedNamedOperation2.class
                 );
-        Set<Class<? extends Operation<?>>> asynchronousDependencyOperationTypes =
+        Set<Class<? extends Operation>> asynchronousDependencyOperationTypes =
                 Sets.newHashSet(
                         TimedNamedOperation2.class
                 );
-        Iterator<Operation<?>> asynchronousDependencyOperations = Lists.<Operation<?>>newArrayList(
+        Iterator<Operation> asynchronousDependencyOperations = Lists.<Operation>newArrayList(
                 new TimedNamedOperation2( 3, 3, 0, "readwrite1" ),
                 new TimedNamedOperation2( 6, 6, 0, "readwrite2" ),
                 new TimedNamedOperation2( 9, 9, 3, "readwrite3" )
         ).iterator();
-        Iterator<Operation<?>> asynchronousNonDependencyOperations = Lists.<Operation<?>>newArrayList(
+        Iterator<Operation> asynchronousNonDependencyOperations = Lists.<Operation>newArrayList(
                 // nothing
         ).iterator();
         workloadStreams.setAsynchronousStream(
@@ -1219,15 +1219,15 @@ public class WorkloadRunnerComplexScenarioTests
                 asynchronousNonDependencyOperations,
                 null
         );
-        Set<Class<? extends Operation<?>>> blockingDependentOperationTypes = Sets.newHashSet(
+        Set<Class<? extends Operation>> blockingDependentOperationTypes = Sets.newHashSet(
                 TimedNamedOperation1.class
         );
-        Set<Class<? extends Operation<?>>> blockingDependencyOperationTypes = Sets.newHashSet(
+        Set<Class<? extends Operation>> blockingDependencyOperationTypes = Sets.newHashSet(
         );
-        Iterator<Operation<?>> blockingDependencyOperations = Lists.<Operation<?>>newArrayList(
+        Iterator<Operation> blockingDependencyOperations = Lists.<Operation>newArrayList(
                 // nothing
         ).iterator();
-        Iterator<Operation<?>> blockingNonDependencyOperations = Lists.<Operation<?>>newArrayList(
+        Iterator<Operation> blockingNonDependencyOperations = Lists.<Operation>newArrayList(
                 new TimedNamedOperation1( 2, 2, 0, "read1" ),
                 new TimedNamedOperation1( 4, 4, 0, "read2" ),
                 new TimedNamedOperation1( 7, 7, 3, "read3" ),
@@ -1462,7 +1462,7 @@ public class WorkloadRunnerComplexScenarioTests
         ConcurrentErrorReporter errorReporter = new ConcurrentErrorReporter();
 
         SimpleCsvFileWriter csvResultsLogWriter = null;
-        Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping = new HashMap<>();
+        Map<Integer,Class<? extends Operation>> operationTypeToClassMapping = new HashMap<>();
         operationTypeToClassMapping.put( TimedNamedOperation1.TYPE, TimedNamedOperation1.class );
         operationTypeToClassMapping.put( TimedNamedOperation2.TYPE, TimedNamedOperation2.class );
         operationTypeToClassMapping.put( TimedNamedOperation3.TYPE, TimedNamedOperation3.class );
@@ -1481,18 +1481,18 @@ public class WorkloadRunnerComplexScenarioTests
                 completionTimeServiceAssistant.newSynchronizedCompletionTimeService();
 
         WorkloadStreams workloadStreams = new WorkloadStreams();
-        Set<Class<? extends Operation<?>>> asynchronousDependentOperationTypes =
+        Set<Class<? extends Operation>> asynchronousDependentOperationTypes =
                 Sets.newHashSet(
                         // nothing
                 );
-        Set<Class<? extends Operation<?>>> asynchronousDependencyOperationTypes =
+        Set<Class<? extends Operation>> asynchronousDependencyOperationTypes =
                 Sets.newHashSet(
                         // nothing
                 );
-        Iterator<Operation<?>> asynchronousDependencyOperations = Lists.<Operation<?>>newArrayList(
+        Iterator<Operation> asynchronousDependencyOperations = Lists.<Operation>newArrayList(
                 // nothing
         ).iterator();
-        Iterator<Operation<?>> asynchronousNonDependencyOperations = Lists.<Operation<?>>newArrayList(
+        Iterator<Operation> asynchronousNonDependencyOperations = Lists.<Operation>newArrayList(
                 // nothing
         ).iterator();
         workloadStreams.setAsynchronousStream(
@@ -1502,19 +1502,19 @@ public class WorkloadRunnerComplexScenarioTests
                 asynchronousNonDependencyOperations,
                 null
         );
-        Set<Class<? extends Operation<?>>> blockingDependentOperationTypes = Sets.newHashSet(
+        Set<Class<? extends Operation>> blockingDependentOperationTypes = Sets.newHashSet(
                 TimedNamedOperation1.class,
                 TimedNamedOperation2.class
         );
-        Set<Class<? extends Operation<?>>> blockingDependencyOperationTypes = Sets.newHashSet(
+        Set<Class<? extends Operation>> blockingDependencyOperationTypes = Sets.newHashSet(
                 TimedNamedOperation2.class
         );
-        Iterator<Operation<?>> blockingDependencyOperations = Lists.<Operation<?>>newArrayList(
+        Iterator<Operation> blockingDependencyOperations = Lists.<Operation>newArrayList(
                 new TimedNamedOperation2( 3, 3, 0, "readwrite1" ),
                 new TimedNamedOperation2( 6, 6, 0, "readwrite2" ),
                 new TimedNamedOperation2( 9, 9, 3, "readwrite3" )
         ).iterator();
-        Iterator<Operation<?>> blockingNonDependencyOperations = Lists.<Operation<?>>newArrayList(
+        Iterator<Operation> blockingNonDependencyOperations = Lists.<Operation>newArrayList(
                 new TimedNamedOperation1( 2, 2, 0, "read1" ),
                 new TimedNamedOperation1( 4, 4, 0, "read2" ),
                 new TimedNamedOperation1( 7, 7, 3, "read3" ),

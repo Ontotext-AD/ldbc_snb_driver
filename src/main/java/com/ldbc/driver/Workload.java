@@ -95,7 +95,7 @@ public abstract class Workload implements Closeable {
 	private boolean isInitialized = false;
 	private boolean isClosed = false;
 
-	public abstract Map<Integer, Class<? extends Operation<?>>> operationTypeToClassMapping();
+	public abstract Map<Integer, Class<? extends Operation>> operationTypeToClassMapping();
 
 	public ResultsLogValidationTolerances resultsLogValidationTolerances(
 			DriverConfiguration configuration,
@@ -422,8 +422,8 @@ public abstract class Workload implements Closeable {
 		WorkloadStreams ldbcSnbInteractiveWorkloadStreams = new WorkloadStreams();
 		List<Iterator<?>> asynchronousDependencyStreamsList = new ArrayList<>();
 		List<Iterator<?>> asynchronousNonDependencyStreamsList = new ArrayList<>();
-		Set<Class<? extends Operation<?>>> dependentAsynchronousOperationTypes = Sets.newHashSet();
-		Set<Class<? extends Operation<?>>> dependencyAsynchronousOperationTypes = Sets.newHashSet();
+		Set<Class<? extends Operation>> dependentAsynchronousOperationTypes = Sets.newHashSet();
+		Set<Class<? extends Operation>> dependencyAsynchronousOperationTypes = Sets.newHashSet();
 
 		/* *******
 		 * *******
@@ -439,9 +439,9 @@ public abstract class Workload implements Closeable {
 		 */
 		if (enabledWriteOperationTypes.contains(LdbcUpdate1AddPerson.class)) {
 			for (File personUpdateOperationFile : personUpdateOperationFiles) {
-				Iterator<Operation<?>> personUpdateOperationsParser;
+				Iterator<Operation> personUpdateOperationsParser;
 				try {
-					Tuple2<Iterator<Operation<?>>, Closeable> parserAndCloseable =
+					Tuple2<Iterator<Operation>, Closeable> parserAndCloseable =
 							fileToWriteStreamParser(personUpdateOperationFile, parser);
 					personUpdateOperationsParser = parserAndCloseable._1();
 					personUpdateOperationsFileReaders.add(parserAndCloseable._2());
@@ -463,7 +463,7 @@ public abstract class Workload implements Closeable {
 					);
 					continue;
 				}
-				PeekingIterator<Operation<?>> unfilteredPersonUpdateOperations =
+				PeekingIterator<Operation> unfilteredPersonUpdateOperations =
 						Iterators.peekingIterator(personUpdateOperationsParser);
 
 				try {
@@ -476,12 +476,12 @@ public abstract class Workload implements Closeable {
 				}
 
 				// Filter Write Operations
-				Predicate<Operation<?>> enabledWriteOperationsFilter = operation -> enabledWriteOperationTypes.contains(operation.getClass());
-				Iterator<Operation<?>> filteredPersonUpdateOperations =
+				Predicate<Operation> enabledWriteOperationsFilter = operation -> enabledWriteOperationTypes.contains(operation.getClass());
+				Iterator<Operation> filteredPersonUpdateOperations =
 						Iterators.filter(unfilteredPersonUpdateOperations, enabledWriteOperationsFilter);
 
-				Set<Class<? extends Operation<?>>> dependentPersonUpdateOperationTypes = Sets.newHashSet();
-				Set<Class<? extends Operation<?>>> dependencyPersonUpdateOperationTypes =
+				Set<Class<? extends Operation>> dependentPersonUpdateOperationTypes = Sets.newHashSet();
+				Set<Class<? extends Operation>> dependencyPersonUpdateOperationTypes =
 						Sets.newHashSet(
 								LdbcUpdate1AddPerson.class
 						);
@@ -510,9 +510,9 @@ public abstract class Workload implements Closeable {
 				enabledWriteOperationTypes.contains(LdbcUpdate8AddFriendship.class)
 		) {
 			for (File forumUpdateOperationFile : forumUpdateOperationFiles) {
-				Iterator<Operation<?>> forumUpdateOperationsParser;
+				Iterator<Operation> forumUpdateOperationsParser;
 				try {
-					Tuple2<Iterator<Operation<?>>, Closeable> parserAndCloseable =
+					Tuple2<Iterator<Operation>, Closeable> parserAndCloseable =
 							fileToWriteStreamParser(forumUpdateOperationFile, parser);
 					forumUpdateOperationsParser = parserAndCloseable._1();
 					forumUpdateOperationsFileReaders.add(parserAndCloseable._2());
@@ -534,7 +534,7 @@ public abstract class Workload implements Closeable {
 					);
 					continue;
 				}
-				PeekingIterator<Operation<?>> unfilteredForumUpdateOperations =
+				PeekingIterator<Operation> unfilteredForumUpdateOperations =
 						Iterators.peekingIterator(forumUpdateOperationsParser);
 
 				try {
@@ -546,11 +546,11 @@ public abstract class Workload implements Closeable {
 				}
 
 				// Filter Write Operations
-				Predicate<Operation<?>> enabledWriteOperationsFilter = operation -> enabledWriteOperationTypes.contains(operation.getClass());
-				Iterator<Operation<?>> filteredForumUpdateOperations =
+				Predicate<Operation> enabledWriteOperationsFilter = operation -> enabledWriteOperationTypes.contains(operation.getClass());
+				Iterator<Operation> filteredForumUpdateOperations =
 						Iterators.filter(unfilteredForumUpdateOperations, enabledWriteOperationsFilter);
 
-				Set<Class<? extends Operation<?>>> dependentForumUpdateOperationTypes =
+				Set<Class<? extends Operation>> dependentForumUpdateOperationTypes =
 						Sets.newHashSet(
 								LdbcUpdate2AddPostLike.class,
 								LdbcUpdate3AddCommentLike.class,
@@ -560,7 +560,7 @@ public abstract class Workload implements Closeable {
 								LdbcUpdate7AddComment.class,
 								LdbcUpdate8AddFriendship.class
 						);
-				Set<Class<? extends Operation<?>>> dependencyForumUpdateOperationTypes = Sets.newHashSet();
+				Set<Class<? extends Operation>> dependencyForumUpdateOperationTypes = Sets.newHashSet();
 
 				ChildOperationGenerator forumUpdateChildOperationGenerator = null;
 
@@ -594,7 +594,7 @@ public abstract class Workload implements Closeable {
 		char arrayDelimiter = ';';
 		char tupleDelimiter = ',';
 
-		Iterator<Operation<?>> readOperation1Stream;
+		Iterator<Operation> readOperation1Stream;
 		{
 			CsvEventStreamReaderBasicCharSeeker.EventDecoder<Object[]> decoder =
 					new Query1EventStreamReader.Query1Decoder();
@@ -622,7 +622,7 @@ public abstract class Workload implements Closeable {
 						readOperation1File.getAbsolutePath()), e);
 			}
 
-			Iterator<Operation<?>> operation1StreamWithoutTimes = new Query1EventStreamReader(
+			Iterator<Operation> operation1StreamWithoutTimes = new Query1EventStreamReader(
 					gf.repeating(
 							new CsvEventStreamReaderBasicCharSeeker<>(
 									charSeeker,
@@ -646,7 +646,7 @@ public abstract class Workload implements Closeable {
 			readOperationFileReaders.add(charSeeker);
 		}
 
-		Iterator<Operation<?>> readOperation2Stream;
+		Iterator<Operation> readOperation2Stream;
 		{
 			CsvEventStreamReaderBasicCharSeeker.EventDecoder<Object[]> decoder =
 					new Query2EventStreamReader.Query2Decoder();
@@ -674,7 +674,7 @@ public abstract class Workload implements Closeable {
 						readOperation2File.getAbsolutePath()), e);
 			}
 
-			Iterator<Operation<?>> operation2StreamWithoutTimes = new Query2EventStreamReader(
+			Iterator<Operation> operation2StreamWithoutTimes = new Query2EventStreamReader(
 					gf.repeating(
 							new CsvEventStreamReaderBasicCharSeeker<>(
 									charSeeker,
@@ -698,7 +698,7 @@ public abstract class Workload implements Closeable {
 			readOperationFileReaders.add(charSeeker);
 		}
 
-		Iterator<Operation<?>> readOperation3Stream;
+		Iterator<Operation> readOperation3Stream;
 		{
 			CsvEventStreamReaderBasicCharSeeker.EventDecoder<Object[]> decoder =
 					new Query3EventStreamReader.Query3Decoder();
@@ -729,7 +729,7 @@ public abstract class Workload implements Closeable {
 						readOperation3File.getAbsolutePath()), e);
 			}
 
-			Iterator<Operation<?>> operation3StreamWithoutTimes = new Query3EventStreamReader(
+			Iterator<Operation> operation3StreamWithoutTimes = new Query3EventStreamReader(
 					gf.repeating(
 							new CsvEventStreamReaderBasicCharSeeker<>(
 									charSeeker,
@@ -753,7 +753,7 @@ public abstract class Workload implements Closeable {
 			readOperationFileReaders.add(charSeeker);
 		}
 
-		Iterator<Operation<?>> readOperation4Stream;
+		Iterator<Operation> readOperation4Stream;
 		{
 			CsvEventStreamReaderBasicCharSeeker.EventDecoder<Object[]> decoder =
 					new Query4EventStreamReader.Query4Decoder();
@@ -782,7 +782,7 @@ public abstract class Workload implements Closeable {
 						readOperation4File.getAbsolutePath()), e);
 			}
 
-			Iterator<Operation<?>> operation4StreamWithoutTimes = new Query4EventStreamReader(
+			Iterator<Operation> operation4StreamWithoutTimes = new Query4EventStreamReader(
 					gf.repeating(
 							new CsvEventStreamReaderBasicCharSeeker<>(
 									charSeeker,
@@ -806,7 +806,7 @@ public abstract class Workload implements Closeable {
 			readOperationFileReaders.add(charSeeker);
 		}
 
-		Iterator<Operation<?>> readOperation5Stream;
+		Iterator<Operation> readOperation5Stream;
 		{
 			CsvEventStreamReaderBasicCharSeeker.EventDecoder<Object[]> decoder =
 					new Query5EventStreamReader.Query5Decoder();
@@ -834,7 +834,7 @@ public abstract class Workload implements Closeable {
 						readOperation5File.getAbsolutePath()), e);
 			}
 
-			Iterator<Operation<?>> operation5StreamWithoutTimes = new Query5EventStreamReader(
+			Iterator<Operation> operation5StreamWithoutTimes = new Query5EventStreamReader(
 					gf.repeating(
 							new CsvEventStreamReaderBasicCharSeeker<>(
 									charSeeker,
@@ -858,7 +858,7 @@ public abstract class Workload implements Closeable {
 			readOperationFileReaders.add(charSeeker);
 		}
 
-		Iterator<Operation<?>> readOperation6Stream;
+		Iterator<Operation> readOperation6Stream;
 		{
 			CsvEventStreamReaderBasicCharSeeker.EventDecoder<Object[]> decoder =
 					new Query6EventStreamReader.Query6Decoder();
@@ -886,7 +886,7 @@ public abstract class Workload implements Closeable {
 						readOperation6File.getAbsolutePath()), e);
 			}
 
-			Iterator<Operation<?>> operation6StreamWithoutTimes = new Query6EventStreamReader(
+			Iterator<Operation> operation6StreamWithoutTimes = new Query6EventStreamReader(
 					gf.repeating(
 							new CsvEventStreamReaderBasicCharSeeker<>(
 									charSeeker,
@@ -910,7 +910,7 @@ public abstract class Workload implements Closeable {
 			readOperationFileReaders.add(charSeeker);
 		}
 
-		Iterator<Operation<?>> readOperation7Stream;
+		Iterator<Operation> readOperation7Stream;
 		{
 			CsvEventStreamReaderBasicCharSeeker.EventDecoder<Object[]> decoder =
 					new Query7EventStreamReader.Query7Decoder();
@@ -937,7 +937,7 @@ public abstract class Workload implements Closeable {
 						readOperation7File.getAbsolutePath()), e);
 			}
 
-			Iterator<Operation<?>> operation7StreamWithoutTimes = new Query7EventStreamReader(
+			Iterator<Operation> operation7StreamWithoutTimes = new Query7EventStreamReader(
 					gf.repeating(
 							new CsvEventStreamReaderBasicCharSeeker<>(
 									charSeeker,
@@ -961,7 +961,7 @@ public abstract class Workload implements Closeable {
 			readOperationFileReaders.add(charSeeker);
 		}
 
-		Iterator<Operation<?>> readOperation8Stream;
+		Iterator<Operation> readOperation8Stream;
 		{
 			CsvEventStreamReaderBasicCharSeeker.EventDecoder<Object[]> decoder =
 					new Query8EventStreamReader.Query8Decoder();
@@ -988,7 +988,7 @@ public abstract class Workload implements Closeable {
 						readOperation8File.getAbsolutePath()), e);
 			}
 
-			Iterator<Operation<?>> operation8StreamWithoutTimes = new Query8EventStreamReader(
+			Iterator<Operation> operation8StreamWithoutTimes = new Query8EventStreamReader(
 					gf.repeating(
 							new CsvEventStreamReaderBasicCharSeeker<>(
 									charSeeker,
@@ -1012,7 +1012,7 @@ public abstract class Workload implements Closeable {
 			readOperationFileReaders.add(charSeeker);
 		}
 
-		Iterator<Operation<?>> readOperation9Stream;
+		Iterator<Operation> readOperation9Stream;
 		{
 			CsvEventStreamReaderBasicCharSeeker.EventDecoder<Object[]> decoder =
 					new Query9EventStreamReader.Query9Decoder();
@@ -1040,7 +1040,7 @@ public abstract class Workload implements Closeable {
 						readOperation9File.getAbsolutePath()), e);
 			}
 
-			Iterator<Operation<?>> operation9StreamWithoutTimes = new Query9EventStreamReader(
+			Iterator<Operation> operation9StreamWithoutTimes = new Query9EventStreamReader(
 					gf.repeating(
 							new CsvEventStreamReaderBasicCharSeeker<>(
 									charSeeker,
@@ -1064,7 +1064,7 @@ public abstract class Workload implements Closeable {
 			readOperationFileReaders.add(charSeeker);
 		}
 
-		Iterator<Operation<?>> readOperation10Stream;
+		Iterator<Operation> readOperation10Stream;
 		{
 			CsvEventStreamReaderBasicCharSeeker.EventDecoder<Object[]> decoder =
 					new Query10EventStreamReader.Query10Decoder();
@@ -1092,7 +1092,7 @@ public abstract class Workload implements Closeable {
 						readOperation10File.getAbsolutePath()), e);
 			}
 
-			Iterator<Operation<?>> operation10StreamWithoutTimes = new Query10EventStreamReader(
+			Iterator<Operation> operation10StreamWithoutTimes = new Query10EventStreamReader(
 					gf.repeating(
 							new CsvEventStreamReaderBasicCharSeeker<>(
 									charSeeker,
@@ -1116,7 +1116,7 @@ public abstract class Workload implements Closeable {
 			readOperationFileReaders.add(charSeeker);
 		}
 
-		Iterator<Operation<?>> readOperation11Stream;
+		Iterator<Operation> readOperation11Stream;
 		{
 			CsvEventStreamReaderBasicCharSeeker.EventDecoder<Object[]> decoder =
 					new Query11EventStreamReader.Query11Decoder();
@@ -1145,7 +1145,7 @@ public abstract class Workload implements Closeable {
 						readOperation11File.getAbsolutePath()), e);
 			}
 
-			Iterator<Operation<?>> operation11StreamWithoutTimes = new Query11EventStreamReader(
+			Iterator<Operation> operation11StreamWithoutTimes = new Query11EventStreamReader(
 					gf.repeating(
 							new CsvEventStreamReaderBasicCharSeeker<>(
 									charSeeker,
@@ -1169,7 +1169,7 @@ public abstract class Workload implements Closeable {
 			readOperationFileReaders.add(charSeeker);
 		}
 
-		Iterator<Operation<?>> readOperation12Stream;
+		Iterator<Operation> readOperation12Stream;
 		{
 			CsvEventStreamReaderBasicCharSeeker.EventDecoder<Object[]> decoder =
 					new Query12EventStreamReader.Query12Decoder();
@@ -1197,7 +1197,7 @@ public abstract class Workload implements Closeable {
 						readOperation12File.getAbsolutePath()), e);
 			}
 
-			Iterator<Operation<?>> operation12StreamWithoutTimes = new Query12EventStreamReader(
+			Iterator<Operation> operation12StreamWithoutTimes = new Query12EventStreamReader(
 					gf.repeating(
 							new CsvEventStreamReaderBasicCharSeeker<>(
 									charSeeker,
@@ -1221,7 +1221,7 @@ public abstract class Workload implements Closeable {
 			readOperationFileReaders.add(charSeeker);
 		}
 
-		Iterator<Operation<?>> readOperation13Stream;
+		Iterator<Operation> readOperation13Stream;
 		{
 			CsvEventStreamReaderBasicCharSeeker.EventDecoder<Object[]> decoder =
 					new Query13EventStreamReader.Query13Decoder();
@@ -1249,7 +1249,7 @@ public abstract class Workload implements Closeable {
 						readOperation13File.getAbsolutePath()), e);
 			}
 
-			Iterator<Operation<?>> operation13StreamWithoutTimes = new Query13EventStreamReader(
+			Iterator<Operation> operation13StreamWithoutTimes = new Query13EventStreamReader(
 					gf.repeating(
 							new CsvEventStreamReaderBasicCharSeeker<>(
 									charSeeker,
@@ -1273,7 +1273,7 @@ public abstract class Workload implements Closeable {
 			readOperationFileReaders.add(charSeeker);
 		}
 
-		Iterator<Operation<?>> readOperation14Stream;
+		Iterator<Operation> readOperation14Stream;
 		{
 			CsvEventStreamReaderBasicCharSeeker.EventDecoder<Object[]> decoder =
 					new Query14EventStreamReader.Query14Decoder();
@@ -1301,7 +1301,7 @@ public abstract class Workload implements Closeable {
 						readOperation14File.getAbsolutePath()), e);
 			}
 
-			Iterator<Operation<?>> operation14StreamWithoutTimes = new Query14EventStreamReader(
+			Iterator<Operation> operation14StreamWithoutTimes = new Query14EventStreamReader(
 					gf.repeating(
 							new CsvEventStreamReaderBasicCharSeeker<>(
 									charSeeker,
@@ -1371,13 +1371,13 @@ public abstract class Workload implements Closeable {
 		/*
 		 * Merge all dependency asynchronous operation streams, ordered by operation start times
 		 */
-		Iterator<Operation<?>> asynchronousDependencyStreams = gf.mergeSortOperationsByTimeStamp(
+		Iterator<Operation> asynchronousDependencyStreams = gf.mergeSortOperationsByTimeStamp(
 				asynchronousDependencyStreamsList.toArray(new Iterator[asynchronousDependencyStreamsList.size()])
 		);
 		/*
 		 * Merge all non dependency asynchronous operation streams, ordered by operation start times
 		 */
-		Iterator<Operation<?>> asynchronousNonDependencyStreams = gf.mergeSortOperationsByTimeStamp(
+		Iterator<Operation> asynchronousNonDependencyStreams = gf.mergeSortOperationsByTimeStamp(
 				asynchronousNonDependencyStreamsList
 						.toArray(new Iterator[asynchronousNonDependencyStreamsList.size()])
 		);
@@ -1461,7 +1461,7 @@ public abstract class Workload implements Closeable {
 		return ldbcSnbInteractiveWorkloadStreams;
 	}
 
-	private Tuple2<Iterator<Operation<?>>, Closeable> fileToWriteStreamParser(File updateOperationsFile,
+	private Tuple2<Iterator<Operation>, Closeable> fileToWriteStreamParser(File updateOperationsFile,
 																			  LdbcSnbInteractiveWorkloadConfiguration.UpdateStreamParser parser) throws IOException, WorkloadException {
 		switch (parser) {
 			case REGEX: {
@@ -1508,17 +1508,17 @@ public abstract class Workload implements Closeable {
 
 	public DbValidationParametersFilter dbValidationParametersFilter(final Integer requiredValidationParameterCount) {
 		return new DbValidationParametersFilter() {
-			private final List<Operation<?>> injectedOperations = new ArrayList<>();
+			private final List<Operation> injectedOperations = new ArrayList<>();
 			int validationParameterCount = 0;
 
 			@Override
-			public boolean useOperation(Operation<?> operation) {
+			public boolean useOperation(Operation operation) {
 				return true;
 			}
 
 			@Override
 			public DbValidationParametersFilterResult useOperationAndResultForValidation(
-					Operation<?> operation,
+					Operation operation,
 					Object operationResult) {
 				if (validationParameterCount < requiredValidationParameterCount) {
 					validationParameterCount++;
@@ -1540,20 +1540,20 @@ public abstract class Workload implements Closeable {
 		return DEFAULT_MAXIMUM_EXPECTED_INTERLEAVE_AS_MILLI;
 	}
 
-	public abstract String serializeOperation(Operation<?> operation) throws SerializingMarshallingException;
+	public abstract String serializeOperation(Operation operation) throws SerializingMarshallingException;
 
-	public abstract Operation<?> marshalOperation(String serializedOperation) throws SerializingMarshallingException;
+	public abstract Operation marshalOperation(String serializedOperation) throws SerializingMarshallingException;
 
-	public abstract boolean resultsEqual(Operation<?> operation, Object result1, Object result2)
+	public abstract boolean resultsEqual(Operation operation, Object result1, Object result2)
 			throws WorkloadException;
 
 	protected abstract BENCHMARK_MODE getBenchmarkMode();
 
 	public interface DbValidationParametersFilter {
-		boolean useOperation(Operation<?> operation);
+		boolean useOperation(Operation operation);
 
 		DbValidationParametersFilterResult useOperationAndResultForValidation(
-				Operation<?> operation,
+				Operation operation,
 				Object operationResult);
 	}
 
@@ -1566,11 +1566,11 @@ public abstract class Workload implements Closeable {
 
 	public static class DbValidationParametersFilterResult {
 		private final DbValidationParametersFilterAcceptance acceptance;
-		private final List<Operation<?>> injectedOperations;
+		private final List<Operation> injectedOperations;
 
 		public DbValidationParametersFilterResult(
 				DbValidationParametersFilterAcceptance acceptance,
-				List<Operation<?>> injectedOperations) {
+				List<Operation> injectedOperations) {
 			this.acceptance = acceptance;
 			this.injectedOperations = injectedOperations;
 		}
@@ -1579,7 +1579,7 @@ public abstract class Workload implements Closeable {
 			return acceptance;
 		}
 
-		public List<Operation<?>> injectedOperations() {
+		public List<Operation> injectedOperations() {
 			return injectedOperations;
 		}
 	}

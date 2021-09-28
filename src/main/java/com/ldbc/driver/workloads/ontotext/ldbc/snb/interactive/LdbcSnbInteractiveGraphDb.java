@@ -80,7 +80,7 @@ public class LdbcSnbInteractiveGraphDb extends Db {
 	private SleepType sleepType;
 
 	private interface SleepFun {
-		void sleep(Operation<?> operation, long sleepNs);
+		void sleep(Operation operation, long sleepNs);
 	}
 
 	private static SleepFun sleepFun;
@@ -177,7 +177,7 @@ public class LdbcSnbInteractiveGraphDb extends Db {
 		return connectionState;
 	}
 
-	private static void sleep(Operation<?> operation, long sleepNs) {
+	private static void sleep(Operation operation, long sleepNs) {
 		sleepFun.sleep(operation, sleepNs);
 	}
 

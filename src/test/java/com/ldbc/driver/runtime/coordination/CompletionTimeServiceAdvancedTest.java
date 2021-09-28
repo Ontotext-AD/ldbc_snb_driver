@@ -176,7 +176,7 @@ public class CompletionTimeServiceAdvancedTest
         workload.init( configuration );
         GeneratorFactory gf = new GeneratorFactory( new RandomDataGeneratorFactory( 42L ) );
 
-        Iterator<Operation<?>> operations = gf.limit(
+        Iterator<Operation> operations = gf.limit(
                 WorkloadStreams.mergeSortedByStartTimeExcludingChildOperationGenerators(
                         gf,
                         workload.streams( gf, true ) ),

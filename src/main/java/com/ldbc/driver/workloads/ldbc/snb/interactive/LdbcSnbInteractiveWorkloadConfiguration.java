@@ -241,7 +241,7 @@ public abstract class LdbcSnbInteractiveWorkloadConfiguration {
 			WRITE_OPERATION_8_ENABLE_KEY
 	);
 
-	private static String asEnableKey(Class<? extends Operation<?>> operation) {
+	private static String asEnableKey(Class<? extends Operation> operation) {
 		return LDBC_SNB_INTERACTIVE_PARAM_NAME_PREFIX + operation.getSimpleName() + ENABLE_SUFFIX;
 	}
 
@@ -354,14 +354,14 @@ public abstract class LdbcSnbInteractiveWorkloadConfiguration {
 
 	public static Map<String, String> withOnly(
 			Map<String, String> originalParams,
-			Class<? extends Operation<?>>... operationClasses)
+			Class<? extends Operation>... operationClasses)
 			throws DriverConfigurationException, IOException {
 		Map<String, String> params = withoutWrites(
 				withoutShortReads(
 						withoutLongReads(originalParams)
 				)
 		);
-		for (Class<? extends Operation<?>> operationClass : operationClasses) {
+		for (Class<? extends Operation> operationClass : operationClasses) {
 			params.put(asEnableKey(operationClass), "true");
 		}
 		return ConsoleAndFileDriverConfiguration.convertLongKeysToShortKeys(params);
@@ -457,8 +457,8 @@ public abstract class LdbcSnbInteractiveWorkloadConfiguration {
 		return ConsoleAndFileDriverConfiguration.convertLongKeysToShortKeys(params);
 	}
 
-	public static Map<Integer, Class<? extends Operation<?>>> operationTypeToClassMapping() {
-		Map<Integer, Class<? extends Operation<?>>> operationTypeToClassMapping = new HashMap<>();
+	public static Map<Integer, Class<? extends Operation>> operationTypeToClassMapping() {
+		Map<Integer, Class<? extends Operation>> operationTypeToClassMapping = new HashMap<>();
 		operationTypeToClassMapping.put(LdbcQuery1.TYPE, LdbcQuery1.class);
 		operationTypeToClassMapping.put(LdbcQuery2.TYPE, LdbcQuery2.class);
 		operationTypeToClassMapping.put(LdbcQuery3.TYPE, LdbcQuery3.class);

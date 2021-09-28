@@ -471,7 +471,7 @@ public class LdbcSnbShortReadGenerator implements ChildOperationGenerator
     }
 
     @Override
-    public Operation<?> nextOperation(
+    public Operation nextOperation(
             double state,
             Operation operation,
             Object result,
@@ -502,13 +502,13 @@ public class LdbcSnbShortReadGenerator implements ChildOperationGenerator
 
     public static interface BufferReplenishFun
     {
-        void replenish( Operation<?> operation, Object result );
+        void replenish( Operation operation, Object result );
     }
 
     public static class NoOpBufferReplenishFun implements BufferReplenishFun
     {
         @Override
-        public void replenish( Operation<?> operation, Object result )
+        public void replenish( Operation operation, Object result )
         {
         }
     }
@@ -525,7 +525,7 @@ public class LdbcSnbShortReadGenerator implements ChildOperationGenerator
         }
 
         @Override
-        public void replenish( Operation<?> operation, Object result )
+        public void replenish( Operation operation, Object result )
         {
             switch ( operation.type() )
             {
@@ -666,10 +666,10 @@ public class LdbcSnbShortReadGenerator implements ChildOperationGenerator
 
     private interface LdbcShortQueryFactory
     {
-        Operation<?> create(
+        Operation create(
                 Queue<Long> personIdBuffer,
                 Queue<Long> messageIdBuffer,
-                Operation<?> previousOperation,
+                Operation previousOperation,
                 long previousOperationActualStartTimeAsMilli,
                 long previousOperationRunDurationAsNano,
                 double state );
@@ -680,10 +680,10 @@ public class LdbcSnbShortReadGenerator implements ChildOperationGenerator
     private class NoOpFactory implements LdbcShortQueryFactory
     {
         @Override
-        public Operation<?> create(
+        public Operation create(
                 Queue<Long> personIdBuffer,
                 Queue<Long> messageIdBuffer,
-                Operation<?> previousOperation,
+                Operation previousOperation,
                 long previousOperationActualStartTimeAsMilli,
                 long previousOperationRunDurationAsNano,
                 double state )
@@ -708,10 +708,10 @@ public class LdbcSnbShortReadGenerator implements ChildOperationGenerator
         }
 
         @Override
-        public Operation<?> create(
+        public Operation create(
                 Queue<Long> personIdBuffer,
                 Queue<Long> messageIdBuffer,
-                Operation<?> previousOperation,
+                Operation previousOperation,
                 long previousOperationActualStartTimeAsMilli,
                 long previousOperationRunDurationAsNano,
                 double state )
@@ -747,10 +747,10 @@ public class LdbcSnbShortReadGenerator implements ChildOperationGenerator
         }
 
         @Override
-        public Operation<?> create(
+        public Operation create(
                 Queue<Long> personIdBuffer,
                 Queue<Long> messageIdBuffer,
-                Operation<?> previousOperation,
+                Operation previousOperation,
                 long previousOperationActualStartTimeAsMilli,
                 long previousOperationRunDurationAsNano,
                 double state )
@@ -792,10 +792,10 @@ public class LdbcSnbShortReadGenerator implements ChildOperationGenerator
         }
 
         @Override
-        public Operation<?> create(
+        public Operation create(
                 Queue<Long> personIdBuffer,
                 Queue<Long> messageIdBuffer,
-                Operation<?> previousOperation,
+                Operation previousOperation,
                 long previousOperationActualStartTimeAsMilli,
                 long previousOperationRunDurationAsNano,
                 double state )
@@ -860,10 +860,10 @@ public class LdbcSnbShortReadGenerator implements ChildOperationGenerator
         }
 
         @Override
-        public Operation<?> create(
+        public Operation create(
                 Queue<Long> personIdBuffer,
                 Queue<Long> messageIdBuffer,
-                Operation<?> previousOperation,
+                Operation previousOperation,
                 long previousOperationActualStartTimeAsMilli,
                 long previousOperationRunDurationAsNano,
                 double state )
@@ -875,7 +875,7 @@ public class LdbcSnbShortReadGenerator implements ChildOperationGenerator
             }
             else
             {
-                Operation<?> operation = new LdbcShortQuery1PersonProfile( id );
+                Operation operation = new LdbcShortQuery1PersonProfile( id );
                 operation.setScheduledStartTimeAsMilli(
                         scheduledStartTimeFactory.nextScheduledStartTime(
                                 previousOperation,
@@ -927,10 +927,10 @@ public class LdbcSnbShortReadGenerator implements ChildOperationGenerator
         }
 
         @Override
-        public Operation<?> create(
+        public Operation create(
                 Queue<Long> personIdBuffer,
                 Queue<Long> messageIdBuffer,
-                Operation<?> previousOperation,
+                Operation previousOperation,
                 long previousOperationActualStartTimeAsMilli,
                 long previousOperationRunDurationAsNano,
                 double state )
@@ -942,7 +942,7 @@ public class LdbcSnbShortReadGenerator implements ChildOperationGenerator
             }
             else
             {
-                Operation<?> operation = new LdbcShortQuery2PersonPosts( id, LdbcShortQuery2PersonPosts.DEFAULT_LIMIT );
+                Operation operation = new LdbcShortQuery2PersonPosts( id, LdbcShortQuery2PersonPosts.DEFAULT_LIMIT );
                 operation.setScheduledStartTimeAsMilli(
                         scheduledStartTimeFactory.nextScheduledStartTime(
                                 previousOperation,
@@ -994,10 +994,10 @@ public class LdbcSnbShortReadGenerator implements ChildOperationGenerator
         }
 
         @Override
-        public Operation<?> create(
+        public Operation create(
                 Queue<Long> personIdBuffer,
                 Queue<Long> messageIdBuffer,
-                Operation<?> previousOperation,
+                Operation previousOperation,
                 long previousOperationActualStartTimeAsMilli,
                 long previousOperationRunDurationAsNano,
                 double state )
@@ -1009,7 +1009,7 @@ public class LdbcSnbShortReadGenerator implements ChildOperationGenerator
             }
             else
             {
-                Operation<?> operation = new LdbcShortQuery3PersonFriends( id );
+                Operation operation = new LdbcShortQuery3PersonFriends( id );
                 operation.setScheduledStartTimeAsMilli(
                         scheduledStartTimeFactory.nextScheduledStartTime(
                                 previousOperation,
@@ -1061,10 +1061,10 @@ public class LdbcSnbShortReadGenerator implements ChildOperationGenerator
         }
 
         @Override
-        public Operation<?> create(
+        public Operation create(
                 Queue<Long> personIdBuffer,
                 Queue<Long> messageIdBuffer,
-                Operation<?> previousOperation,
+                Operation previousOperation,
                 long previousOperationActualStartTimeAsMilli,
                 long previousOperationRunDurationAsNano,
                 double state )
@@ -1076,7 +1076,7 @@ public class LdbcSnbShortReadGenerator implements ChildOperationGenerator
             }
             else
             {
-                Operation<?> operation = new LdbcShortQuery4MessageContent( id );
+                Operation operation = new LdbcShortQuery4MessageContent( id );
                 operation.setScheduledStartTimeAsMilli(
                         scheduledStartTimeFactory.nextScheduledStartTime(
                                 previousOperation,
@@ -1128,10 +1128,10 @@ public class LdbcSnbShortReadGenerator implements ChildOperationGenerator
         }
 
         @Override
-        public Operation<?> create(
+        public Operation create(
                 Queue<Long> personIdBuffer,
                 Queue<Long> messageIdBuffer,
-                Operation<?> previousOperation,
+                Operation previousOperation,
                 long previousOperationActualStartTimeAsMilli,
                 long previousOperationRunDurationAsNano,
                 double state )
@@ -1143,7 +1143,7 @@ public class LdbcSnbShortReadGenerator implements ChildOperationGenerator
             }
             else
             {
-                Operation<?> operation = new LdbcShortQuery5MessageCreator( id );
+                Operation operation = new LdbcShortQuery5MessageCreator( id );
                 operation.setScheduledStartTimeAsMilli(
                         scheduledStartTimeFactory.nextScheduledStartTime(
                                 previousOperation,
@@ -1195,10 +1195,10 @@ public class LdbcSnbShortReadGenerator implements ChildOperationGenerator
         }
 
         @Override
-        public Operation<?> create(
+        public Operation create(
                 Queue<Long> personIdBuffer,
                 Queue<Long> messageIdBuffer,
-                Operation<?> previousOperation,
+                Operation previousOperation,
                 long previousOperationActualStartTimeAsMilli,
                 long previousOperationRunDurationAsNano,
                 double state )
@@ -1210,7 +1210,7 @@ public class LdbcSnbShortReadGenerator implements ChildOperationGenerator
             }
             else
             {
-                Operation<?> operation = new LdbcShortQuery6MessageForum( id );
+                Operation operation = new LdbcShortQuery6MessageForum( id );
                 operation.setScheduledStartTimeAsMilli(
                         scheduledStartTimeFactory.nextScheduledStartTime(
                                 previousOperation,
@@ -1262,10 +1262,10 @@ public class LdbcSnbShortReadGenerator implements ChildOperationGenerator
         }
 
         @Override
-        public Operation<?> create(
+        public Operation create(
                 Queue<Long> personIdBuffer,
                 Queue<Long> messageIdBuffer,
-                Operation<?> previousOperation,
+                Operation previousOperation,
                 long previousOperationActualStartTimeAsMilli,
                 long previousOperationRunDurationAsNano,
                 double state )
@@ -1277,7 +1277,7 @@ public class LdbcSnbShortReadGenerator implements ChildOperationGenerator
             }
             else
             {
-                Operation<?> operation = new LdbcShortQuery7MessageReplies( id );
+                Operation operation = new LdbcShortQuery7MessageReplies( id );
                 operation.setScheduledStartTimeAsMilli(
                         scheduledStartTimeFactory.nextScheduledStartTime(
                                 previousOperation,
@@ -1302,14 +1302,14 @@ public class LdbcSnbShortReadGenerator implements ChildOperationGenerator
 
     private interface ScheduledStartTimeFactory
     {
-        long nextScheduledStartTime( Operation<?> previousOperation, long actualStartTimeAsMilli,
+        long nextScheduledStartTime( Operation previousOperation, long actualStartTimeAsMilli,
                 long previousOperationRunDurationAsNano );
     }
 
     private class EstimatedScheduledStartTimeFactory implements ScheduledStartTimeFactory
     {
         @Override
-        public long nextScheduledStartTime( Operation<?> previousOperation, long actualStartTimeAsMilli,
+        public long nextScheduledStartTime( Operation previousOperation, long actualStartTimeAsMilli,
                 long previousOperationRunDurationAsNano )
         {
             return previousOperation.scheduledStartTimeAsMilli() + interleavesAsMilli[previousOperation.type()];
@@ -1319,7 +1319,7 @@ public class LdbcSnbShortReadGenerator implements ChildOperationGenerator
     private class PreviousOperationActualFinishTimeFactory implements ScheduledStartTimeFactory
     {
         @Override
-        public long nextScheduledStartTime( Operation<?> previousOperation, long actualStartTimeAsMilli,
+        public long nextScheduledStartTime( Operation previousOperation, long actualStartTimeAsMilli,
                 long previousOperationRunDurationAsNano )
         {
             return actualStartTimeAsMilli + TimeUnit.NANOSECONDS.toMillis( previousOperationRunDurationAsNano );
@@ -1329,7 +1329,7 @@ public class LdbcSnbShortReadGenerator implements ChildOperationGenerator
     private class PreviousOperationScheduledStartTimeFactory implements ScheduledStartTimeFactory
     {
         @Override
-        public long nextScheduledStartTime( Operation<?> previousOperation, long actualStartTimeAsMilli,
+        public long nextScheduledStartTime( Operation previousOperation, long actualStartTimeAsMilli,
                 long previousOperationRunDurationAsNano )
         {
             return previousOperation.scheduledStartTimeAsMilli();

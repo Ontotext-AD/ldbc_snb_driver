@@ -46,9 +46,9 @@ public class SimpleWorkload extends Workload
     final long INITIAL_INSERT_COUNT = 10;
 
     @Override
-    public Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping()
+    public Map<Integer,Class<? extends Operation>> operationTypeToClassMapping()
     {
-        Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping = new HashMap<>();
+        Map<Integer,Class<? extends Operation>> operationTypeToClassMapping = new HashMap<>();
         operationTypeToClassMapping.put( InsertOperation.TYPE, InsertOperation.class );
         operationTypeToClassMapping.put( ReadModifyWriteOperation.TYPE, ReadModifyWriteOperation.class );
         operationTypeToClassMapping.put( ReadOperation.TYPE, ReadOperation.class );
@@ -88,7 +88,7 @@ public class SimpleWorkload extends Workload
         Iterator<Map<String,Iterator<Byte>>> insertValuedFieldGenerator =
                 gf.weightedDiscreteMap( valuedFields, NUMBER_OF_FIELDS_IN_RECORD );
 
-        Iterator<Operation<?>> initialInsertOperationGenerator = gf.limit(
+        Iterator<Operation> initialInsertOperationGenerator = gf.limit(
                 new InsertOperationGenerator( TABLE, gf.prefix( insertKeyGenerator, KEY_NAME_PREFIX ),
                         insertValuedFieldGenerator ),
                 INITIAL_INSERT_COUNT
@@ -187,18 +187,18 @@ public class SimpleWorkload extends Workload
          * **************************
          */
         // proportion of transactions reads/update/insert/scan/read-modify-write
-        List<Tuple2<Double,Iterator<Operation<?>>>> operations = new ArrayList<>();
+        List<Tuple2<Double,Iterator<Operation>>> operations = new ArrayList<>();
         operations.add( Tuple.tuple2( READ_RATIO, readOperationGenerator) );
-        operations.add( Tuple.tuple2( UPDATE_RATIO, (Iterator<Operation<?>>) updateOperationGenerator ) );
+        operations.add( Tuple.tuple2( UPDATE_RATIO, (Iterator<Operation>) updateOperationGenerator ) );
         operations.add( Tuple.tuple2( INSERT_RATIO, transactionalInsertOperationGenerator) );
         operations.add( Tuple.tuple2( SCAN_RATIO, scanOperationGenerator ) );
         operations.add( Tuple
                 .tuple2( READ_MODIFY_WRITE_RATIO, readModifyWriteOperationGenerator) );
 
-        Iterator<Operation<?>> transactionalOperationGenerator = gf.weightedDiscreteDereferencing( operations );
+        Iterator<Operation> transactionalOperationGenerator = gf.weightedDiscreteDereferencing( operations );
 
         // iterates initialInsertOperationGenerator before starting with transactionalInsertOperationGenerator
-        Iterator<Operation<?>> workloadOperations =
+        Iterator<Operation> workloadOperations =
                 Iterators.concat( initialInsertOperationGenerator, transactionalOperationGenerator );
 
         Iterator<Long> startTimesAsMilli = gf.incrementing( workloadStartTimeAsMilli + 1, 100l );
@@ -227,7 +227,7 @@ public class SimpleWorkload extends Workload
     };
 
     @Override
-    public String serializeOperation( Operation<?> operation ) throws SerializingMarshallingException
+    public String serializeOperation( Operation operation ) throws SerializingMarshallingException
     {
         try
         {
@@ -382,7 +382,7 @@ public class SimpleWorkload extends Workload
     }
 
     @Override
-    public boolean resultsEqual( Operation<?> operation, Object result1, Object result2 ) throws WorkloadException
+    public boolean resultsEqual( Operation operation, Object result1, Object result2 ) throws WorkloadException
     {
         if ( null == result1 || null == result2 )
         { return false; }

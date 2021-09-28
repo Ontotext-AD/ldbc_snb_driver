@@ -17,14 +17,14 @@ public abstract class Db implements Closeable
     private boolean isInitialized = false;
     private AtomicBoolean isShutdown = new AtomicBoolean( false );
     private DbConnectionState dbConnectionState = null;
-    private Map<Class<? extends Operation<?>>,OperationHandler> operationHandlers = new HashMap<>();
+    private Map<Class<? extends Operation>,OperationHandler> operationHandlers = new HashMap<>();
     private OperationHandler[] operationHandlersArray = null;
     private OperationHandlerRunnerFactory operationHandlerRunnableContextFactory = null;
 
     synchronized public final void init(
             Map<String,String> params,
             LoggingService loggingService,
-            Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping )
+            Map<Integer,Class<? extends Operation>> operationTypeToClassMapping )
             throws DbException
     {
         if (isInitialized)
@@ -87,7 +87,7 @@ public abstract class Db implements Closeable
      */
     protected abstract void onClose() throws IOException;
 
-    public final <A extends Operation<?>, H extends OperationHandler<A,?>> void registerOperationHandler(
+    public final <A extends Operation, H extends OperationHandler<A,?>> void registerOperationHandler(
             Class<A> operationType, Class<H> operationHandlerType ) throws DbException
     {
         if ( operationHandlers.containsKey( operationType ) )
@@ -133,8 +133,8 @@ public abstract class Db implements Closeable
     }
 
     private static OperationHandler[] toOperationHandlerArray(
-            Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping,
-            Map<Class<? extends Operation<?>>,OperationHandler> operationHandlers ) throws DbException
+            Map<Integer,Class<? extends Operation>> operationTypeToClassMapping,
+            Map<Class<? extends Operation>,OperationHandler> operationHandlers ) throws DbException
     {
         if ( operationTypeToClassMapping.isEmpty() )
         {

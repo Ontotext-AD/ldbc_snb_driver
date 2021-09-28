@@ -125,7 +125,7 @@ public class QueuePerformanceTests
         WorkloadStreams workloadStreams = workloadStreamsAndWorkload._1();
         Workload workload = workloadStreamsAndWorkload._2();
 
-        Iterator<Operation<?>> operations =
+        Iterator<Operation> operations =
                 WorkloadStreams.mergeSortedByStartTimeExcludingChildOperationGenerators( gf, workloadStreams );
 
         System.out.println( "Benchmarking..." );
@@ -141,11 +141,11 @@ public class QueuePerformanceTests
         workload.close();
     }
 
-    private long doOperationQueuePerformanceTest( final Iterator<Operation<?>> operations, final Queue<Operation<?>> queue )
+    private long doOperationQueuePerformanceTest( final Iterator<Operation> operations, final Queue<Operation> queue )
             throws InterruptedException
     {
-        final QueueEventSubmitter<Operation<?>> queueEventSubmitter = QueueEventSubmitter.queueEventSubmitterFor( queue );
-        final QueueEventFetcher<Operation<?>> queueEventFetcher = QueueEventFetcher.queueEventFetcherFor( queue );
+        final QueueEventSubmitter<Operation> queueEventSubmitter = QueueEventSubmitter.queueEventSubmitterFor( queue );
+        final QueueEventFetcher<Operation> queueEventFetcher = QueueEventFetcher.queueEventFetcherFor( queue );
         Thread writeThread = new Thread()
         {
             @Override

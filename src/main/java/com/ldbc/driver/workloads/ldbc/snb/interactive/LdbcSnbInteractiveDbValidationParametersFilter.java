@@ -53,7 +53,7 @@ public class LdbcSnbInteractiveDbValidationParametersFilter implements DbValidat
     public DbValidationParametersFilterResult useOperationAndResultForValidation(Operation operation,
                                                                                  Object operationResult) {
         Class<?> operationType = operation.getClass();
-        List<Operation<?>> injectedOperations = new ArrayList<>();
+        List<Operation> injectedOperations = new ArrayList<>();
 
         // do not use empty results for validation
         if (multiResultOperations.contains(operationType) && ((List) operationResult).isEmpty()) {
@@ -111,8 +111,8 @@ public class LdbcSnbInteractiveDbValidationParametersFilter implements DbValidat
         return true;
     }
 
-    private List<Operation<?>> generateOperationsToInject(Operation<?> operation) {
-        List<Operation<?>> operationsToInject = new ArrayList<>();
+    private List<Operation> generateOperationsToInject(Operation operation) {
+        List<Operation> operationsToInject = new ArrayList<>();
         switch (operation.type()) {
             case LdbcUpdate1AddPerson.TYPE: {
                 injectShort1(operationsToInject, ((LdbcUpdate1AddPerson) operation).personId());
@@ -185,7 +185,7 @@ public class LdbcSnbInteractiveDbValidationParametersFilter implements DbValidat
         return operationsToInject;
     }
 
-    private void injectShort1(List<Operation<?>> operationsToInject, long personId) {
+    private void injectShort1(List<Operation> operationsToInject, long personId) {
         if (enabledShortReadOperationTypes.contains(LdbcShortQuery1PersonProfile.class)) {
             operationsToInject.add(
                     new LdbcShortQuery1PersonProfile(personId)
@@ -193,7 +193,7 @@ public class LdbcSnbInteractiveDbValidationParametersFilter implements DbValidat
         }
     }
 
-    private void injectShort2(List<Operation<?>> operationsToInject, long personId) {
+    private void injectShort2(List<Operation> operationsToInject, long personId) {
         if (enabledShortReadOperationTypes.contains(LdbcShortQuery2PersonPosts.class)) {
             operationsToInject.add(
                     new LdbcShortQuery2PersonPosts(personId, LdbcShortQuery2PersonPosts.DEFAULT_LIMIT)
@@ -201,7 +201,7 @@ public class LdbcSnbInteractiveDbValidationParametersFilter implements DbValidat
         }
     }
 
-    private void injectShort3(List<Operation<?>> operationsToInject, long personId) {
+    private void injectShort3(List<Operation> operationsToInject, long personId) {
         if (enabledShortReadOperationTypes.contains(LdbcShortQuery3PersonFriends.class)) {
             operationsToInject.add(
                     new LdbcShortQuery3PersonFriends(personId)
@@ -209,7 +209,7 @@ public class LdbcSnbInteractiveDbValidationParametersFilter implements DbValidat
         }
     }
 
-    private void injectShort4(List<Operation<?>> operationsToInject, long messageId) {
+    private void injectShort4(List<Operation> operationsToInject, long messageId) {
         if (enabledShortReadOperationTypes.contains(LdbcShortQuery4MessageContent.class)) {
             operationsToInject.add(
                     new LdbcShortQuery4MessageContent(messageId)
@@ -217,7 +217,7 @@ public class LdbcSnbInteractiveDbValidationParametersFilter implements DbValidat
         }
     }
 
-    private void injectShort5(List<Operation<?>> operationsToInject, long messageId) {
+    private void injectShort5(List<Operation> operationsToInject, long messageId) {
         if (enabledShortReadOperationTypes.contains(LdbcShortQuery5MessageCreator.class)) {
             operationsToInject.add(
                     new LdbcShortQuery5MessageCreator(messageId)
@@ -225,7 +225,7 @@ public class LdbcSnbInteractiveDbValidationParametersFilter implements DbValidat
         }
     }
 
-    private void injectShort6(List<Operation<?>> operationsToInject, long messageId) {
+    private void injectShort6(List<Operation> operationsToInject, long messageId) {
         if (enabledShortReadOperationTypes.contains(LdbcShortQuery6MessageForum.class)) {
             operationsToInject.add(
                     new LdbcShortQuery6MessageForum(messageId)
@@ -233,7 +233,7 @@ public class LdbcSnbInteractiveDbValidationParametersFilter implements DbValidat
         }
     }
 
-    private void injectShort7(List<Operation<?>> operationsToInject, long messageId) {
+    private void injectShort7(List<Operation> operationsToInject, long messageId) {
         if (enabledShortReadOperationTypes.contains(LdbcShortQuery7MessageReplies.class)) {
             operationsToInject.add(
                     new LdbcShortQuery7MessageReplies(messageId)

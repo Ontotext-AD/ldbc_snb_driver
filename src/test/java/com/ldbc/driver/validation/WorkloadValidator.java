@@ -58,7 +58,7 @@ public class WorkloadValidator
          * *************************************************************************************************************
          */
         Workload workloadPass1;
-        Iterator<Operation<?>> operationsPass1;
+        Iterator<Operation> operationsPass1;
         try
         {
             long offset = 0;
@@ -169,7 +169,7 @@ public class WorkloadValidator
          */
 
         Workload workloadPass2;
-        Iterator<Operation<?>> operationsPass2;
+        Iterator<Operation> operationsPass2;
         try
         {
             long offset = 0;
@@ -420,8 +420,8 @@ public class WorkloadValidator
          */
         Workload workload1;
         Workload workload2;
-        Iterator<Operation<?>> operationStream1;
-        Iterator<Operation<?>> operationStream2;
+        Iterator<Operation> operationStream1;
+        Iterator<Operation> operationStream2;
         try
         {
             boolean returnStreamsWithDbConnector = false;

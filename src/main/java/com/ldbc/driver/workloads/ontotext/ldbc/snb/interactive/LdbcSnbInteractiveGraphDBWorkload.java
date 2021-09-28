@@ -34,8 +34,8 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 	public static final String ERROR_WHILE_TRYING_TO_SERIALIZE_RESULT_N_S = "Error while trying to serialize result%n%s";
 
 	@Override
-	public Map<Integer, Class<? extends Operation<?>>> operationTypeToClassMapping() {
-		Map<Integer, Class<? extends Operation<?>>> operationTypeToClassMapping = new HashMap<>();
+	public Map<Integer, Class<? extends Operation>> operationTypeToClassMapping() {
+		Map<Integer, Class<? extends Operation>> operationTypeToClassMapping = new HashMap<>();
 		operationTypeToClassMapping.put(LdbcQuery1.TYPE, LdbcQuery1.class);
 		operationTypeToClassMapping.put(LdbcQuery2.TYPE, LdbcQuery2.class);
 		operationTypeToClassMapping.put(LdbcQuery3.TYPE, LdbcQuery3.class);
@@ -124,7 +124,7 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 	};
 
 	@Override
-	public String serializeOperation(Operation<?> operation) throws SerializingMarshallingException {
+	public String serializeOperation(Operation operation) throws SerializingMarshallingException {
 		switch (operation.type()) {
 			case LdbcQuery1.TYPE: {
 				LdbcQuery1 ldbcQuery = (LdbcQuery1) operation;
@@ -325,7 +325,7 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 	}
 
 	@Override
-	public Operation<?> marshalOperation(String serializedOperation) throws SerializingMarshallingException {
+	public Operation marshalOperation(String serializedOperation) throws SerializingMarshallingException {
 		List<Object> operationAsList;
 		try {
 			operationAsList = OBJECT_MAPPER.readValue(serializedOperation, TYPE_REFERENCE);
@@ -449,7 +449,7 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 	};
 
 	@Override
-	public boolean resultsEqual(Operation<?> operation, Object result1, Object result2) {
+	public boolean resultsEqual(Operation operation, Object result1, Object result2) {
 		if (null == result1 || null == result2) {
 			return false;
 		} else if (operation.type() == LdbcQuery14.TYPE) {

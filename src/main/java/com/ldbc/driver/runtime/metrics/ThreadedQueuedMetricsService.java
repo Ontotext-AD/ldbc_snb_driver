@@ -42,7 +42,7 @@ public class ThreadedQueuedMetricsService implements MetricsService
             TimeUnit unit,
             long maxRuntimeDurationAsNano,
             SimpleCsvFileWriter csvResultsLogWriter,
-            Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping,
+            Map<Integer,Class<? extends Operation>> operationTypeToClassMapping,
             LoggingServiceFactory loggingServiceFactory ) throws MetricsCollectionException
     {
         Queue<ThreadedQueuedMetricsEvent> queue = DefaultQueues.newBlockingBounded( 10_000 );
@@ -64,7 +64,7 @@ public class ThreadedQueuedMetricsService implements MetricsService
             TimeUnit unit,
             long maxRuntimeDurationAsNano,
             SimpleCsvFileWriter csvResultsLogWriter,
-            Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping,
+            Map<Integer,Class<? extends Operation>> operationTypeToClassMapping,
             LoggingServiceFactory loggingServiceFactory ) throws MetricsCollectionException
     {
         Queue<ThreadedQueuedMetricsEvent> queue = DefaultQueues.newBlockingBounded( 10000 );
@@ -87,7 +87,7 @@ public class ThreadedQueuedMetricsService implements MetricsService
             long maxRuntimeDurationAsNano,
             Queue<ThreadedQueuedMetricsEvent> queue,
             SimpleCsvFileWriter csvResultsLogWriter,
-            Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping,
+            Map<Integer,Class<? extends Operation>> operationTypeToClassMapping,
             LoggingServiceFactory loggingServiceFactory ) throws MetricsCollectionException
     {
         this.timeSource = timeSource;

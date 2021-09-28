@@ -146,13 +146,13 @@ public class InteractiveEventStreamReaderPerformanceTest
         private final CountDownLatch readyLatch;
         private final CountDownLatch startLatch;
         private final CountDownLatch stopLatch;
-        private final Iterator<Operation<?>> updateStreamReader;
+        private final Iterator<Operation> updateStreamReader;
         private long count = 0;
 
         private UpdateStreamReadingThread( CountDownLatch readyLatch,
                 CountDownLatch startLatch,
                 CountDownLatch stopLatch,
-                Iterator<Operation<?>> updateStreamReader )
+                Iterator<Operation> updateStreamReader )
         {
             this.readyLatch = readyLatch;
             this.startLatch = startLatch;
@@ -306,7 +306,7 @@ public class InteractiveEventStreamReaderPerformanceTest
                         ),
                         limit
                 );
-                Iterator<Operation<?>> query1OperationsWithoutTimes = new Query1EventStreamReader( query1Parameters );
+                Iterator<Operation> query1OperationsWithoutTimes = new Query1EventStreamReader( query1Parameters );
                 lines += readingStreamPerformanceTest( query1OperationsWithoutTimes );
                 charSeeker.close();
             }
@@ -352,7 +352,7 @@ public class InteractiveEventStreamReaderPerformanceTest
                         ),
                         limit
                 );
-                Iterator<Operation<?>> query1OperationsWithTimes = gf.assignStartTimes(
+                Iterator<Operation> query1OperationsWithTimes = gf.assignStartTimes(
                         gf.incrementing( 0l, 1l ),
                         new Query1EventStreamReader( query1Parameters )
                 );
@@ -403,7 +403,7 @@ public class InteractiveEventStreamReaderPerformanceTest
                 // skip headers
                 charSeeker1.seek( mark1, new int[]{columnDelimiter} );
                 charSeeker1.seek( mark1, new int[]{columnDelimiter} );
-                Iterator<Operation<?>> query1OperationsWithTimes = gf.assignStartTimes(
+                Iterator<Operation> query1OperationsWithTimes = gf.assignStartTimes(
                         gf.incrementing( 0l, 1l ),
                         new Query1EventStreamReader(
                                 gf.repeating(
@@ -426,7 +426,7 @@ public class InteractiveEventStreamReaderPerformanceTest
                 // skip headers
                 charSeeker2.seek( mark2, new int[]{columnDelimiter} );
                 charSeeker2.seek( mark2, new int[]{columnDelimiter} );
-                Iterator<Operation<?>> query2OperationsWithTimes = gf.assignStartTimes(
+                Iterator<Operation> query2OperationsWithTimes = gf.assignStartTimes(
                         gf.incrementing( 0l, 1l ),
                         new Query2EventStreamReader(
                                 gf.repeating(
@@ -452,7 +452,7 @@ public class InteractiveEventStreamReaderPerformanceTest
                 charSeeker3.seek( mark3, new int[]{columnDelimiter} );
                 charSeeker3.seek( mark3, new int[]{columnDelimiter} );
                 charSeeker3.seek( mark3, new int[]{columnDelimiter} );
-                Iterator<Operation<?>> query3OperationsWithTimes = gf.assignStartTimes(
+                Iterator<Operation> query3OperationsWithTimes = gf.assignStartTimes(
                         gf.incrementing( 0l, 1l ),
                         new Query3EventStreamReader(
                                 gf.repeating(
@@ -476,7 +476,7 @@ public class InteractiveEventStreamReaderPerformanceTest
                 charSeeker4.seek( mark4, new int[]{columnDelimiter} );
                 charSeeker4.seek( mark4, new int[]{columnDelimiter} );
                 charSeeker4.seek( mark4, new int[]{columnDelimiter} );
-                Iterator<Operation<?>> query4OperationsWithTimes = gf.assignStartTimes(
+                Iterator<Operation> query4OperationsWithTimes = gf.assignStartTimes(
                         gf.incrementing( 0l, 1l ),
                         new Query4EventStreamReader(
                                 gf.repeating(
@@ -499,7 +499,7 @@ public class InteractiveEventStreamReaderPerformanceTest
                 // skip headers
                 charSeeker5.seek( mark5, new int[]{columnDelimiter} );
                 charSeeker5.seek( mark5, new int[]{columnDelimiter} );
-                Iterator<Operation<?>> query5OperationsWithTimes = gf.assignStartTimes(
+                Iterator<Operation> query5OperationsWithTimes = gf.assignStartTimes(
                         gf.incrementing( 0l, 1l ),
                         new Query5EventStreamReader(
                                 gf.repeating(
@@ -522,7 +522,7 @@ public class InteractiveEventStreamReaderPerformanceTest
                 // skip headers
                 charSeeker6.seek( mark6, new int[]{columnDelimiter} );
                 charSeeker6.seek( mark6, new int[]{columnDelimiter} );
-                Iterator<Operation<?>> query6OperationsWithTimes = gf.assignStartTimes(
+                Iterator<Operation> query6OperationsWithTimes = gf.assignStartTimes(
                         gf.incrementing( 0l, 1l ),
                         new Query6EventStreamReader(
                                 gf.repeating(
@@ -544,7 +544,7 @@ public class InteractiveEventStreamReaderPerformanceTest
                 Mark mark7 = new Mark();
                 // skip headers
                 charSeeker7.seek( mark7, new int[]{columnDelimiter} );
-                Iterator<Operation<?>> query7OperationsWithTimes = gf.assignStartTimes(
+                Iterator<Operation> query7OperationsWithTimes = gf.assignStartTimes(
                         gf.incrementing( 0l, 1l ),
                         new Query7EventStreamReader(
                                 gf.repeating(
@@ -566,7 +566,7 @@ public class InteractiveEventStreamReaderPerformanceTest
                 Mark mark8 = new Mark();
                 // skip headers
                 charSeeker8.seek( mark8, new int[]{columnDelimiter} );
-                Iterator<Operation<?>> query8OperationsWithTimes = gf.assignStartTimes(
+                Iterator<Operation> query8OperationsWithTimes = gf.assignStartTimes(
                         gf.incrementing( 0l, 1l ),
                         new Query8EventStreamReader(
                                 gf.repeating(
@@ -589,7 +589,7 @@ public class InteractiveEventStreamReaderPerformanceTest
                 // skip headers
                 charSeeker9.seek( mark9, new int[]{columnDelimiter} );
                 charSeeker9.seek( mark9, new int[]{columnDelimiter} );
-                Iterator<Operation<?>> query9OperationsWithTimes = gf.assignStartTimes(
+                Iterator<Operation> query9OperationsWithTimes = gf.assignStartTimes(
                         gf.incrementing( 0l, 1l ),
                         new Query9EventStreamReader(
                                 gf.repeating(
@@ -612,7 +612,7 @@ public class InteractiveEventStreamReaderPerformanceTest
                 // skip headers
                 charSeeker10.seek( mark10, new int[]{columnDelimiter} );
                 charSeeker10.seek( mark10, new int[]{columnDelimiter} );
-                Iterator<Operation<?>> query10OperationsWithTimes = gf.assignStartTimes(
+                Iterator<Operation> query10OperationsWithTimes = gf.assignStartTimes(
                         gf.incrementing( 0l, 1l ),
                         new Query10EventStreamReader(
                                 gf.repeating(
@@ -636,7 +636,7 @@ public class InteractiveEventStreamReaderPerformanceTest
                 charSeeker11.seek( mark11, new int[]{columnDelimiter} );
                 charSeeker11.seek( mark11, new int[]{columnDelimiter} );
                 charSeeker11.seek( mark11, new int[]{columnDelimiter} );
-                Iterator<Operation<?>> query11OperationsWithTimes = gf.assignStartTimes(
+                Iterator<Operation> query11OperationsWithTimes = gf.assignStartTimes(
                         gf.incrementing( 0l, 1l ),
                         new Query11EventStreamReader(
                                 gf.repeating(
@@ -659,7 +659,7 @@ public class InteractiveEventStreamReaderPerformanceTest
                 // skip headers
                 charSeeker12.seek( mark12, new int[]{columnDelimiter} );
                 charSeeker12.seek( mark12, new int[]{columnDelimiter} );
-                Iterator<Operation<?>> query12OperationsWithTimes = gf.assignStartTimes(
+                Iterator<Operation> query12OperationsWithTimes = gf.assignStartTimes(
                         gf.incrementing( 0l, 1l ),
                         new Query12EventStreamReader(
                                 gf.repeating(
@@ -682,7 +682,7 @@ public class InteractiveEventStreamReaderPerformanceTest
                 // skip headers
                 charSeeker13.seek( mark13, new int[]{columnDelimiter} );
                 charSeeker13.seek( mark13, new int[]{columnDelimiter} );
-                Iterator<Operation<?>> query13OperationsWithTimes = gf.assignStartTimes(
+                Iterator<Operation> query13OperationsWithTimes = gf.assignStartTimes(
                         gf.incrementing( 0l, 1l ),
                         new Query13EventStreamReader(
                                 gf.repeating(
@@ -705,7 +705,7 @@ public class InteractiveEventStreamReaderPerformanceTest
                 // skip headers
                 charSeeker14.seek( mark14, new int[]{columnDelimiter} );
                 charSeeker14.seek( mark14, new int[]{columnDelimiter} );
-                Iterator<Operation<?>> query14OperationsWithTimes = gf.assignStartTimes(
+                Iterator<Operation> query14OperationsWithTimes = gf.assignStartTimes(
                         gf.incrementing( 0l, 1l ),
                         new Query14EventStreamReader(
                                 gf.repeating(
@@ -785,7 +785,7 @@ public class InteractiveEventStreamReaderPerformanceTest
         long startTimeAsMilli = timeSource.nowAsMilli();
         SimpleCsvFileReader simpleCsvFileReader =
                 new SimpleCsvFileReader( forumUpdateStream, SimpleCsvFileReader.DEFAULT_COLUMN_SEPARATOR_REGEX_STRING );
-        Iterator<Operation<?>> writeEventStreamReader = WriteEventStreamReaderRegex.create( simpleCsvFileReader );
+        Iterator<Operation> writeEventStreamReader = WriteEventStreamReaderRegex.create( simpleCsvFileReader );
         lines += readingStreamPerformanceTest( writeEventStreamReader );
         simpleCsvFileReader.close();
         long endTimeAsMilli = timeSource.nowAsMilli();
@@ -818,7 +818,7 @@ public class InteractiveEventStreamReaderPerformanceTest
                 bufferSize );
         int columnDelimiter = '|';
         Extractors extractors = new Extractors( ';', ',' );
-        Iterator<Operation<?>> writeEventStreamReader =
+        Iterator<Operation> writeEventStreamReader =
                 WriteEventStreamReaderCharSeeker.create( charSeeker, extractors, columnDelimiter );
         lines += readingStreamPerformanceTest( writeEventStreamReader );
         charSeeker.close();
@@ -847,7 +847,7 @@ public class InteractiveEventStreamReaderPerformanceTest
         long startTimeAsMilli = timeSource.nowAsMilli();
         SimpleCsvFileReader simpleCsvFileReader =
                 new SimpleCsvFileReader( forumUpdateStream, SimpleCsvFileReader.DEFAULT_COLUMN_SEPARATOR_REGEX_STRING );
-        Iterator<Operation<?>> writeEventStreamReader = WriteEventStreamReaderRegex.create( simpleCsvFileReader );
+        Iterator<Operation> writeEventStreamReader = WriteEventStreamReaderRegex.create( simpleCsvFileReader );
         lines += readingStreamPerformanceTest( writeEventStreamReader );
         simpleCsvFileReader.close();
         long endTimeAsMilli = timeSource.nowAsMilli();
@@ -880,7 +880,7 @@ public class InteractiveEventStreamReaderPerformanceTest
                 bufferSize );
         int columnDelimiter = '|';
         Extractors extractors = new Extractors( ';', ',' );
-        Iterator<Operation<?>> writeEventStreamReader =
+        Iterator<Operation> writeEventStreamReader =
                 WriteEventStreamReaderCharSeeker.create( charSeeker, extractors, columnDelimiter );
         lines += readingStreamPerformanceTest( writeEventStreamReader );
         charSeeker.close();
@@ -1018,7 +1018,7 @@ public class InteractiveEventStreamReaderPerformanceTest
             {
                 SimpleCsvFileReader simpleCsvFileReader = new SimpleCsvFileReader( forumUpdateStream,
                         SimpleCsvFileReader.DEFAULT_COLUMN_SEPARATOR_REGEX_STRING );
-                Iterator<Operation<?>> writeEventStreamReader = WriteEventStreamReaderRegex.create( simpleCsvFileReader );
+                Iterator<Operation> writeEventStreamReader = WriteEventStreamReaderRegex.create( simpleCsvFileReader );
                 lines += readingStreamPerformanceTest( writeEventStreamReader );
                 simpleCsvFileReader.close();
             }
@@ -1051,7 +1051,7 @@ public class InteractiveEventStreamReaderPerformanceTest
                             bufferSize );
                     int columnDelimiter = '|';
                     Extractors extractors = new Extractors( ';', ',' );
-                    Iterator<Operation<?>> writeEventStreamReader =
+                    Iterator<Operation> writeEventStreamReader =
                             WriteEventStreamReaderCharSeeker.create( charSeeker, extractors, columnDelimiter );
                     lines += readingStreamPerformanceTest( writeEventStreamReader );
                     charSeeker.close();
@@ -1081,7 +1081,7 @@ public class InteractiveEventStreamReaderPerformanceTest
                             ThreadAheadReadable.threadAhead( Readables.wrap( reader ), bufferSize ), bufferSize );
                     int columnDelimiter = '|';
                     Extractors extractors = new Extractors( ';', ',' );
-                    Iterator<Operation<?>> writeEventStreamReader =
+                    Iterator<Operation> writeEventStreamReader =
                             WriteEventStreamReaderCharSeeker.create( charSeeker, extractors, columnDelimiter );
                     lines += readingStreamPerformanceTest( writeEventStreamReader );
                     charSeeker.close();

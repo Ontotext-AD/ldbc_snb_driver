@@ -98,8 +98,8 @@ public class GeneratorFactory
      */
     // TODO move into a separate class, test that class separately, use that class here
     // TODO add check for timeStamp()
-    public OperationStreamComparisonResult compareOperationStreams( Iterator<Operation<?>> operationStream1,
-            Iterator<Operation<?>> operationStream2,
+    public OperationStreamComparisonResult compareOperationStreams( Iterator<Operation> operationStream1,
+            Iterator<Operation> operationStream2,
             boolean compareTimes )
     {
         int operationNumber = 0;
@@ -118,8 +118,8 @@ public class GeneratorFactory
                         format( "operation %s\nstream 2 is shorter", operationNumber ),
                         OperationStreamComparisonResultType.FAIL_STREAMS_HAVE_DIFFERENT_LENGTH );
             }
-            Operation<?> next1 = operationStream1.next();
-            Operation<?> next2 = operationStream2.next();
+            Operation next1 = operationStream1.next();
+            Operation next2 = operationStream2.next();
             if ( null == next1 && null == next2 )
             { continue; }
             if ( null == next1 || null == next2 )
@@ -342,11 +342,11 @@ public class GeneratorFactory
      * @param canOverwriteDependencyTime
      * @return
      */
-    public Iterator<Operation<?>> assignConservativeDependencyTimes( Iterator<Operation<?>> operations,
+    public Iterator<Operation> assignConservativeDependencyTimes( Iterator<Operation> operations,
             final long initialDependencyTimeAsMilli,
             final boolean canOverwriteDependencyTime )
     {
-        Function1<Operation<?>,Boolean,RuntimeException> isDependency = operation -> true;
+        Function1<Operation,Boolean,RuntimeException> isDependency = operation -> true;
         return assignDependencyTimesEqualToLastEncounteredDependencyTimeStamp( operations, isDependency,
                 initialDependencyTimeAsMilli, canOverwriteDependencyTime );
     }
@@ -414,19 +414,19 @@ public class GeneratorFactory
      * @param canOverwriteDependencyTime
      * @return
      */
-    public Iterator<Operation<?>> assignDependencyTimesEqualToLastEncounteredDependencyTimeStamp(
-            Iterator<Operation<?>> operations,
-            final Function1<Operation<?>,Boolean,RuntimeException> isDependency,
+    public Iterator<Operation> assignDependencyTimesEqualToLastEncounteredDependencyTimeStamp(
+            Iterator<Operation> operations,
+            final Function1<Operation,Boolean,RuntimeException> isDependency,
             final long initialDependencyTimeAsMilli,
             final boolean canOverwriteDependencyTime )
     {
-        Function1<Operation<?>,Operation<?>,RuntimeException> dependencyTimeAssigningFun =
-                new Function1<Operation<?>,Operation<?>,RuntimeException>()
+        Function1<Operation,Operation,RuntimeException> dependencyTimeAssigningFun =
+                new Function1<Operation,Operation,RuntimeException>()
                 {
                     private long mostRecentDependencyAsMilli = initialDependencyTimeAsMilli;
 
                     @Override
-                    public Operation<?> apply( Operation<?> operation )
+                    public Operation apply( Operation operation )
                     {
                         if ( -1 == operation.dependencyTimeStamp() || canOverwriteDependencyTime )
                         { operation.setDependencyTimeStamp( mostRecentDependencyAsMilli ); }
@@ -448,9 +448,9 @@ public class GeneratorFactory
      * @param operations
      * @return
      */
-    public Iterator<Operation<?>> assignStartTimes( Iterator<Long> startTimesAsMilli, Iterator<Operation<?>> operations )
+    public Iterator<Operation> assignStartTimes( Iterator<Long> startTimesAsMilli, Iterator<Operation> operations )
     {
-        Function2<Long,Operation<?>,Operation<?>,RuntimeException> startTimeAssigningFun =
+        Function2<Long,Operation,Operation,RuntimeException> startTimeAssigningFun =
                 (timeAsMilli, operation) -> {
                     operation.setScheduledStartTimeAsMilli( timeAsMilli );
                     operation.setTimeStamp( timeAsMilli );
@@ -468,10 +468,10 @@ public class GeneratorFactory
      * @param operations
      * @return
      */
-    public Iterator<Operation<?>> assignDependencyTimes( Iterator<Long> dependencyTimesAsMilli,
-            Iterator<Operation<?>> operations )
+    public Iterator<Operation> assignDependencyTimes( Iterator<Long> dependencyTimesAsMilli,
+            Iterator<Operation> operations )
     {
-        Function2<Long,Operation<?>,Operation<?>,RuntimeException> dependencyTimeAssigningFun =
+        Function2<Long,Operation,Operation,RuntimeException> dependencyTimeAssigningFun =
                 (timeAsMilli, operation) -> {
                     operation.setDependencyTimeStamp( timeAsMilli );
                     return operation;
@@ -501,7 +501,7 @@ public class GeneratorFactory
      * @param generators
      * @return
      */
-    public Iterator<Operation<?>> mergeSortOperationsByScheduledStartTime( Iterator<Operation<?>>... generators )
+    public Iterator<Operation> mergeSortOperationsByScheduledStartTime( Iterator<Operation>... generators )
     {
         return mergeSort(
                 Comparator.comparingLong(Operation::scheduledStartTimeAsMilli),
@@ -515,7 +515,7 @@ public class GeneratorFactory
      * @param generators
      * @return
      */
-    public Iterator<Operation<?>> mergeSortOperationsByTimeStamp( Iterator<Operation<?>>... generators )
+    public Iterator<Operation> mergeSortOperationsByTimeStamp( Iterator<Operation>... generators )
     {
         return mergeSort(
                 Comparator.comparingLong(Operation::timeStamp),
@@ -654,7 +654,7 @@ public class GeneratorFactory
      * @param newStartTimeAsMilli
      * @return
      */
-    public Iterator<Operation<?>> timeOffset( Iterator<Operation<?>> generator, long newStartTimeAsMilli )
+    public Iterator<Operation> timeOffset( Iterator<Operation> generator, long newStartTimeAsMilli )
     {
         return timeOffsetAndCompress( generator, newStartTimeAsMilli, null );
     }
@@ -671,7 +671,7 @@ public class GeneratorFactory
      * @param compressionRatio
      * @return
      */
-    public Iterator<Operation<?>> timeOffsetAndCompress(Iterator<Operation<?>> generator, long newStartTimeAsMilli,
+    public Iterator<Operation> timeOffsetAndCompress(Iterator<Operation> generator, long newStartTimeAsMilli,
                                                         Double compressionRatio )
     {
         return new TimeMappingOperationGenerator( generator, newStartTimeAsMilli, compressionRatio );

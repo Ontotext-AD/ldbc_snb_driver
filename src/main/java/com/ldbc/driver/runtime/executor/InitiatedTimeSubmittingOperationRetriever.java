@@ -10,11 +10,11 @@ import java.util.Iterator;
 // TODO test
 class InitiatedTimeSubmittingOperationRetriever
 {
-    private final Iterator<Operation<?>> nonDependencyOperations;
-    private final Iterator<Operation<?>> dependencyOperations;
+    private final Iterator<Operation> nonDependencyOperations;
+    private final Iterator<Operation> dependencyOperations;
     private final CompletionTimeWriter completionTimeWriter;
-    private Operation<?> nextNonDependencyOperation = null;
-    private Operation<?> nextDependencyOperation = null;
+    private Operation nextNonDependencyOperation = null;
+    private Operation nextDependencyOperation = null;
 
     InitiatedTimeSubmittingOperationRetriever( WorkloadStreams.WorkloadStreamDefinition streamDefinition,
             CompletionTimeWriter completionTimeWriter )
@@ -34,7 +34,7 @@ class InitiatedTimeSubmittingOperationRetriever
     2. submit initiated time
     4. return operation with lowest scheduled start time
      */
-    Operation<?> nextOperation() throws OperationExecutorException, CompletionTimeException
+    Operation nextOperation() throws OperationExecutorException, CompletionTimeException
     {
         if ( dependencyOperations.hasNext() && null == nextDependencyOperation )
         {
@@ -56,7 +56,7 @@ class InitiatedTimeSubmittingOperationRetriever
         // return operation with lowest start time
         if ( null != nextDependencyOperation && null != nextNonDependencyOperation )
         {
-            Operation<?> nextOperation;
+            Operation nextOperation;
             if ( nextNonDependencyOperation.timeStamp() < nextDependencyOperation.timeStamp() )
             {
                 nextOperation = nextNonDependencyOperation;
@@ -71,13 +71,13 @@ class InitiatedTimeSubmittingOperationRetriever
         }
         else if ( null == nextDependencyOperation && null != nextNonDependencyOperation )
         {
-            Operation<?> nextOperation = nextNonDependencyOperation;
+            Operation nextOperation = nextNonDependencyOperation;
             nextNonDependencyOperation = null;
             return nextOperation;
         }
         else if ( null != nextDependencyOperation && null == nextNonDependencyOperation )
         {
-            Operation<?> nextOperation = nextDependencyOperation;
+            Operation nextOperation = nextDependencyOperation;
             nextDependencyOperation = null;
             return nextOperation;
         }

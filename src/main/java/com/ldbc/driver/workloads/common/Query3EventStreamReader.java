@@ -16,7 +16,7 @@ import java.util.Iterator;
 
 import static java.lang.String.format;
 
-public class Query3EventStreamReader implements Iterator<Operation<?>> {
+public class Query3EventStreamReader implements Iterator<Operation> {
     private final Workload.BENCHMARK_MODE benchmarkMode;
     private final Iterator<Object[]> csvRows;
 
@@ -35,7 +35,7 @@ public class Query3EventStreamReader implements Iterator<Operation<?>> {
 	}
 
 	@Override
-	public Operation<?> next() {
+	public Operation next() {
 		Object[] rowAsObjects = csvRows.next();
         long personId = (long) rowAsObjects[0];
         String countryXName = (String) rowAsObjects[3];
@@ -43,7 +43,7 @@ public class Query3EventStreamReader implements Iterator<Operation<?>> {
         Date startDate = (Date) rowAsObjects[1];
         int durationDays = (int) rowAsObjects[2];
 
-        Operation<?> operation =
+        Operation operation =
                 benchmarkMode == Workload.BENCHMARK_MODE.DEFAULT_BENCHMARK_MODE ?
                         new com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery3(personId, countryXName, countryYName, startDate, durationDays, com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery3.DEFAULT_LIMIT) :
                         new LdbcQuery3(personId, countryXName, countryYName, startDate, durationDays);

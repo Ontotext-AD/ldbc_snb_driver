@@ -37,14 +37,14 @@ public class WorkloadValidatorTest
     LoggingServiceFactory loggingServiceFactory = new Log4jLoggingServiceFactory( false );
     GeneratorFactory gf = new GeneratorFactory( new RandomDataGeneratorFactory( 42l ) );
 
-    private WorkloadStreams valid1( Set<Class<? extends Operation<?>>> dependentOperationTypes )
+    private WorkloadStreams valid1( Set<Class<? extends Operation>> dependentOperationTypes )
     {
         WorkloadStreams workloadStreams = new WorkloadStreams();
         workloadStreams.setAsynchronousStream(
                 dependentOperationTypes,
                 new HashSet<>(),
                 Collections.emptyIterator(),
-                Lists.<Operation<?>>newArrayList(
+                Lists.<Operation>newArrayList(
                         new TimedNamedOperation2( 10, 10, 0, "name2" ),
                         new TimedNamedOperation2( 11, 11, 1, "name2" ),
                         new TimedNamedOperation1( 12, 12, 2, "name1" )
@@ -54,14 +54,14 @@ public class WorkloadValidatorTest
         return workloadStreams;
     }
 
-    private WorkloadStreams invalid1( Set<Class<? extends Operation<?>>> dependentOperationTypes )
+    private WorkloadStreams invalid1( Set<Class<? extends Operation>> dependentOperationTypes )
     {
         WorkloadStreams workloadStreams = new WorkloadStreams();
         workloadStreams.setAsynchronousStream(
                 dependentOperationTypes,
                 new HashSet<>(),
                 Collections.emptyIterator(),
-                Lists.<Operation<?>>newArrayList(
+                Lists.<Operation>newArrayList(
                         new TimedNamedOperation2( 10, 10, 0, "name2" ),
                         new TimedNamedOperation2( 11, 11, 1, "name2" ),
                         new TimedNamedOperation1( 12, 12, -1, "name1" )
@@ -78,7 +78,7 @@ public class WorkloadValidatorTest
         // Given
         long maxExpectedInterleaveAsMilli = 1000;
 
-        Set<Class<? extends Operation<?>>> dependentOperationTypes = Sets.newHashSet(
+        Set<Class<? extends Operation>> dependentOperationTypes = Sets.newHashSet(
                 TimedNamedOperation2.class
         );
 
@@ -134,14 +134,14 @@ public class WorkloadValidatorTest
         assertThat( invalidResult.errorMessage(), invalidResult.isSuccessful(), is( false ) );
     }
 
-    private WorkloadStreams valid2( Set<Class<? extends Operation<?>>> dependentOperationTypes )
+    private WorkloadStreams valid2( Set<Class<? extends Operation>> dependentOperationTypes )
     {
         WorkloadStreams workloadStreams = new WorkloadStreams();
         workloadStreams.setAsynchronousStream(
                 dependentOperationTypes,
                 new HashSet<>(),
                 Collections.emptyIterator(),
-                Lists.<Operation<?>>newArrayList(
+                Lists.<Operation>newArrayList(
                         new TimedNamedOperation2( 10, 10, 0, "name2" ),
                         new TimedNamedOperation2( 11, 11, 1, "name2" ),
                         new TimedNamedOperation1( 12, 12, 11, "name1" )
@@ -151,14 +151,14 @@ public class WorkloadValidatorTest
         return workloadStreams;
     }
 
-    private WorkloadStreams invalid2( Set<Class<? extends Operation<?>>> dependentOperationTypes )
+    private WorkloadStreams invalid2( Set<Class<? extends Operation>> dependentOperationTypes )
     {
         WorkloadStreams workloadStreams = new WorkloadStreams();
         workloadStreams.setAsynchronousStream(
                 dependentOperationTypes,
                 new HashSet<>(),
                 Collections.emptyIterator(),
-                Lists.<Operation<?>>newArrayList(
+                Lists.<Operation>newArrayList(
                         new TimedNamedOperation2( 10, 10, 0, "name2" ),
                         new TimedNamedOperation2( 11, 11, 1, "name2" ),
                         new TimedNamedOperation1( 12, 12, 13, "name1" )
@@ -175,7 +175,7 @@ public class WorkloadValidatorTest
         // Given
         long maxExpectedInterleaveAsMilli = 1000;
 
-        Set<Class<? extends Operation<?>>> dependentOperationTypes = Sets.newHashSet(
+        Set<Class<? extends Operation>> dependentOperationTypes = Sets.newHashSet(
                 TimedNamedOperation2.class
         );
 
@@ -230,14 +230,14 @@ public class WorkloadValidatorTest
         assertThat( invalidResult.errorMessage(), invalidResult.isSuccessful(), is( false ) );
     }
 
-    private WorkloadStreams valid3( Set<Class<? extends Operation<?>>> dependentOperationTypes )
+    private WorkloadStreams valid3( Set<Class<? extends Operation>> dependentOperationTypes )
     {
         WorkloadStreams workloadStreams = new WorkloadStreams();
         workloadStreams.setAsynchronousStream(
                 dependentOperationTypes,
                 new HashSet<>(),
                 Collections.emptyIterator(),
-                Lists.<Operation<?>>newArrayList(
+                Lists.<Operation>newArrayList(
                         new TimedNamedOperation2( 10, 10, 0, "name2" ),
                         new TimedNamedOperation2( 11, 11, 1, "name2" ),
                         new TimedNamedOperation1( 12, 12, 2, "name1" )
@@ -247,14 +247,14 @@ public class WorkloadValidatorTest
         return workloadStreams;
     }
 
-    private WorkloadStreams invalid3( Set<Class<? extends Operation<?>>> dependentOperationTypes )
+    private WorkloadStreams invalid3( Set<Class<? extends Operation>> dependentOperationTypes )
     {
         WorkloadStreams workloadStreams = new WorkloadStreams();
         workloadStreams.setAsynchronousStream(
                 dependentOperationTypes,
                 new HashSet<>(),
                 Collections.emptyIterator(),
-                Lists.<Operation<?>>newArrayList(
+                Lists.<Operation>newArrayList(
                         new TimedNamedOperation2( 10, 10, 0, "name2" ),
                         new TimedNamedOperation2( 11, 11, 1, "name2" ),
                         new TimedNamedOperation2( 12, 12, 2, "name2" )
@@ -264,14 +264,14 @@ public class WorkloadValidatorTest
         return workloadStreams;
     }
 
-    private WorkloadStreams valid4a( Set<Class<? extends Operation<?>>> dependentOperationTypes )
+    private WorkloadStreams valid4a( Set<Class<? extends Operation>> dependentOperationTypes )
     {
         WorkloadStreams workloadStreams = new WorkloadStreams();
         workloadStreams.setAsynchronousStream(
                 dependentOperationTypes,
                 new HashSet<>(),
                 Collections.emptyIterator(),
-                Lists.<Operation<?>>newArrayList(
+                Lists.<Operation>newArrayList(
                         new TimedNamedOperation2( 10, 10, 0, "name2" ),
                         new TimedNamedOperation2( 11, 11, 1, "name2" ),
                         new TimedNamedOperation1( 12, 12, 2, "name1" )
@@ -281,14 +281,14 @@ public class WorkloadValidatorTest
         return workloadStreams;
     }
 
-    private WorkloadStreams valid4b( Set<Class<? extends Operation<?>>> dependentOperationTypes )
+    private WorkloadStreams valid4b( Set<Class<? extends Operation>> dependentOperationTypes )
     {
         WorkloadStreams workloadStreams = new WorkloadStreams();
         workloadStreams.setAsynchronousStream(
                 dependentOperationTypes,
                 new HashSet<>(),
                 Collections.emptyIterator(),
-                Lists.<Operation<?>>newArrayList(
+                Lists.<Operation>newArrayList(
                         new TimedNamedOperation2( 10, 10, 0, "name2" ),
                         new TimedNamedOperation2( 11, 11, 1, "name2" ),
                         new TimedNamedOperation1( 12, 12, 2, "name1" )
@@ -305,7 +305,7 @@ public class WorkloadValidatorTest
         // Given
         long maxExpectedInterleaveAsMilli = 1000;
 
-        Set<Class<? extends Operation<?>>> dependentOperationTypes = Sets.newHashSet(
+        Set<Class<? extends Operation>> dependentOperationTypes = Sets.newHashSet(
                 TimedNamedOperation2.class
         );
 
@@ -343,7 +343,7 @@ public class WorkloadValidatorTest
                 valid4b( dependentOperationTypes )
         );
 
-        List<Operation<?>> validAlternativeOperations = Lists.newArrayList(
+        List<Operation> validAlternativeOperations = Lists.newArrayList(
                 new TimedNamedOperation1( 12, 12, 2, "name1" ),
                 new TimedNamedOperation1( 12, 12, 2, "name1" ),
                 new TimedNamedOperation1( 12, 12, 2, "name1" ),
@@ -356,7 +356,7 @@ public class WorkloadValidatorTest
                 new TimedNamedOperation1( 12, 12, 2, "name1" )
         );
 
-        List<Operation<?>> invalidAlternativeOperations = Lists.newArrayList(
+        List<Operation> invalidAlternativeOperations = Lists.newArrayList(
                 new TimedNamedOperation1( 12, 12, 3, "name4" ),
                 new TimedNamedOperation1( 12, 12, 3, "name5" ),
                 new TimedNamedOperation1( 12, 12, 4, "name6" ),
@@ -414,7 +414,7 @@ public class WorkloadValidatorTest
         long startTimeAsMilli = 1;
         long operationCount = 1000;
 
-        Set<Class<? extends Operation<?>>> dependentOperationTypes = new HashSet<>();
+        Set<Class<? extends Operation>> dependentOperationTypes = new HashSet<>();
 
         WorkloadStreams stream1 = new WorkloadStreams();
         stream1.setAsynchronousStream(
@@ -589,7 +589,7 @@ public class WorkloadValidatorTest
                 )
         ).get( operationCount - 2 ).scheduledStartTimeAsMilli();
 
-        Set<Class<? extends Operation<?>>> dependentOperationTypes = new HashSet<>();
+        Set<Class<? extends Operation>> dependentOperationTypes = new HashSet<>();
 
         WorkloadStreams stream1 = new WorkloadStreams();
         stream1.setAsynchronousStream(
@@ -605,7 +605,7 @@ public class WorkloadValidatorTest
                                 ),
                                 operationCount - 1
                         ),
-                        gf.<Operation<?>>identity(
+                        gf.<Operation>identity(
                                 new TimedNamedOperation1(
                                         lastStartTimeAsMilli + excessiveInterleaveAsMilli,
                                         lastStartTimeAsMilli + excessiveInterleaveAsMilli,
@@ -631,7 +631,7 @@ public class WorkloadValidatorTest
                                 ),
                                 operationCount - 1
                         ),
-                        gf.<Operation<?>>identity(
+                        gf.<Operation>identity(
                                 new TimedNamedOperation1(
                                         lastStartTimeAsMilli + excessiveInterleaveAsMilli,
                                         lastStartTimeAsMilli + excessiveInterleaveAsMilli,
@@ -657,7 +657,7 @@ public class WorkloadValidatorTest
                                 ),
                                 operationCount - 1
                         ),
-                        gf.<Operation<?>>identity(
+                        gf.<Operation>identity(
                                 new TimedNamedOperation1(
                                         lastStartTimeAsMilli + excessiveInterleaveAsMilli,
                                         lastStartTimeAsMilli + excessiveInterleaveAsMilli,
@@ -683,7 +683,7 @@ public class WorkloadValidatorTest
                                 ),
                                 operationCount - 1
                         ),
-                        gf.<Operation<?>>identity(
+                        gf.<Operation>identity(
                                 new TimedNamedOperation1(
                                         lastStartTimeAsMilli + excessiveInterleaveAsMilli,
                                         lastStartTimeAsMilli + excessiveInterleaveAsMilli,
@@ -735,7 +735,7 @@ public class WorkloadValidatorTest
         ).get( operationCount - 2 ).scheduledStartTimeAsMilli() - 1;
 
 
-        Set<Class<? extends Operation<?>>> dependentOperationTypes = new HashSet<>();
+        Set<Class<? extends Operation>> dependentOperationTypes = new HashSet<>();
 
         WorkloadStreams stream1 = new WorkloadStreams();
         stream1.setAsynchronousStream(

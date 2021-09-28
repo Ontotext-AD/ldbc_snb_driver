@@ -35,7 +35,7 @@ public class ThreadedQueuedMetricsServiceThread extends Thread
             TimeSource timeSource,
             TimeUnit unit,
             long maxRuntimeDurationAsNano,
-            Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping,
+            Map<Integer,Class<? extends Operation>> operationTypeToClassMapping,
             LoggingServiceFactory loggingServiceFactory ) throws MetricsCollectionException
     {
         this( errorReporter,
@@ -56,7 +56,7 @@ public class ThreadedQueuedMetricsServiceThread extends Thread
             TimeSource timeSource,
             TimeUnit unit,
             long maxRuntimeDurationAsNano,
-            Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping,
+            Map<Integer,Class<? extends Operation>> operationTypeToClassMapping,
             LoggingServiceFactory loggingServiceFactory ) throws MetricsCollectionException
     {
         super( ThreadedQueuedMetricsServiceThread.class.getSimpleName() + "-" + System.currentTimeMillis() );

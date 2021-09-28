@@ -21,7 +21,7 @@ public class MetricsManager
     private long startTimeAsMilli;
     private long latestFinishTimeAsMilli;
     private final OperationTypeMetricsManager[] operationTypeMetricsManagers;
-    private final Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping;
+    private final Map<Integer,Class<? extends Operation>> operationTypeToClassMapping;
 
     public static void export(
             WorkloadResultsSnapshot workloadResults,
@@ -42,7 +42,7 @@ public class MetricsManager
     }
 
     public static OperationTypeMetricsManager[] toOperationTypeMetricsManagerArray(
-            Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping,
+            Map<Integer,Class<? extends Operation>> operationTypeToClassMapping,
             TimeUnit unit,
             long highestExpectedRuntimeDurationAsNano,
             LoggingServiceFactory loggingServiceFactory ) throws MetricsCollectionException
@@ -84,7 +84,7 @@ public class MetricsManager
         }
     }
 
-    public static String[] toOperationNameArray( Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping )
+    public static String[] toOperationNameArray( Map<Integer,Class<? extends Operation>> operationTypeToClassMapping )
             throws MetricsCollectionException
     {
         if ( operationTypeToClassMapping.isEmpty() )
@@ -120,7 +120,7 @@ public class MetricsManager
     public MetricsManager( TimeSource timeSource,
             TimeUnit unit,
             long highestExpectedRuntimeDurationAsNano,
-            Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping,
+            Map<Integer,Class<? extends Operation>> operationTypeToClassMapping,
             LoggingServiceFactory loggingServiceFactory ) throws MetricsCollectionException
     {
         operationTypeMetricsManagers = toOperationTypeMetricsManagerArray(
@@ -166,7 +166,7 @@ public class MetricsManager
     }
 
     private static Map<String,Integer> simpleNameToTypeMapping(
-            Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping )
+            Map<Integer,Class<? extends Operation>> operationTypeToClassMapping )
     {
         return operationTypeToClassMapping.entrySet().stream()
                 .collect( toMap( entry -> entry.getValue().getSimpleName(), Map.Entry::getKey ) );

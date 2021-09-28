@@ -15,7 +15,7 @@ import java.util.Iterator;
 
 import static java.lang.String.format;
 
-public class Query10EventStreamReader implements Iterator<Operation<?>> {
+public class Query10EventStreamReader implements Iterator<Operation> {
 	private final Workload.BENCHMARK_MODE benchmarkMode;
 	private final Iterator<Object[]> csvRows;
 
@@ -34,11 +34,11 @@ public class Query10EventStreamReader implements Iterator<Operation<?>> {
 	}
 
 	@Override
-	public Operation<?> next() {
+	public Operation next() {
 		Object[] rowAsObjects = csvRows.next();
 		long personId = (long) rowAsObjects[0];
 		int month = (int) rowAsObjects[1];
-		Operation<?> operation =
+		Operation operation =
 				benchmarkMode == Workload.BENCHMARK_MODE.DEFAULT_BENCHMARK_MODE ?
 						new com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery10(personId, month, com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery10.DEFAULT_LIMIT) :
 						new LdbcQuery10(personId, month);

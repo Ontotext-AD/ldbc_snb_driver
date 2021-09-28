@@ -51,7 +51,7 @@ public class WorkloadStatisticsCalculatorTest
         long operationCount = 1000;
         long operationInterleave = 100l;
 
-        Iterator<Operation<?>> operations = gf.limit(
+        Iterator<Operation> operations = gf.limit(
                 new TimedNamedOperation1Factory(
                         gf.incrementing( workloadStartTime, operationInterleave ),
                         gf.incrementing( workloadStartTime - operationInterleave, operationInterleave ),
@@ -143,21 +143,21 @@ public class WorkloadStatisticsCalculatorTest
         long operation3StartTime = 100l;
         long operation3Interleave = 10000l; // 100,100
 
-        Iterator<Operation<?>> operation1Stream = gf.limit(
+        Iterator<Operation> operation1Stream = gf.limit(
                 new TimedNamedOperation1Factory(
                         gf.incrementing( operation1StartTime, operation1Interleave ),
                         gf.incrementing( 0l, 0l ),
                         gf.constant( "name1" )
                 ),
                 operation1Count );
-        Iterator<Operation<?>> operation2Stream = gf.limit(
+        Iterator<Operation> operation2Stream = gf.limit(
                 new TimedNamedOperation2Factory(
                         gf.incrementing( operation2StartTime, operation2Interleave ),
                         gf.incrementing( 0l, operation2Interleave ),
                         gf.constant( "name2" )
                 ),
                 operation2Count );
-        Iterator<Operation<?>> operation3Stream = gf.limit(
+        Iterator<Operation> operation3Stream = gf.limit(
                 new TimedNamedOperation3Factory(
                         gf.incrementing( operation3StartTime, operation3Interleave ),
                         gf.incrementing( operation3StartTime - 10l, operation3Interleave ),
@@ -166,7 +166,7 @@ public class WorkloadStatisticsCalculatorTest
                 operation3Count );
 
         WorkloadStreams workloadStreams = new WorkloadStreams();
-        Set<Class<? extends Operation<?>>> dependentOperations = Sets.newHashSet(
+        Set<Class<? extends Operation>> dependentOperations = Sets.newHashSet(
                 TimedNamedOperation2.class,
                 TimedNamedOperation3.class
         );

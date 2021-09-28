@@ -32,7 +32,7 @@ import static java.lang.String.format;
 public class LdbcSnbInteractiveWorkload extends Workload
 {
     @Override
-    public Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping()
+    public Map<Integer,Class<? extends Operation>> operationTypeToClassMapping()
     {
         return LdbcSnbInteractiveWorkloadConfiguration.operationTypeToClassMapping();
     }
@@ -129,7 +129,7 @@ public class LdbcSnbInteractiveWorkload extends Workload
     };
 
     @Override
-    public String serializeOperation( Operation<?> operation ) throws SerializingMarshallingException
+    public String serializeOperation( Operation operation ) throws SerializingMarshallingException
     {
         switch ( operation.type() )
         {
@@ -711,7 +711,7 @@ public class LdbcSnbInteractiveWorkload extends Workload
     }
 
     @Override
-    public Operation<?> marshalOperation( String serializedOperation ) throws SerializingMarshallingException
+    public Operation marshalOperation( String serializedOperation ) throws SerializingMarshallingException
     {
         List<Object> operationAsList;
         try
@@ -1066,7 +1066,7 @@ public class LdbcSnbInteractiveWorkload extends Workload
     };
 
     @Override
-    public boolean resultsEqual( Operation<?> operation, Object result1, Object result2 ) throws WorkloadException
+    public boolean resultsEqual( Operation operation, Object result1, Object result2 ) throws WorkloadException
     {
         if ( null == result1 || null == result2 )
         {

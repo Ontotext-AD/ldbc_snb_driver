@@ -54,7 +54,7 @@ public class DisruptorSbeMetricsService implements MetricsService
             TimeUnit timeUnit,
             long maxRuntimeDurationAsNano,
             ResultsLogWriter resultsLogWriter,
-            Map<Integer,Class<? extends Operation<?>>> operationTypeToClassMapping,
+            Map<Integer,Class<? extends Operation>> operationTypeToClassMapping,
             LoggingServiceFactory loggingServiceFactory ) throws MetricsCollectionException
     {
         // Specify the size of the ring buffer, must be power of 2

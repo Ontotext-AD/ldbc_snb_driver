@@ -119,7 +119,7 @@ public abstract class WorkloadTest
     {
         try ( Workload workload = workload() )
         {
-            Map<Integer,Class<? extends Operation<?>>> typeToClassMapping = workload.operationTypeToClassMapping();
+            Map<Integer,Class<? extends Operation>> typeToClassMapping = workload.operationTypeToClassMapping();
             assertThat(
                     typeToClassMapping.keySet().size(),
                     equalTo( Sets.newHashSet( typeToClassMapping.values() ).size() )
@@ -132,7 +132,7 @@ public abstract class WorkloadTest
     {
         try ( Workload workload = workload() )
         {
-            for ( Map.Entry<Integer,Class<? extends Operation<?>>> entry :
+            for ( Map.Entry<Integer,Class<? extends Operation>> entry :
                     workload.operationTypeToClassMapping().entrySet() )
             {
                 assertTrue(
@@ -236,7 +236,7 @@ public abstract class WorkloadTest
             {
                 workload.init( configuration );
                 GeneratorFactory gf = new GeneratorFactory( new RandomDataGeneratorFactory( 42L ) );
-                Iterator<Operation<?>> operations = gf.limit(
+                Iterator<Operation> operations = gf.limit(
                         WorkloadStreams.mergeSortedByStartTimeExcludingChildOperationGenerators(
                                 gf,
                                 workload.streams( gf, true )
