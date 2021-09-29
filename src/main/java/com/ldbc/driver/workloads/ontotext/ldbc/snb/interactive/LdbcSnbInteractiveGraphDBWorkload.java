@@ -129,7 +129,6 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 
 		getQueries(params);
 
-		public void onInit (Map < String, String > params) throws WorkloadException {
 			if (params.containsKey(LdbcSnbInteractiveWorkloadConfiguration.UPDATES_DIRECTORY)) {
 				String updatesDirectoryPath =
 						params.get(LdbcSnbInteractiveWorkloadConfiguration.UPDATES_DIRECTORY).trim();
