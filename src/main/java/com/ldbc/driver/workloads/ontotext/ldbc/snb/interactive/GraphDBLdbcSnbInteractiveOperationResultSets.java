@@ -1,11 +1,7 @@
 package com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive;
 
-import com.google.common.collect.Lists;
-import com.ldbc.driver.SerializingMarshallingException;
-import com.ldbc.driver.workloads.common.LdbcUtils;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.impl.SimpleIRI;
 import org.eclipse.rdf4j.query.BindingSet;
 
 import java.util.ArrayList;

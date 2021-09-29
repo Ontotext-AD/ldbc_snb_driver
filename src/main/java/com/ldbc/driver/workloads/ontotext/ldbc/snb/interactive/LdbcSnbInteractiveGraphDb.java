@@ -7,8 +7,8 @@ import com.ldbc.driver.Operation;
 import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
 import com.ldbc.driver.control.LoggingService;
-import com.ldbc.driver.workloads.common.LdbcUtils;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcSnbInteractiveWorkloadConfiguration;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.readers.LdbcUtils;
 import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.query.TupleQueryResult;
@@ -149,7 +149,7 @@ public class LdbcSnbInteractiveGraphDb extends Db {
 		params.put(SLEEP_DURATION_NANO_ARG, Long.toString(sleepDurationAsNano));
 		params.put(SLEEP_TYPE_ARG, sleepType.name());
 
-		LdbcUtils.loadQueriesFromDirectory(BENCHMARK_QUERIES, params.get(LdbcSnbInteractiveWorkloadConfiguration.LDBC_SNB_QUERY_DIR));
+		LdbcUtils.loadQueriesFromDirectory(BENCHMARK_QUERIES, params.get(LdbcSnbInteractiveGraphDBWorkloadConfiguration.LDBC_SNB_QUERY_DIR));
 
 		// Long Reads
 		registerOperationHandler(LdbcQuery1.class, LdbcQuery1Handler.class);
