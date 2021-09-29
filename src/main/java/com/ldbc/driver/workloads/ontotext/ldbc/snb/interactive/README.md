@@ -1,24 +1,30 @@
 # LDBC SNB GraphDB implementation
 
-This directory contains the GraphDB implementation of the Interactive workload of the LDBC SNB benchmark. Here you can find information about 
-how to generate .ttl dataset and run LDBC SNB Benchmark against GDB repository manually.
+This directory contains the [GraphDB](https://www.ontotext.com/products/graphdb/) implementation of the Interactive workload of the [LDBC SNB benchmark](https://github.com/ldbc/ldbc_snb_docs).
+##Setup
+The recommended environment for executing this benchmark is as follows: the benchmark scripts (Bash) and the LDBC driver (Java 8) run on the host machine. Therefore, the requirements are as follows:
 
-**1. Generating LDBC SNB Dataset representing Social Network**
+* Bash
+* Java 8
+* Python version 2.7.X
 
-To generate benchmark data, we need to have Hadoop on top of which DATAGEN runs. The latter could be downloaded using following link: http://archive.apache.org/dist/hadoop/core/hadoop-1.2.1/hadoop-1.2.1.tar.gz
-After Hadoop is decompressed, download DATAGEN from the LDBC-SNB official repositories. The Release page can be found here.
-Decompress the downloaded version of DATAGEN. This will create a folder called “ldbc_snb_datagen-<downloaded_version>”.
+##Generating and loading the data set
 
-DATAGEN provides a run.sh is a script to automate the compilation and execution of DATAGEN. It needs to be configured for your environment, so open it and set the two variables at the top of the script to the corresponding paths.
+###Generating LDBC SNB Dataset representing Social Network
+
+To generate benchmark data, we need to have Hadoop on top of which LDBC SNB Datagen runs. The latter could be downloaded from [here](http://archive.apache.org/dist/hadoop/core/hadoop-3.2.1/hadoop-3.2.1.tar.gz).
+After that, download [Hadoop-based Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop) and after it is decompressed, you will have a folder called ***“ldbc_snb_datagen-<downloaded_version>”***.
+
+Datagen provides a run.sh which is a script to automate its compilation and execution. It needs to be configured for your environment, so open it and set the two variables at the top of the script to the corresponding paths.
 
 ```
-HADOOP_HOME=/<path_to_hadoop_dir>/hadoop-1.2.1
+HADOOP_HOME=/<path_to_hadoop_dir>/hadoop-3.2.1
 LDBC_SNB_DATAGEN_HOME=/<path_to_dir>/ldbc_snb_datagen
 ```
 
-HADOOP_HOME points to the path where hadoop-1.2.1 is installed, while LDBC_SNB_DATAGEN_HOME points to where DATAGEN is installed. Change these variables to the appropriate values.
+HADOOP_HOME points to the path where hadoop-3.2.1 is installed, while LDBC_SNB_DATAGEN_HOME points to where Hadoop-based Datagen is installed.
 
-***In order to create dataset in desired .ttl format user should provide properly configured params.ini file in /<path_to_dir>/ldbc_snb_datagen-<datagen_version> directory.***
+In order to create dataset in desired .ttl format user should provide properly configured ***params.ini*** file in /<path_to_dir>/ldbc_snb_datagen-<datagen_version> directory.
 
 ```
 ldbc.snb.datagen.generator.scaleFactor:snb.interactive.1                                                                              
@@ -40,31 +46,28 @@ ldbc.snb.datagen.serializer.outputDir:/<path_to_directory_where_ttl_files_to_be_
 ```
 The snb.interactive.1 scale factor will create a dataset of approximately 47 million statements. One could modify the number of persons, friends, etc parameters.
 
-Now, we can execute run.sh script to compile and execute DATAGEN using the provided params.ini file. Type the following commands:
-```
+Now, you can execute run.sh script to compile and execute Datagen using the provided params.ini file. Type the following commands:
+```bash
 $ cd /<path_to_dir>/ldbc_snb_datagen-<datagen_version>
 $ ./run.sh
 ```
-The result of execution of ./run.sh command will generate three directories in the provided outputDir: hadoop, social_network and substitution_parameters.The last one will be empty at this stage.
+The result of execution will generate three directories in the provided outputDir: hadoop, social_network and substitution_parameters.The last one will be empty at this stage.
 
-In order to generate query substitution parameters, user should go to
-```
-$ cd /<path_to_dir>/ldbc_snb_datagen-<datagen_version>/paramgenerator directory
-```
-And execute
-```
+In order to generate query substitution parameters, you should execute
+```bash
+$ cd /<path_to_dir>/ldbc_snb_datagen-<datagen_version>/paramgenerator
 $ ./generateparams.py /<path_to_directory_where_ttl_files_to_be_stored>/hadoop /<path_to_directory_where_ttl_files_to_be_stored>/substitution_parameters.
 ```
-***Afterwards user should upload created /<path_to_directory_where_ttl_files_to_be_stored>/social_network/social_network_activity_0_0.ttl,  /<path_to_directory_where_ttl_files_to_be_stored>/social_network/social_network_person_0_0.ttl and  /<path_to_directory_where_ttl_files_to_be_stored>/social_network_static_0_0.ttl into running GDB repository.***
+Afterwards you should upload created ***/<path_to_directory_where_ttl_files_to_be_stored>/social_network/social_network_activity_0_0.ttl,  /<path_to_directory_where_ttl_files_to_be_stored>/social_network/social_network_person_0_0.ttl*** and ***/<path_to_directory_where_ttl_files_to_be_stored>/social_network_static_0_0.ttl*** into running GraphDB repository.
 
-**2. How to run LDBC SNB Benchmark**
+## Running the benchmark
 
 Checkout https://github.com/Ontotext-AD/ldbc_snb_driver fork and build branch GDB-5779-Benchmark_Performance_of_Property_Path_Search 
-```
-mvn clean install -DskipTests
+```bash
+$ mvn clean install -DskipTests
 ```
 
-***Create interactive-benchmark.properties file with following content:***
+Create ***interactive-benchmark.properties*** file with following content:
 
 ```
 endpoint=http://<host>:<port>/repositories/<repo_id>
@@ -142,6 +145,6 @@ ldbc.snb.interactive.LdbcQuery14_enable=false
 
 ***Go to target directory of the project and execute:***
 
-```
-java -cp jeeves-standalone.jar com.ldbc.driver.Client -P /<path_to>/interactive-benchmark.properties
+```bash
+$ java -cp jeeves-standalone.jar com.ldbc.driver.Client -P /<path_to>/interactive-benchmark.properties
 ```
