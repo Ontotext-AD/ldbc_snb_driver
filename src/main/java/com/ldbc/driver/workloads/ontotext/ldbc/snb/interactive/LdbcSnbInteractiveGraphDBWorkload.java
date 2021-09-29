@@ -121,7 +121,7 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 		compulsoryKeys.addAll(LdbcSnbInteractiveWorkloadConfiguration.LONG_READ_OPERATION_ENABLE_KEYS);
 
 		Set<String> missingPropertyParameters =
-				LdbcSnbInteractiveWorkloadConfiguration.missingParameters(params, compulsoryKeys);
+				LdbcSnbInteractiveGraphDBWorkloadConfiguration.missingParameters(params, compulsoryKeys);
 		if (!missingPropertyParameters.isEmpty()) {
 			throw new WorkloadException(format("Workload could not initialize due to missing parameters: %s",
 					missingPropertyParameters));
@@ -201,8 +201,8 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 				boolean longReadOperationEnabled = Boolean.parseBoolean(longReadOperationEnabledString);
 				String longReadOperationClassName =
 						LdbcSnbInteractiveGraphDBWorkloadConfiguration.LDBC_GRAPHDB_INTERACTIVE_PACKAGE_PREFIX
-								+ LdbcSnbInteractiveWorkloadConfiguration.removePrefix(
-								LdbcSnbInteractiveWorkloadConfiguration.removeSuffix(
+								+ LdbcSnbInteractiveGraphDBWorkloadConfiguration.removePrefix(
+								LdbcSnbInteractiveGraphDBWorkloadConfiguration.removeSuffix(
 										longReadOperationEnableKey,
 										LdbcSnbInteractiveWorkloadConfiguration.ENABLE_SUFFIX
 								),
@@ -245,7 +245,7 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 
 			List<String> frequencyKeys =
 					Lists.newArrayList(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_FREQUENCY_KEYS);
-			Set<String> missingFrequencyKeys = LdbcSnbInteractiveWorkloadConfiguration
+			Set<String> missingFrequencyKeys = LdbcSnbInteractiveGraphDBWorkloadConfiguration
 					.missingParameters(params, frequencyKeys);
 			if (enabledWriteOperationTypes.isEmpty() &&
 					!params.containsKey(LdbcSnbInteractiveWorkloadConfiguration.UPDATE_INTERLEAVE)) {
@@ -268,7 +268,7 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 				params = LdbcSnbInteractiveWorkloadConfiguration.convertFrequenciesToInterleaves(params);
 			} else {
 				// if any frequencies are not set, there should be specified interleave times for read queries
-				Set<String> missingInterleaveKeys = LdbcSnbInteractiveWorkloadConfiguration.missingParameters(
+				Set<String> missingInterleaveKeys = LdbcSnbInteractiveGraphDBWorkloadConfiguration.missingParameters(
 						params,
 						LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_INTERLEAVE_KEYS
 				);
@@ -317,7 +317,7 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 			if (null == parserString) {
 				parserString = LdbcSnbInteractiveWorkloadConfiguration.DEFAULT_UPDATE_STREAM_PARSER.name();
 			}
-			if (!LdbcSnbInteractiveWorkloadConfiguration.isValidParser(parserString)) {
+			if (!LdbcSnbInteractiveGraphDBWorkloadConfiguration.isValidParser(parserString)) {
 				throw new WorkloadException("Invalid parser: " + parserString);
 			}
 			this.parser = LdbcSnbInteractiveWorkloadConfiguration.UpdateStreamParser.valueOf(parserString.trim());
@@ -325,7 +325,6 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 					params.get(ConsoleAndFileDriverConfiguration.TIME_COMPRESSION_RATIO_ARG).trim()
 			);
 		}
-	}
 
 	protected void onClose() throws IOException {
 		for (Closeable forumUpdateOperationsFileReader : forumUpdateOperationsFileReaders) {
