@@ -373,7 +373,7 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 					resultCountsAssignedForLongReadTypesSoFar + minimumResultCountPerOperationType;
 		}
 
-		return new LdbcSnbGraphDBInteractiveDbValidationParametersFilter(
+		return new LdbcSnbInteractiveDbValidationParametersFilter(
 				multiResultOperations,
 				0L,
 				new HashMap<>(),
