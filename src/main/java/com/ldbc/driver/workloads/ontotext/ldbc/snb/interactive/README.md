@@ -1,16 +1,18 @@
 # LDBC SNB GraphDB implementation
 
 This directory contains the [GraphDB](https://www.ontotext.com/products/graphdb/) implementation of the Interactive workload of the [LDBC SNB benchmark](https://github.com/ldbc/ldbc_snb_docs).
-##Setup
+
+## Setup
+
 The recommended environment for executing this benchmark is as follows: the benchmark scripts (Bash) and the LDBC driver (Java 8) run on the host machine. Therefore, the requirements are as follows:
 
 * Bash
 * Java 8
 * Python version 2.7.X
 
-##Generating and loading the data set
+## Generating and loading the data set
 
-###Generating LDBC SNB Dataset representing Social Network
+### Generating LDBC SNB Dataset representing Social Network
 
 To generate benchmark data, we need to have Hadoop on top of which LDBC SNB Datagen runs. The latter could be downloaded from [here](http://archive.apache.org/dist/hadoop/core/hadoop-3.2.1/hadoop-3.2.1.tar.gz).
 After that, download [Hadoop-based Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop) and after it is decompressed, you will have a folder called ***“ldbc_snb_datagen-<downloaded_version>”***.
