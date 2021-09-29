@@ -342,7 +342,7 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 
 	@Override
 	public DbValidationParametersFilter dbValidationParametersFilter(Integer requiredValidationParameterCount) {
-		final Set<Class<?>> multiResultOperations = Sets.newHashSet(
+		final Set<Class> multiResultOperations = Sets.newHashSet(
 				LdbcQuery1.class,
 				LdbcQuery2.class,
 				LdbcQuery3.class,
@@ -365,7 +365,7 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 						requiredValidationParameterCount.doubleValue() / (double) operationTypeCount) )
 		);
 
-		final Map<Class<?>, Long> remainingRequiredResultsPerLongReadType = new HashMap<>();
+		final Map<Class, Long> remainingRequiredResultsPerLongReadType = new HashMap<>();
 		long resultCountsAssignedForLongReadTypesSoFar = 0;
 		for (Class longReadOperationType : enabledLongReadOperationTypes) {
 			remainingRequiredResultsPerLongReadType.put(longReadOperationType, minimumResultCountPerOperationType);

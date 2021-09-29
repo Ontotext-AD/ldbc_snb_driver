@@ -1,9 +1,13 @@
 package com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive;
 
+import com.ldbc.driver.Operation;
+import com.ldbc.driver.Workload;
+import com.ldbc.driver.Workload.DbValidationParametersFilter;
+
 import java.util.Map;
 import java.util.Set;
 
-public class LdbcSnbGraphDBInteractiveDbValidationParametersFilter {
+public class LdbcSnbGraphDBInteractiveDbValidationParametersFilter implements DbValidationParametersFilter {
 
 	private final Set<Class> multiResultOperations;
 	private final Map<Class, Long> remainingRequiredResultsPerWriteType;
@@ -23,5 +27,15 @@ public class LdbcSnbGraphDBInteractiveDbValidationParametersFilter {
 		this.remainingRequiredResultsPerLongReadType = remainingRequiredResultsPerLongReadType;
 		this.enabledShortReadOperationTypes = enabledShortReadOperationTypes;
 		this.uncompletedShortReads = 0;
+	}
+
+	@Override
+	public boolean useOperation(Operation operation) {
+		return false;
+	}
+
+	@Override
+	public Workload.DbValidationParametersFilterResult useOperationAndResultForValidation(Operation operation, Object operationResult) {
+		return null;
 	}
 }
