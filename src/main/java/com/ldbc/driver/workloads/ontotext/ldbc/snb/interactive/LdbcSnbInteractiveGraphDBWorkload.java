@@ -1739,11 +1739,11 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 			RandomDataGeneratorFactory randomFactory = new RandomDataGeneratorFactory(42l);
 			double initialProbability = 1.0;
 			Queue<Long> personIdBuffer = (hasDbConnected)
-					? LdbcSnbShortReadGenerator.synchronizedCircularQueueBuffer(1024)
-					: LdbcSnbShortReadGenerator.constantBuffer(1);
+					? LdbcSnbGraphDBShortReadGenerator.synchronizedCircularQueueBuffer(1024)
+					: LdbcSnbGraphDBShortReadGenerator.constantBuffer(1);
 			Queue<Long> messageIdBuffer = (hasDbConnected)
-					? LdbcSnbShortReadGenerator.synchronizedCircularQueueBuffer(1024)
-					: LdbcSnbShortReadGenerator.constantBuffer(1);
+					? LdbcSnbGraphDBShortReadGenerator.synchronizedCircularQueueBuffer(1024)
+					: LdbcSnbGraphDBShortReadGenerator.constantBuffer(1);
 			LdbcSnbShortReadGenerator.SCHEDULED_START_TIME_POLICY scheduledStartTimePolicy = (hasDbConnected)
 					?
 					LdbcSnbShortReadGenerator.SCHEDULED_START_TIME_POLICY.PREVIOUS_OPERATION_ACTUAL_FINISH_TIME
