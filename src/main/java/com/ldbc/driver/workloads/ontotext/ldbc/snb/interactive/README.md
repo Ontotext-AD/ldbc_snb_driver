@@ -60,7 +60,7 @@ In order to generate query substitution parameters, you should execute
 $ cd /<path_to_dir>/ldbc_snb_datagen-<datagen_version>/paramgenerator
 $ ./generateparams.py /<path_to_directory_where_ttl_files_to_be_stored>/hadoop /<path_to_directory_where_ttl_files_to_be_stored>/substitution_parameters.
 ```
-Afterwards you should upload created ***/<path_to_directory_where_ttl_files_to_be_stored>/social_network/social_network_activity_0_0.ttl,  /<path_to_directory_where_ttl_files_to_be_stored>/social_network/social_network_person_0_0.ttl*** and ***/<path_to_directory_where_ttl_files_to_be_stored>/social_network_static_0_0.ttl*** into running GraphDB repository.
+Afterwards you should upload created ***social_network_activity_0_0.ttl, social_network_person_0_0.ttl*** and ***social_network_static_0_0.ttl*** files from /<path_to_directory_where_ttl_files_to_be_stored>/social_network/ folder into running GraphDB repository.
 
 ## Running the benchmark
 
@@ -95,7 +95,7 @@ spinner_wait_duration=1
 help=false
 ignore_scheduled_start_times=true
 
-workload=com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.LdbcSnbInteractiveGraphDBWorkload // this is the GDB implementation of the workload
+workload=com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.LdbcSnbInteractiveGraphDBWorkload 
 db=com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.LdbcSnbInteractiveGraphDb
 operation_count=250
 ldbc.snb.interactive.parameters_dir=/home/sava/output_result/substitution_parameters/
