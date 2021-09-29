@@ -11,10 +11,11 @@ import java.util.Set;
 import static java.lang.String.format;
 
 public class LdbcSnbInteractiveGraphDBWorkloadConfiguration {
+
 	public static final String LDBC_GRAPHDB_INTERACTIVE_PACKAGE_PREFIX = "com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.";
 	public static final String LDBC_SNB_QUERY_DIR = "queryDir";
 
-	public static Set<String> missingParameters(Map<String, String> properties, Iterable<String> compulsoryPropertyKeys) {
+	 static Set<String> missingParameters(Map<String, String> properties, Iterable<String> compulsoryPropertyKeys) {
 		Set<String> missingPropertyKeys = new HashSet<>();
 		for (String compulsoryKey : compulsoryPropertyKeys) {
 			if (null == properties.get(compulsoryKey)) {
@@ -24,18 +25,19 @@ public class LdbcSnbInteractiveGraphDBWorkloadConfiguration {
 		return missingPropertyKeys;
 	}
 
-	public static String removePrefix(String original, String prefix) {
+	static String removePrefix(String original, String prefix) {
 		return (!original.contains(prefix)) ? original : original
-				.substring(original.lastIndexOf(prefix) + prefix.length(), original.length());
+				.substring(original.lastIndexOf(prefix) + prefix.length());
 	}
 
-	public static String removeSuffix(String original, String suffix) {
+	static String removeSuffix(String original, String suffix) {
 		return (!original.contains(suffix)) ? original : original.substring(0, original.lastIndexOf(suffix));
 	}
 
-	public static boolean isValidParser(String parserString) throws WorkloadException {
+	static boolean isValidParser(String parserString) throws WorkloadException {
 		try {
-			LdbcSnbInteractiveWorkloadConfiguration.UpdateStreamParser parser = LdbcSnbInteractiveWorkloadConfiguration.UpdateStreamParser.valueOf(parserString);
+			LdbcSnbInteractiveWorkloadConfiguration.UpdateStreamParser parser = LdbcSnbInteractiveWorkloadConfiguration.
+					UpdateStreamParser.valueOf(parserString);
 			Set<LdbcSnbInteractiveWorkloadConfiguration.UpdateStreamParser> validParsers = new HashSet<>();
 			validParsers.addAll(Arrays.asList(LdbcSnbInteractiveWorkloadConfiguration.UpdateStreamParser.values()));
 			return validParsers.contains(parser);

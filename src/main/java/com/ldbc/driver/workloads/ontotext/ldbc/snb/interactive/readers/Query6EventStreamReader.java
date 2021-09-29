@@ -1,8 +1,6 @@
 package com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.readers;
 
-
 import com.ldbc.driver.Operation;
-import com.ldbc.driver.Workload;
 import com.ldbc.driver.csv.charseeker.CharSeeker;
 import com.ldbc.driver.csv.charseeker.Extractors;
 import com.ldbc.driver.csv.charseeker.Mark;
