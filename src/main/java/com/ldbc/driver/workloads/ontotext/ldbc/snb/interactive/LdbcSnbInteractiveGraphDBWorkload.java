@@ -38,8 +38,23 @@ import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.readers.Query9Eve
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.Equator;
 
-import java.io.*;
-import java.util.*;
+import java.io.Closeable;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import static java.lang.String.format;
@@ -95,22 +110,7 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 
 	@Override
 	public Map<Integer, Class<? extends Operation>> operationTypeToClassMapping() {
-		Map<Integer, Class<? extends Operation>> operationTypeToClassMapping = new HashMap<>();
-		operationTypeToClassMapping.put(LdbcQuery1.TYPE, LdbcQuery1.class);
-		operationTypeToClassMapping.put(LdbcQuery2.TYPE, LdbcQuery2.class);
-		operationTypeToClassMapping.put(LdbcQuery3.TYPE, LdbcQuery3.class);
-		operationTypeToClassMapping.put(LdbcQuery4.TYPE, LdbcQuery4.class);
-		operationTypeToClassMapping.put(LdbcQuery5.TYPE, LdbcQuery5.class);
-		operationTypeToClassMapping.put(LdbcQuery6.TYPE, LdbcQuery6.class);
-		operationTypeToClassMapping.put(LdbcQuery7.TYPE, LdbcQuery7.class);
-		operationTypeToClassMapping.put(LdbcQuery8.TYPE, LdbcQuery8.class);
-		operationTypeToClassMapping.put(LdbcQuery9.TYPE, LdbcQuery9.class);
-		operationTypeToClassMapping.put(LdbcQuery10.TYPE, LdbcQuery10.class);
-		operationTypeToClassMapping.put(LdbcQuery11.TYPE, LdbcQuery11.class);
-		operationTypeToClassMapping.put(LdbcQuery12.TYPE, LdbcQuery12.class);
-		operationTypeToClassMapping.put(LdbcQuery13.TYPE, LdbcQuery13.class);
-		operationTypeToClassMapping.put(LdbcQuery14.TYPE, LdbcQuery14.class);
-		return operationTypeToClassMapping;
+		return LdbcSnbInteractiveGraphDBWorkloadConfiguration.operationTypeToClassMapping();
 	}
 
 	@Override
@@ -122,12 +122,11 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 
 		Set<String> missingPropertyParameters =
 				LdbcSnbInteractiveGraphDBWorkloadConfiguration.missingParameters(params, compulsoryKeys);
+
 		if (!missingPropertyParameters.isEmpty()) {
 			throw new WorkloadException(format("Workload could not initialize due to missing parameters: %s",
 					missingPropertyParameters));
 		}
-
-		getQueries(params);
 
 			if (params.containsKey(LdbcSnbInteractiveWorkloadConfiguration.UPDATES_DIRECTORY)) {
 				String updatesDirectoryPath =
@@ -326,7 +325,8 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 			);
 		}
 
-	protected void onClose() throws IOException {
+	@Override
+	synchronized protected void onClose() throws IOException {
 		for (Closeable forumUpdateOperationsFileReader : forumUpdateOperationsFileReaders) {
 			forumUpdateOperationsFileReader.close();
 		}
@@ -744,8 +744,8 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 				csvFileReader);
 	}
 
-	protected WorkloadStreams getStreams(GeneratorFactory gf, boolean hasDbConnected)
-			throws WorkloadException {
+	@Override
+	protected WorkloadStreams getStreams(GeneratorFactory gf, boolean hasDbConnected) throws WorkloadException {
 		long workloadStartTimeAsMilli = Long.MAX_VALUE;
 		WorkloadStreams ldbcSnbInteractiveWorkloadStreams = new WorkloadStreams();
 		List<Iterator<?>> asynchronousDependencyStreamsList = new ArrayList<>();
@@ -761,7 +761,6 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 		 * *******
 		 * *******/
 
-		// TODO put person/forum update stream pairs into same streams, to half required thread count
 		/*
 		 * Create person write operation streams
 		 */
@@ -1721,20 +1720,20 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 		ChildOperationGenerator shortReadsChildGenerator = null;
 		if (!enabledShortReadOperationTypes.isEmpty()) {
 			Map<Integer, Long> longReadInterleavesAsMilli = new HashMap<>();
-			longReadInterleavesAsMilli.put(com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1.TYPE, readOperation1InterleaveAsMilli);
-			longReadInterleavesAsMilli.put(com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery2.TYPE, readOperation2InterleaveAsMilli);
-			longReadInterleavesAsMilli.put(com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery3.TYPE, readOperation3InterleaveAsMilli);
-			longReadInterleavesAsMilli.put(com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery4.TYPE, readOperation4InterleaveAsMilli);
-			longReadInterleavesAsMilli.put(com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery5.TYPE, readOperation5InterleaveAsMilli);
-			longReadInterleavesAsMilli.put(com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery6.TYPE, readOperation6InterleaveAsMilli);
-			longReadInterleavesAsMilli.put(com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery7.TYPE, readOperation7InterleaveAsMilli);
-			longReadInterleavesAsMilli.put(com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery8.TYPE, readOperation8InterleaveAsMilli);
-			longReadInterleavesAsMilli.put(com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery9.TYPE, readOperation9InterleaveAsMilli);
-			longReadInterleavesAsMilli.put(com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery10.TYPE, readOperation10InterleaveAsMilli);
-			longReadInterleavesAsMilli.put(com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery11.TYPE, readOperation11InterleaveAsMilli);
-			longReadInterleavesAsMilli.put(com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery12.TYPE, readOperation12InterleaveAsMilli);
-			longReadInterleavesAsMilli.put(com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery13.TYPE, readOperation13InterleaveAsMilli);
-			longReadInterleavesAsMilli.put(com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery14.TYPE, readOperation14InterleaveAsMilli);
+			longReadInterleavesAsMilli.put(LdbcQuery1.TYPE, readOperation1InterleaveAsMilli);
+			longReadInterleavesAsMilli.put(LdbcQuery2.TYPE, readOperation2InterleaveAsMilli);
+			longReadInterleavesAsMilli.put(LdbcQuery3.TYPE, readOperation3InterleaveAsMilli);
+			longReadInterleavesAsMilli.put(LdbcQuery4.TYPE, readOperation4InterleaveAsMilli);
+			longReadInterleavesAsMilli.put(LdbcQuery5.TYPE, readOperation5InterleaveAsMilli);
+			longReadInterleavesAsMilli.put(LdbcQuery6.TYPE, readOperation6InterleaveAsMilli);
+			longReadInterleavesAsMilli.put(LdbcQuery7.TYPE, readOperation7InterleaveAsMilli);
+			longReadInterleavesAsMilli.put(LdbcQuery8.TYPE, readOperation8InterleaveAsMilli);
+			longReadInterleavesAsMilli.put(LdbcQuery9.TYPE, readOperation9InterleaveAsMilli);
+			longReadInterleavesAsMilli.put(LdbcQuery10.TYPE, readOperation10InterleaveAsMilli);
+			longReadInterleavesAsMilli.put(LdbcQuery11.TYPE, readOperation11InterleaveAsMilli);
+			longReadInterleavesAsMilli.put(LdbcQuery12.TYPE, readOperation12InterleaveAsMilli);
+			longReadInterleavesAsMilli.put(LdbcQuery13.TYPE, readOperation13InterleaveAsMilli);
+			longReadInterleavesAsMilli.put(LdbcQuery14.TYPE, readOperation14InterleaveAsMilli);
 
 			RandomDataGeneratorFactory randomFactory = new RandomDataGeneratorFactory(42l);
 			double initialProbability = 1.0;
@@ -1849,8 +1848,5 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 		} else {
 			return result1.equals(result2);
 		}
-	}
-
-	private void getQueries(Map<String, String> params) {
 	}
 }
