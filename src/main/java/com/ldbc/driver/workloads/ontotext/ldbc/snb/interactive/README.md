@@ -73,14 +73,14 @@ Create ***interactive-benchmark.properties*** file with following content:
 
 ```
 endpoint=http://<host>:<port>/repositories/<repo_id>
-user=admin // optional if the endpoint is secured
-password=root // optional if the endpoint is secured
+user=admin # optional if the endpoint is secured
+password=root # optional if the endpoint is secured
 queryDir=<path_to_benchmark_queries>
-printQueryNames=true // configurable
-printQueryStrings=true // configurable
-printQueryResults=true // configurable
-cvp=<path_to_valid_file_where_validation_parameters_will_be_generated>|100 // uncomment this line if you’d like to create validation parameters
-vdb=<path_to_valid_file_where_validation_parameters_are_located> // uncomment this line if you’d like to run the benchmark in validation mode. Note that first you should generate validation parameters.
+printQueryNames=true # configurable
+printQueryStrings=true # configurable
+printQueryResults=true # configurable
+#cvp=<path_to_valid_file_where_validation_parameters_will_be_generated>|100 # uncomment this line if you’d like to create validation parameters
+#vdb=<path_to_valid_file_where_validation_parameters_are_located> # uncomment this line if you’d like to run the benchmark in validation mode. Note that first you should generate validation parameters.
 
 status=1
 thread_count=1
@@ -98,7 +98,7 @@ ignore_scheduled_start_times=true
 workload=com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.LdbcSnbInteractiveGraphDBWorkload 
 db=com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.LdbcSnbInteractiveGraphDb
 operation_count=250
-ldbc.snb.interactive.parameters_dir=/home/sava/output_result/substitution_parameters/
+ldbc.snb.interactive.parameters_dir=<path_to>/substitution_parameters/
 ldbc.snb.interactive.short_read_dissipation=0.2
 ## The ldbc.snb.interactive.update_interleave driver parameter must come from the
 ## updateStream.properties file, which is created by the data generator.
