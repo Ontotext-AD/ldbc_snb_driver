@@ -1,4 +1,4 @@
-package com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive;
+package com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,6 +7,7 @@ import com.ldbc.driver.Operation;
 import com.ldbc.driver.SerializingMarshallingException;
 import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.readers.LdbcUtils;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,34 +17,26 @@ import java.util.Objects;
 
 import static java.lang.String.format;
 
-public class LdbcQuery10 extends Operation<List<LdbcQuery10Result>> {
+public class LdbcQuery8 extends Operation<List<LdbcQuery8Result>> {
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-	public static final int TYPE = 10;
+	public static final int TYPE = 8;
 	public static final String PERSON_ID = "%Person%";
-	public static final String MONTH = "%HS1%";
 
 	private final String personId;
-	private final String month;
 
-	public LdbcQuery10(long personId, int month) {
+	public LdbcQuery8(long personId) {
 		this.personId = LdbcUtils.appendZeroAtStart(personId);
-		this.month = String.valueOf(month);
 	}
 
 	public String personId() {
 		return personId;
 	}
 
-	public String month() {
-		return month;
-	}
-
 	@Override
 	public Map<String, Object> parameterMap() {
 		return ImmutableMap.<String, Object>builder()
 				.put(PERSON_ID, personId)
-				.put(MONTH, month)
 				.build();
 	}
 
@@ -56,31 +49,25 @@ public class LdbcQuery10 extends Operation<List<LdbcQuery10Result>> {
 			return false;
 		}
 
-		LdbcQuery10 that = (LdbcQuery10) o;
+		LdbcQuery8 that = (LdbcQuery8) o;
 
-		if (!month.equals(that.month)) {
-			return false;
-		}
-		return Objects.equals(personId, that.personId);
-	}
+        return Objects.equals(personId, that.personId);
+    }
 
 	@Override
 	public int hashCode() {
-		int result = 31 * personId.hashCode();
-		result = 31 * result + (month != null ? month.hashCode() : 0);
-		return result;
+        return 31 * personId.hashCode();
 	}
 
 	@Override
 	public String toString() {
-		return "LdbcQuery10{" +
+		return "LdbcQuery8{" +
 				"personId=" + personId +
-				", month=" + month +
 				'}';
 	}
 
 	@Override
-	public List<LdbcQuery10Result> marshalResult(String serializedResults) throws SerializingMarshallingException {
+	public List<LdbcQuery8Result> marshalResult(String serializedResults) throws SerializingMarshallingException {
 		List<List<Object>> resultsAsList;
 		try {
 			resultsAsList = OBJECT_MAPPER.readValue(serializedResults, new TypeReference<List<List<Object>>>() {
@@ -90,22 +77,22 @@ public class LdbcQuery10 extends Operation<List<LdbcQuery10Result>> {
 					format("Error while parsing serialized results%n%s", serializedResults), e);
 		}
 
-		List<LdbcQuery10Result> results = new ArrayList<>();
+		List<LdbcQuery8Result> results = new ArrayList<>();
 		for (List<Object> resultAsList : resultsAsList) {
 			IRI friendId = LdbcUtils.createIRI(resultAsList.get(0));
 			String personFirstName = (String) resultAsList.get(1);
 			String personLastName = (String) resultAsList.get(2);
-			int commonInterestScore = ((Number) resultAsList.get(3)).intValue();
-			String personGender = (String) resultAsList.get(4);
-			String personCityName = (String) resultAsList.get(5);
+			Literal commentCreationDate = LdbcUtils.createLiteral(resultAsList.get(3));
+			IRI commentId = LdbcUtils.createIRI(resultAsList.get(4));
+			String commentContent = (String) resultAsList.get(5);
 
-			results.add(new LdbcQuery10Result(
+			results.add(new LdbcQuery8Result(
 					friendId,
 					personFirstName,
 					personLastName,
-					commonInterestScore,
-					personGender,
-					personCityName
+					commentCreationDate,
+					commentId,
+					commentContent
 			));
 		}
 
@@ -114,16 +101,17 @@ public class LdbcQuery10 extends Operation<List<LdbcQuery10Result>> {
 
 	@Override
 	public String serializeResult(Object resultsObject) throws SerializingMarshallingException {
-		List<LdbcQuery10Result> results = (List<LdbcQuery10Result>) resultsObject;
+		List<LdbcQuery8Result> results = (List<LdbcQuery8Result>) resultsObject;
 		List<List<Object>> resultsFields = new ArrayList<>();
-		for (LdbcQuery10Result result : results) {
+		for (int i = 0; i < results.size(); i++) {
+			LdbcQuery8Result result = results.get(i);
 			List<Object> resultFields = new ArrayList<>();
 			resultFields.add(result.personId());
 			resultFields.add(result.personFirstName());
 			resultFields.add(result.personLastName());
-			resultFields.add(result.commonInterestScore());
-			resultFields.add(result.personGender());
-			resultFields.add(result.personCityName());
+			resultFields.add(result.commentCreationDate());
+			resultFields.add(result.commentId());
+			resultFields.add(result.commentContent());
 			resultsFields.add(resultFields);
 		}
 

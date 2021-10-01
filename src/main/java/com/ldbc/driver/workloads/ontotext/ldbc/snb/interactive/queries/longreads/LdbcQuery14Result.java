@@ -1,4 +1,4 @@
-package com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive;
+package com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads;
 
 import com.google.common.collect.Lists;
 import com.ldbc.driver.validation.ValidationEquality;

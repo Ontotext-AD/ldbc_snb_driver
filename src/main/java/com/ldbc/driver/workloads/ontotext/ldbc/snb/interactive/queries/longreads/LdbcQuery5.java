@@ -1,4 +1,4 @@
-package com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive;
+package com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,41 +8,38 @@ import com.ldbc.driver.SerializingMarshallingException;
 import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.readers.LdbcUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static java.lang.String.format;
 
-public class LdbcQuery6 extends Operation<List<LdbcQuery6Result>> {
+public class LdbcQuery5 extends Operation<List<LdbcQuery5Result>> {
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-	public static final int TYPE = 6;
+	public static final int TYPE = 5;
 	public static final String PERSON_ID = "%Person%";
-	public static final String TAG_NAME = "%Tag%";
+	public static final String MIN_DATE = "%Date0%";
 
 	private final String personId;
-	private final String tagName;
+	private final String minDate;
 
-	public LdbcQuery6(long personId, String tagName) {
+	public LdbcQuery5(long personId, Date minDate) {
 		this.personId = LdbcUtils.appendZeroAtStart(personId);
-		this.tagName = tagName;
+		this.minDate = LdbcUtils.convertToDateAsString(minDate);
 	}
 
 	public String personId() {
 		return personId;
 	}
 
-	public String tagName() {
-		return tagName;
+	public String minDate() {
+		return minDate;
 	}
 
 	@Override
 	public Map<String, Object> parameterMap() {
 		return ImmutableMap.<String, Object>builder()
 				.put(PERSON_ID, personId)
-				.put(TAG_NAME, tagName)
+				.put(MIN_DATE, minDate)
 				.build();
 	}
 
@@ -55,31 +52,31 @@ public class LdbcQuery6 extends Operation<List<LdbcQuery6Result>> {
 			return false;
 		}
 
-		LdbcQuery6 that = (LdbcQuery6) o;
+		LdbcQuery5 that = (LdbcQuery5) o;
 
         if (!Objects.equals(personId, that.personId)) {
             return false;
         }
-        return Objects.equals(tagName, that.tagName);
+        return Objects.equals(minDate, that.minDate);
     }
 
 	@Override
 	public int hashCode() {
 		int result = 31 * personId.hashCode();
-		result = 31 * result + (tagName != null ? tagName.hashCode() : 0);
+		result = 31 * result + (minDate != null ? minDate.hashCode() : 0);
 		return result;
 	}
 
 	@Override
 	public String toString() {
-		return "LdbcQuery6{" +
+		return "LdbcQuery5{" +
 				"personId=" + personId +
-				", tagName='" + tagName + '\'' +
+				", minDate=" + minDate +
 				'}';
 	}
 
 	@Override
-	public List<LdbcQuery6Result> marshalResult(String serializedResults) throws SerializingMarshallingException {
+	public List<LdbcQuery5Result> marshalResult(String serializedResults) throws SerializingMarshallingException {
 		List<List<Object>> resultsAsList;
 		try {
 			resultsAsList = OBJECT_MAPPER.readValue(serializedResults, new TypeReference<List<List<Object>>>() {
@@ -89,14 +86,14 @@ public class LdbcQuery6 extends Operation<List<LdbcQuery6Result>> {
 					format("Error while parsing serialized results\n%s", serializedResults), e);
 		}
 
-		List<LdbcQuery6Result> results = new ArrayList<>();
+		List<LdbcQuery5Result> results = new ArrayList<>();
 		for (List<Object> resultAsList : resultsAsList) {
-			String tagName = (String) resultAsList.get(0);
-			int tagCount = ((Number) resultAsList.get(1)).intValue();
+			String forumTitle = (String) resultAsList.get(0);
+			int postCount = ((Number) resultAsList.get(1)).intValue();
 
-			results.add(new LdbcQuery6Result(
-					tagName,
-					tagCount
+			results.add(new LdbcQuery5Result(
+					forumTitle,
+					postCount
 			));
 		}
 
@@ -105,12 +102,12 @@ public class LdbcQuery6 extends Operation<List<LdbcQuery6Result>> {
 
 	@Override
 	public String serializeResult(Object resultsObject) throws SerializingMarshallingException {
-		List<LdbcQuery6Result> results = (List<LdbcQuery6Result>) resultsObject;
+		List<LdbcQuery5Result> results = (List<LdbcQuery5Result>) resultsObject;
 		List<List<Object>> resultsFields = new ArrayList<>();
 		for (int i = 0; i < results.size(); i++) {
-			LdbcQuery6Result result = results.get(i);
+			LdbcQuery5Result result = results.get(i);
 			List<Object> resultFields = new ArrayList<>();
-			resultFields.add(result.tagName());
+			resultFields.add(result.forumTitle());
 			resultFields.add(result.postCount());
 			resultsFields.add(resultFields);
 		}

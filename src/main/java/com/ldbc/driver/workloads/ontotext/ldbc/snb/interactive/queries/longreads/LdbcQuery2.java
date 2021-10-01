@@ -1,4 +1,4 @@
-package com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive;
+package com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,51 +7,41 @@ import com.ldbc.driver.Operation;
 import com.ldbc.driver.SerializingMarshallingException;
 import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.readers.LdbcUtils;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static java.lang.String.format;
 
-public class LdbcQuery11 extends Operation<List<LdbcQuery11Result>> {
+public class LdbcQuery2 extends Operation<List<LdbcQuery2Result>> {
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-	public static final int TYPE = 11;
+	public static final int TYPE = 2;
 	public static final String PERSON_ID = "%Person%";
-	public static final String COUNTRY_NAME = "%Country%";
-	public static final String WORK_FROM_YEAR = "%Date0%";
+	public static final String MAX_DATE = "%Date0%";
 
 	private final String personId;
-	private final String countryName;
-	private final String workFromYear;
+	private final String maxDate;
 
-	public LdbcQuery11(long personId, String countryName, int workFromYear) {
+	public LdbcQuery2(long personId, Date maxDate) {
 		this.personId = LdbcUtils.appendZeroAtStart(personId);
-		this.countryName = countryName;
-		this.workFromYear = String.valueOf(workFromYear);
+		this.maxDate = LdbcUtils.convertToDateAsString(maxDate);
 	}
 
 	public String personId() {
 		return personId;
 	}
 
-	public String countryName() {
-		return countryName;
-	}
-
-	public String workFromYear() {
-		return workFromYear;
+	public String maxDate() {
+		return maxDate;
 	}
 
 	@Override
 	public Map<String, Object> parameterMap() {
 		return ImmutableMap.<String, Object>builder()
 				.put(PERSON_ID, personId)
-				.put(COUNTRY_NAME, countryName)
-				.put(WORK_FROM_YEAR, workFromYear)
+				.put(MAX_DATE, maxDate)
 				.build();
 	}
 
@@ -64,60 +54,56 @@ public class LdbcQuery11 extends Operation<List<LdbcQuery11Result>> {
 			return false;
 		}
 
-		LdbcQuery11 that = (LdbcQuery11) o;
+		LdbcQuery2 that = (LdbcQuery2) o;
 
-
-        if (!Objects.equals(personId, that.personId)) {
-            return false;
-        }
-		if (workFromYear != that.workFromYear) {
+		if (!Objects.equals(personId, that.personId)) {
 			return false;
 		}
-		return Objects.equals(countryName, that.countryName);
-	}
+        return Objects.equals(maxDate, that.maxDate);
+    }
 
 	@Override
 	public int hashCode() {
-		int result = 31 * personId.hashCode();
-		result = 31 * result + (countryName != null ? countryName.hashCode() : 0);
-		result = 31 * result + (workFromYear != null ? workFromYear.hashCode() : 0);
+        int result = 31 * personId.hashCode();
+		result = 31 * result + (maxDate != null ? maxDate.hashCode() : 0);
 		return result;
 	}
 
 	@Override
 	public String toString() {
-		return "LdbcQuery11{" +
+		return "LdbcQuery2{" +
 				"personId=" + personId +
-				", countryName='" + countryName + '\'' +
-				", workFromYear=" + workFromYear +
+				", maxDate=" + maxDate +
 				'}';
 	}
 
 	@Override
-	public List<LdbcQuery11Result> marshalResult(String serializedResults) throws SerializingMarshallingException {
+	public List<LdbcQuery2Result> marshalResult(String serializedResults) throws SerializingMarshallingException {
 		List<List<Object>> resultsAsList;
 		try {
 			resultsAsList = OBJECT_MAPPER.readValue(serializedResults, new TypeReference<List<List<Object>>>() {
 			});
 		} catch (IOException e) {
 			throw new SerializingMarshallingException(
-					format("Error while parsing serialized results\n%s", serializedResults), e);
+					format("Error parsing serialized result\n%s", serializedResults), e);
 		}
 
-		List<LdbcQuery11Result> results = new ArrayList<>();
+		List<LdbcQuery2Result> results = new ArrayList<>();
 		for (List<Object> resultAsList : resultsAsList) {
 			IRI friendId = LdbcUtils.createIRI(resultAsList.get(0));
 			String personFirstName = (String) resultAsList.get(1);
 			String personLastName = (String) resultAsList.get(2);
-			String organizationName = (String) resultAsList.get(3);
-			int organizationWorkFromYear = ((Number) resultAsList.get(4)).intValue();
+			IRI messageId = LdbcUtils.createIRI(resultAsList.get(3));
+			String messageContent = (String) resultAsList.get(4);
+			Literal messageCreationDate = LdbcUtils.createLiteral(resultAsList.get(5));
 
-			results.add(new LdbcQuery11Result(
+			results.add(new LdbcQuery2Result(
 					friendId,
 					personFirstName,
 					personLastName,
-					organizationName,
-					organizationWorkFromYear
+					messageId,
+					messageContent,
+					messageCreationDate
 			));
 		}
 
@@ -126,15 +112,16 @@ public class LdbcQuery11 extends Operation<List<LdbcQuery11Result>> {
 
 	@Override
 	public String serializeResult(Object resultsObject) throws SerializingMarshallingException {
-		List<LdbcQuery11Result> results = (List<LdbcQuery11Result>) resultsObject;
+		List<LdbcQuery2Result> results = (List<LdbcQuery2Result>) resultsObject;
 		List<List<Object>> resultsFields = new ArrayList<>();
-		for (LdbcQuery11Result result : results) {
+		for (LdbcQuery2Result result : results) {
 			List<Object> resultFields = new ArrayList<>();
 			resultFields.add(result.personId());
 			resultFields.add(result.personFirstName());
 			resultFields.add(result.personLastName());
-			resultFields.add(result.organizationName());
-			resultFields.add(result.organizationWorkFromYear());
+			resultFields.add(result.messageId());
+			resultFields.add(result.messageContent());
+			resultFields.add(result.messageCreationDate());
 			resultsFields.add(resultFields);
 		}
 
@@ -142,7 +129,7 @@ public class LdbcQuery11 extends Operation<List<LdbcQuery11Result>> {
 			return OBJECT_MAPPER.writeValueAsString(resultsFields);
 		} catch (IOException e) {
 			throw new SerializingMarshallingException(
-					format("Error while trying to serialize result\n%s", results.toString()), e);
+					format("Error while trying to serialize result%n%s", results.toString()), e);
 		}
 	}
 

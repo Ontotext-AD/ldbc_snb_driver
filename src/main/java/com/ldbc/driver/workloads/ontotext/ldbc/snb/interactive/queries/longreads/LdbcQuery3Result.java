@@ -1,22 +1,24 @@
-package com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive;
+package com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads;
 
 import org.eclipse.rdf4j.model.IRI;
 
 import java.util.Objects;
 
-public class LdbcQuery11Result {
+public class LdbcQuery3Result {
 	private final IRI personId;
 	private final String personFirstName;
 	private final String personLastName;
-	private final String organizationName;
-	private final int organizationWorkFromYear;
+	private final long xCount;
+	private final long yCount;
+	private final long count;
 
-	public LdbcQuery11Result(IRI personId, String personFirstName, String personLastName, String organizationName, int organizationWorkFromYear) {
+	public LdbcQuery3Result(IRI personId, String personFirstName, String personLastName, long xCount, long yCount, long count) {
 		this.personId = personId;
 		this.personFirstName = personFirstName;
 		this.personLastName = personLastName;
-		this.organizationName = organizationName;
-		this.organizationWorkFromYear = organizationWorkFromYear;
+		this.xCount = xCount;
+		this.yCount = yCount;
+		this.count = count;
 	}
 
 	public IRI personId() {
@@ -31,12 +33,16 @@ public class LdbcQuery11Result {
 		return personLastName;
 	}
 
-	public String organizationName() {
-		return organizationName;
+	public long xCount() {
+		return xCount;
 	}
 
-	public int organizationWorkFromYear() {
-		return organizationWorkFromYear;
+	public long yCount() {
+		return yCount;
+	}
+
+	public long count() {
+		return count;
 	}
 
 	@Override
@@ -44,12 +50,12 @@ public class LdbcQuery11Result {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		LdbcQuery11Result that = (LdbcQuery11Result) o;
+		LdbcQuery3Result that = (LdbcQuery3Result) o;
 
-		if (organizationWorkFromYear != that.organizationWorkFromYear) return false;
+		if (count != that.count) return false;
 		if (!Objects.equals(personId, that.personId)) return false;
-		if (!Objects.equals(organizationName, that.organizationName))
-			return false;
+		if (xCount != that.xCount) return false;
+		if (yCount != that.yCount) return false;
 		if (!Objects.equals(personFirstName, that.personFirstName))
 			return false;
 		return Objects.equals(personLastName, that.personLastName);
@@ -57,12 +63,13 @@ public class LdbcQuery11Result {
 
 	@Override
 	public String toString() {
-		return "LdbcQuery11Result{" +
+		return "LdbcQuery3Result{" +
 				"personId=" + personId +
 				", personFirstName='" + personFirstName + '\'' +
 				", personLastName='" + personLastName + '\'' +
-				", organizationName='" + organizationName + '\'' +
-				", organizationWorkFromYear=" + organizationWorkFromYear +
+				", xCount=" + xCount +
+				", yCount=" + yCount +
+				", count=" + count +
 				'}';
 	}
 }

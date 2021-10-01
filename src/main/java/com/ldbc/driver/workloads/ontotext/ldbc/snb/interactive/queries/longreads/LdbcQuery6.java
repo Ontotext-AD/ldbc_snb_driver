@@ -1,4 +1,4 @@
-package com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive;
+package com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,46 +6,43 @@ import com.google.common.collect.ImmutableMap;
 import com.ldbc.driver.Operation;
 import com.ldbc.driver.SerializingMarshallingException;
 import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.readers.LdbcUtils;
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Literal;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import static java.lang.String.format;
 
-public class LdbcQuery9 extends Operation<List<LdbcQuery9Result>> {
+public class LdbcQuery6 extends Operation<List<LdbcQuery6Result>> {
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-	public static final int TYPE = 9;
+	public static final int TYPE = 6;
 	public static final String PERSON_ID = "%Person%";
-	public static final String MAX_DATE = "%Date0%";
+	public static final String TAG_NAME = "%Tag%";
 
 	private final String personId;
-	private final String maxDate;
+	private final String tagName;
 
-	public LdbcQuery9(long personId, Date maxDate) {
+	public LdbcQuery6(long personId, String tagName) {
 		this.personId = LdbcUtils.appendZeroAtStart(personId);
-		this.maxDate = LdbcUtils.convertToDateAsString(maxDate);
+		this.tagName = tagName;
 	}
 
 	public String personId() {
 		return personId;
 	}
 
-	public String maxDate() {
-		return maxDate;
+	public String tagName() {
+		return tagName;
 	}
 
 	@Override
 	public Map<String, Object> parameterMap() {
 		return ImmutableMap.<String, Object>builder()
 				.put(PERSON_ID, personId)
-				.put(MAX_DATE, maxDate)
+				.put(TAG_NAME, tagName)
 				.build();
 	}
 
@@ -58,31 +55,31 @@ public class LdbcQuery9 extends Operation<List<LdbcQuery9Result>> {
 			return false;
 		}
 
-		LdbcQuery9 that = (LdbcQuery9) o;
+		LdbcQuery6 that = (LdbcQuery6) o;
 
-		if (!Objects.equals(personId, that.personId)) {
-			return false;
-		}
-		return Objects.equals(maxDate, that.maxDate);
-	}
+        if (!Objects.equals(personId, that.personId)) {
+            return false;
+        }
+        return Objects.equals(tagName, that.tagName);
+    }
 
 	@Override
 	public int hashCode() {
 		int result = 31 * personId.hashCode();
-		result = 31 * result + (maxDate != null ? maxDate.hashCode() : 0);
+		result = 31 * result + (tagName != null ? tagName.hashCode() : 0);
 		return result;
 	}
 
 	@Override
 	public String toString() {
-		return "LdbcQuery9{" +
+		return "LdbcQuery6{" +
 				"personId=" + personId +
-				", maxDate=" + maxDate +
+				", tagName='" + tagName + '\'' +
 				'}';
 	}
 
 	@Override
-	public List<LdbcQuery9Result> marshalResult(String serializedResults) throws SerializingMarshallingException {
+	public List<LdbcQuery6Result> marshalResult(String serializedResults) throws SerializingMarshallingException {
 		List<List<Object>> resultsAsList;
 		try {
 			resultsAsList = OBJECT_MAPPER.readValue(serializedResults, new TypeReference<List<List<Object>>>() {
@@ -92,22 +89,14 @@ public class LdbcQuery9 extends Operation<List<LdbcQuery9Result>> {
 					format("Error while parsing serialized results\n%s", serializedResults), e);
 		}
 
-		List<LdbcQuery9Result> results = new ArrayList<>();
+		List<LdbcQuery6Result> results = new ArrayList<>();
 		for (List<Object> resultAsList : resultsAsList) {
-			IRI friendId = LdbcUtils.createIRI(resultAsList.get(0));
-			String personFirstName = (String) resultAsList.get(1);
-			String personLastName = (String) resultAsList.get(2);
-			IRI messageId = LdbcUtils.createIRI(resultAsList.get(3));
-			String messageContent = (String) resultAsList.get(4);
-			Literal messageCreationDate = LdbcUtils.createLiteral(resultAsList.get(5));
+			String tagName = (String) resultAsList.get(0);
+			int tagCount = ((Number) resultAsList.get(1)).intValue();
 
-			results.add(new LdbcQuery9Result(
-					friendId,
-					personFirstName,
-					personLastName,
-					messageId,
-					messageContent,
-					messageCreationDate
+			results.add(new LdbcQuery6Result(
+					tagName,
+					tagCount
 			));
 		}
 
@@ -116,16 +105,13 @@ public class LdbcQuery9 extends Operation<List<LdbcQuery9Result>> {
 
 	@Override
 	public String serializeResult(Object resultsObject) throws SerializingMarshallingException {
-		List<LdbcQuery9Result> results = (List<LdbcQuery9Result>) resultsObject;
+		List<LdbcQuery6Result> results = (List<LdbcQuery6Result>) resultsObject;
 		List<List<Object>> resultsFields = new ArrayList<>();
-		for (LdbcQuery9Result result : results) {
+		for (int i = 0; i < results.size(); i++) {
+			LdbcQuery6Result result = results.get(i);
 			List<Object> resultFields = new ArrayList<>();
-			resultFields.add(result.personId());
-			resultFields.add(result.personFirstName());
-			resultFields.add(result.personLastName());
-			resultFields.add(result.messageId());
-			resultFields.add(result.messageContent());
-			resultFields.add(result.messageCreationDate());
+			resultFields.add(result.tagName());
+			resultFields.add(result.postCount());
 			resultsFields.add(resultFields);
 		}
 

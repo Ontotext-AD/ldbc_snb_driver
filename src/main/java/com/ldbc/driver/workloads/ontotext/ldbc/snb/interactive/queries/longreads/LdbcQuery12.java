@@ -1,4 +1,4 @@
-package com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive;
+package com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,44 +6,44 @@ import com.google.common.collect.ImmutableMap;
 import com.ldbc.driver.Operation;
 import com.ldbc.driver.SerializingMarshallingException;
 import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.readers.LdbcUtils;
+import org.eclipse.rdf4j.model.IRI;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import static java.lang.String.format;
 
-public class LdbcQuery5 extends Operation<List<LdbcQuery5Result>> {
+public class LdbcQuery12 extends Operation<List<LdbcQuery12Result>> {
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-	public static final int TYPE = 5;
+	public static final int TYPE = 12;
 	public static final String PERSON_ID = "%Person%";
-	public static final String MIN_DATE = "%Date0%";
+	public static final String TAG_CLASS_NAME = "%TagType%";
 
 	private final String personId;
-	private final String minDate;
+	private final String tagClassName;
 
-	public LdbcQuery5(long personId, Date minDate) {
+	public LdbcQuery12(long personId, String tagClassName) {
 		this.personId = LdbcUtils.appendZeroAtStart(personId);
-		this.minDate = LdbcUtils.convertToDateAsString(minDate);
+		this.tagClassName = tagClassName;
 	}
 
 	public String personId() {
 		return personId;
 	}
 
-	public String minDate() {
-		return minDate;
+	public String tagClassName() {
+		return tagClassName;
 	}
 
 	@Override
 	public Map<String, Object> parameterMap() {
 		return ImmutableMap.<String, Object>builder()
 				.put(PERSON_ID, personId)
-				.put(MIN_DATE, minDate)
+				.put(TAG_CLASS_NAME, tagClassName)
 				.build();
 	}
 
@@ -56,48 +56,54 @@ public class LdbcQuery5 extends Operation<List<LdbcQuery5Result>> {
 			return false;
 		}
 
-		LdbcQuery5 that = (LdbcQuery5) o;
+		LdbcQuery12 that = (LdbcQuery12) o;
 
-        if (!Objects.equals(personId, that.personId)) {
-            return false;
-        }
-        return Objects.equals(minDate, that.minDate);
-    }
+		if (!Objects.equals(personId, that.personId)) {
+			return false;
+		}
+		return Objects.equals(tagClassName, that.tagClassName);
+	}
 
 	@Override
 	public int hashCode() {
 		int result = 31 * personId.hashCode();
-		result = 31 * result + (minDate != null ? minDate.hashCode() : 0);
+		result = 31 * result + (tagClassName != null ? tagClassName.hashCode() : 0);
 		return result;
 	}
 
 	@Override
 	public String toString() {
-		return "LdbcQuery5{" +
+		return "LdbcQuery12{" +
 				"personId=" + personId +
-				", minDate=" + minDate +
+				", tagClassName='" + tagClassName + '\'' +
 				'}';
 	}
 
 	@Override
-	public List<LdbcQuery5Result> marshalResult(String serializedResults) throws SerializingMarshallingException {
+	public List<LdbcQuery12Result> marshalResult(String serializedResults) throws SerializingMarshallingException {
 		List<List<Object>> resultsAsList;
 		try {
 			resultsAsList = OBJECT_MAPPER.readValue(serializedResults, new TypeReference<List<List<Object>>>() {
 			});
 		} catch (IOException e) {
 			throw new SerializingMarshallingException(
-					format("Error while parsing serialized results\n%s", serializedResults), e);
+					format("Error while parsing serialized results%n%s", serializedResults), e);
 		}
 
-		List<LdbcQuery5Result> results = new ArrayList<>();
+		List<LdbcQuery12Result> results = new ArrayList<>();
 		for (List<Object> resultAsList : resultsAsList) {
-			String forumTitle = (String) resultAsList.get(0);
-			int postCount = ((Number) resultAsList.get(1)).intValue();
+			IRI friendId = LdbcUtils.createIRI(resultAsList.get(0));
+			String personFirstName = (String) resultAsList.get(1);
+			String personLastName = (String) resultAsList.get(2);
+			String tagNames = (String) resultAsList.get(3);
+			int replyCount = ((Number) resultAsList.get(4)).intValue();
 
-			results.add(new LdbcQuery5Result(
-					forumTitle,
-					postCount
+			results.add(new LdbcQuery12Result(
+					friendId,
+					personFirstName,
+					personLastName,
+					tagNames,
+					replyCount
 			));
 		}
 
@@ -106,13 +112,15 @@ public class LdbcQuery5 extends Operation<List<LdbcQuery5Result>> {
 
 	@Override
 	public String serializeResult(Object resultsObject) throws SerializingMarshallingException {
-		List<LdbcQuery5Result> results = (List<LdbcQuery5Result>) resultsObject;
+		List<LdbcQuery12Result> results = (List<LdbcQuery12Result>) resultsObject;
 		List<List<Object>> resultsFields = new ArrayList<>();
-		for (int i = 0; i < results.size(); i++) {
-			LdbcQuery5Result result = results.get(i);
+		for (LdbcQuery12Result result : results) {
 			List<Object> resultFields = new ArrayList<>();
-			resultFields.add(result.forumTitle());
-			resultFields.add(result.postCount());
+			resultFields.add(result.personId());
+			resultFields.add(result.personFirstName());
+			resultFields.add(result.personLastName());
+			resultFields.add(result.tagNames());
+			resultFields.add(result.replyCount());
 			resultsFields.add(resultFields);
 		}
 

@@ -35,6 +35,20 @@ import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.readers.Query6Eve
 import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.readers.Query7EventStreamReader;
 import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.readers.Query8EventStreamReader;
 import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.readers.Query9EventStreamReader;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery1;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery2;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery3;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery4;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery5;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery6;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery7;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery8;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery9;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery10;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery11;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery12;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery13;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery14;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.Equator;
 
@@ -128,202 +142,267 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 					missingPropertyParameters));
 		}
 
-			if (params.containsKey(LdbcSnbInteractiveWorkloadConfiguration.UPDATES_DIRECTORY)) {
-				String updatesDirectoryPath =
-						params.get(LdbcSnbInteractiveWorkloadConfiguration.UPDATES_DIRECTORY).trim();
-				File updatesDirectory = new File(updatesDirectoryPath);
-				if (!updatesDirectory.exists()) {
-					throw new WorkloadException(format("Updates directory does not exist%nDirectory: %s",
-							updatesDirectory.getAbsolutePath()));
-				}
-				if (!updatesDirectory.isDirectory()) {
-					throw new WorkloadException(format("Updates directory is not a directory%nDirectory: %s",
-							updatesDirectory.getAbsolutePath()));
-				}
-				forumUpdateOperationFiles = LdbcSnbInteractiveWorkloadConfiguration
-						.forumUpdateFilesInDirectory(updatesDirectory);
-				personUpdateOperationFiles =
-						LdbcSnbInteractiveWorkloadConfiguration.personUpdateFilesInDirectory(updatesDirectory);
-			} else {
-				forumUpdateOperationFiles = new ArrayList<>();
-				personUpdateOperationFiles = new ArrayList<>();
+		if (params.containsKey(LdbcSnbInteractiveWorkloadConfiguration.UPDATES_DIRECTORY)) {
+			String updatesDirectoryPath =
+					params.get(LdbcSnbInteractiveWorkloadConfiguration.UPDATES_DIRECTORY).trim();
+			File updatesDirectory = new File(updatesDirectoryPath);
+			if (!updatesDirectory.exists()) {
+				throw new WorkloadException(format("Updates directory does not exist%nDirectory: %s",
+						updatesDirectory.getAbsolutePath()));
 			}
+			if (!updatesDirectory.isDirectory()) {
+				throw new WorkloadException(format("Updates directory is not a directory%nDirectory: %s",
+						updatesDirectory.getAbsolutePath()));
+			}
+			forumUpdateOperationFiles = LdbcSnbInteractiveWorkloadConfiguration
+					.forumUpdateFilesInDirectory(updatesDirectory);
+			personUpdateOperationFiles =
+					LdbcSnbInteractiveWorkloadConfiguration.personUpdateFilesInDirectory(updatesDirectory);
+		} else {
+			forumUpdateOperationFiles = new ArrayList<>();
+			personUpdateOperationFiles = new ArrayList<>();
+		}
 
-			File parametersDir =
-					new File(params.get(LdbcSnbInteractiveWorkloadConfiguration.PARAMETERS_DIRECTORY).trim());
-			if (!parametersDir.exists()) {
+		File parametersDir =
+				new File(params.get(LdbcSnbInteractiveWorkloadConfiguration.PARAMETERS_DIRECTORY).trim());
+		if (!parametersDir.exists()) {
+			throw new WorkloadException(
+					format("Parameters directory does not exist: %s", parametersDir.getAbsolutePath()));
+		}
+		for (String readOperationParamsFilename :
+				LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_PARAMS_FILENAMES) {
+			File readOperationParamsFile = new File(parametersDir, readOperationParamsFilename);
+			if (!readOperationParamsFile.exists()) {
 				throw new WorkloadException(
-						format("Parameters directory does not exist: %s", parametersDir.getAbsolutePath()));
+						format("Read operation parameters file does not exist: %s",
+								readOperationParamsFile.getAbsolutePath()));
 			}
-			for (String readOperationParamsFilename :
-					LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_PARAMS_FILENAMES) {
-				File readOperationParamsFile = new File(parametersDir, readOperationParamsFilename);
-				if (!readOperationParamsFile.exists()) {
-					throw new WorkloadException(
-							format("Read operation parameters file does not exist: %s",
-									readOperationParamsFile.getAbsolutePath()));
-				}
+		}
+		readOperation1File =
+				new File(parametersDir, LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_1_PARAMS_FILENAME);
+		readOperation2File =
+				new File(parametersDir, LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_2_PARAMS_FILENAME);
+		readOperation3File =
+				new File(parametersDir, LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_3_PARAMS_FILENAME);
+		readOperation4File =
+				new File(parametersDir, LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_4_PARAMS_FILENAME);
+		readOperation5File =
+				new File(parametersDir, LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_5_PARAMS_FILENAME);
+		readOperation7File =
+				new File(parametersDir, LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_7_PARAMS_FILENAME);
+		readOperation8File =
+				new File(parametersDir, LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_8_PARAMS_FILENAME);
+		readOperation9File =
+				new File(parametersDir, LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_9_PARAMS_FILENAME);
+		readOperation6File =
+				new File(parametersDir, LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_6_PARAMS_FILENAME);
+		readOperation10File =
+				new File(parametersDir, LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_10_PARAMS_FILENAME);
+		readOperation11File =
+				new File(parametersDir, LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_11_PARAMS_FILENAME);
+		readOperation12File =
+				new File(parametersDir, LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_12_PARAMS_FILENAME);
+		readOperation13File =
+				new File(parametersDir, LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_13_PARAMS_FILENAME);
+		readOperation14File =
+				new File(parametersDir, LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_14_PARAMS_FILENAME);
+
+		enabledLongReadOperationTypes = new HashSet<>();
+		addEnabledQuery(params, enabledLongReadOperationTypes, LdbcSnbInteractiveWorkloadConfiguration
+				.LONG_READ_OPERATION_ENABLE_KEYS, LdbcSnbInteractiveGraphDBWorkloadConfiguration.LONG_READ_QUERIES_PACKAGE_PREFIX);
+
+//		for (String longReadOperationEnableKey : LdbcSnbInteractiveWorkloadConfiguration
+//				.LONG_READ_OPERATION_ENABLE_KEYS) {
+//			String longReadOperationEnabledString = params.get(longReadOperationEnableKey).trim();
+//			boolean longReadOperationEnabled = Boolean.parseBoolean(longReadOperationEnabledString);
+//			String longReadOperationClassName =
+//					LdbcSnbInteractiveGraphDBWorkloadConfiguration.LDBC_GRAPHDB_INTERACTIVE_PACKAGE_PREFIX
+//							+ LdbcSnbInteractiveGraphDBWorkloadConfiguration.removePrefix(
+//							LdbcSnbInteractiveGraphDBWorkloadConfiguration.removeSuffix(
+//									longReadOperationEnableKey,
+//									LdbcSnbInteractiveWorkloadConfiguration.ENABLE_SUFFIX
+//							),
+//							LdbcSnbInteractiveWorkloadConfiguration
+//									.LDBC_SNB_INTERACTIVE_PARAM_NAME_PREFIX
+//					);
+//			try {
+//				Class<?> longReadOperationClass = ClassLoaderHelper.loadClass(longReadOperationClassName);
+//				if (longReadOperationEnabled) {
+//					enabledLongReadOperationTypes.add(longReadOperationClass);
+//				}
+//			} catch (ClassLoadingException e) {
+//				throw new WorkloadException(
+//						format(
+//								"Unable to load operation class for parameter: %s%nGuessed incorrect class name: %s",
+//								longReadOperationEnableKey, longReadOperationClassName),
+//						e
+//				);
+//			}
+//		}
+
+		enabledShortReadOperationTypes = new HashSet<>();
+		addEnabledQuery(params, enabledShortReadOperationTypes, LdbcSnbInteractiveWorkloadConfiguration
+				.SHORT_READ_OPERATION_ENABLE_KEYS, LdbcSnbInteractiveGraphDBWorkloadConfiguration.SHORT_READ_QUERIES_PACKAGE_PREFIX);
+
+//		for (String shortReadOperationEnableKey : LdbcSnbInteractiveWorkloadConfiguration
+//				.SHORT_READ_OPERATION_ENABLE_KEYS) {
+//			String shortReadOperationEnabledString = params.get(shortReadOperationEnableKey).trim();
+//			boolean shortReadOperationEnabled = Boolean.parseBoolean(shortReadOperationEnabledString);
+//			String shortReadOperationClassName =
+//					LdbcSnbInteractiveGraphDBWorkloadConfiguration.LDBC_GRAPHDB_INTERACTIVE_PACKAGE_PREFIX +
+//							LdbcSnbInteractiveGraphDBWorkloadConfiguration.removePrefix(
+//									LdbcSnbInteractiveGraphDBWorkloadConfiguration.removeSuffix(
+//											shortReadOperationEnableKey,
+//											LdbcSnbInteractiveWorkloadConfiguration.ENABLE_SUFFIX
+//									),
+//									LdbcSnbInteractiveWorkloadConfiguration
+//											.LDBC_SNB_INTERACTIVE_PARAM_NAME_PREFIX
+//							);
+//			try {
+//				Class<?> shortReadOperationClass = ClassLoaderHelper.loadClass(shortReadOperationClassName);
+//				if (shortReadOperationEnabled) {
+//					enabledShortReadOperationTypes.add(shortReadOperationClass);
+//				}
+//			} catch (ClassLoadingException e) {
+//				throw new WorkloadException(
+//						format(
+//								"Unable to load operation class for parameter: %s%nGuessed incorrect class name: %s",
+//								shortReadOperationEnableKey, shortReadOperationClassName),
+//						e
+//				);
+//			}
+//		}
+
+		if (!enabledShortReadOperationTypes.isEmpty()) {
+			if (!params.containsKey(LdbcSnbInteractiveWorkloadConfiguration.SHORT_READ_DISSIPATION)) {
+				throw new WorkloadException(format("Configuration parameter missing: %s",
+						LdbcSnbInteractiveWorkloadConfiguration.SHORT_READ_DISSIPATION));
 			}
-			readOperation1File =
-					new File(parametersDir, LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_1_PARAMS_FILENAME);
-			readOperation2File =
-					new File(parametersDir, LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_2_PARAMS_FILENAME);
-			readOperation3File =
-					new File(parametersDir, LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_3_PARAMS_FILENAME);
-			readOperation4File =
-					new File(parametersDir, LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_4_PARAMS_FILENAME);
-			readOperation5File =
-					new File(parametersDir, LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_5_PARAMS_FILENAME);
-			readOperation7File =
-					new File(parametersDir, LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_7_PARAMS_FILENAME);
-			readOperation8File =
-					new File(parametersDir, LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_8_PARAMS_FILENAME);
-			readOperation9File =
-					new File(parametersDir, LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_9_PARAMS_FILENAME);
-			readOperation6File =
-					new File(parametersDir, LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_6_PARAMS_FILENAME);
-			readOperation10File =
-					new File(parametersDir, LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_10_PARAMS_FILENAME);
-			readOperation11File =
-					new File(parametersDir, LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_11_PARAMS_FILENAME);
-			readOperation12File =
-					new File(parametersDir, LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_12_PARAMS_FILENAME);
-			readOperation13File =
-					new File(parametersDir, LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_13_PARAMS_FILENAME);
-			readOperation14File =
-					new File(parametersDir, LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_14_PARAMS_FILENAME);
-
-			enabledLongReadOperationTypes = new HashSet<>();
-			for (String longReadOperationEnableKey : LdbcSnbInteractiveWorkloadConfiguration
-					.LONG_READ_OPERATION_ENABLE_KEYS) {
-				String longReadOperationEnabledString = params.get(longReadOperationEnableKey).trim();
-				boolean longReadOperationEnabled = Boolean.parseBoolean(longReadOperationEnabledString);
-				String longReadOperationClassName =
-						LdbcSnbInteractiveGraphDBWorkloadConfiguration.LDBC_GRAPHDB_INTERACTIVE_PACKAGE_PREFIX
-								+ LdbcSnbInteractiveGraphDBWorkloadConfiguration.removePrefix(
-								LdbcSnbInteractiveGraphDBWorkloadConfiguration.removeSuffix(
-										longReadOperationEnableKey,
-										LdbcSnbInteractiveWorkloadConfiguration.ENABLE_SUFFIX
-								),
-								LdbcSnbInteractiveWorkloadConfiguration
-										.LDBC_SNB_INTERACTIVE_PARAM_NAME_PREFIX
-						);
-				try {
-					Class<?> longReadOperationClass = ClassLoaderHelper.loadClass(longReadOperationClassName);
-					if (longReadOperationEnabled) {
-						enabledLongReadOperationTypes.add(longReadOperationClass);
-					}
-				} catch (ClassLoadingException e) {
-					throw new WorkloadException(
-							format(
-									"Unable to load operation class for parameter: %s%nGuessed incorrect class name: %s",
-									longReadOperationEnableKey, longReadOperationClassName),
-							e
-					);
-				}
-			}
-
-			enabledShortReadOperationTypes = new HashSet<>();
-
-			if (!enabledShortReadOperationTypes.isEmpty()) {
-				if (!params.containsKey(LdbcSnbInteractiveWorkloadConfiguration.SHORT_READ_DISSIPATION)) {
-					throw new WorkloadException(format("Configuration parameter missing: %s",
-							LdbcSnbInteractiveWorkloadConfiguration.SHORT_READ_DISSIPATION));
-				}
-				shortReadDissipationFactor = Double.parseDouble(
-						params.get(LdbcSnbInteractiveWorkloadConfiguration.SHORT_READ_DISSIPATION).trim()
-				);
-				if (shortReadDissipationFactor < 0 || shortReadDissipationFactor > 1) {
-					throw new WorkloadException(
-							format("Configuration parameter %s should be in interval [1.0,0.0] but is: %s",
-									LdbcSnbInteractiveWorkloadConfiguration.SHORT_READ_DISSIPATION, shortReadDissipationFactor));
-				}
-			}
-
-			enabledWriteOperationTypes = new HashSet<>();
-
-			List<String> frequencyKeys =
-					Lists.newArrayList(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_FREQUENCY_KEYS);
-			Set<String> missingFrequencyKeys = LdbcSnbInteractiveGraphDBWorkloadConfiguration
-					.missingParameters(params, frequencyKeys);
-			if (enabledWriteOperationTypes.isEmpty() &&
-					!params.containsKey(LdbcSnbInteractiveWorkloadConfiguration.UPDATE_INTERLEAVE)) {
-				// if UPDATE_INTERLEAVE is missing and writes are disabled set it to DEFAULT
-				params.put(
-						LdbcSnbInteractiveWorkloadConfiguration.UPDATE_INTERLEAVE,
-						LdbcSnbInteractiveWorkloadConfiguration.DEFAULT_UPDATE_INTERLEAVE
-				);
-			}
-			if (!params.containsKey(LdbcSnbInteractiveWorkloadConfiguration.UPDATE_INTERLEAVE)) {
-				// if UPDATE_INTERLEAVE is missing but writes are enabled it is an error
+			shortReadDissipationFactor = Double.parseDouble(
+					params.get(LdbcSnbInteractiveWorkloadConfiguration.SHORT_READ_DISSIPATION).trim()
+			);
+			if (shortReadDissipationFactor < 0 || shortReadDissipationFactor > 1) {
 				throw new WorkloadException(
-						format("Workload could not initialize. Missing parameter: %s",
-								LdbcSnbInteractiveWorkloadConfiguration.UPDATE_INTERLEAVE));
+						format("Configuration parameter %s should be in interval [1.0,0.0] but is: %s",
+								LdbcSnbInteractiveWorkloadConfiguration.SHORT_READ_DISSIPATION, shortReadDissipationFactor));
 			}
-			updateInterleaveAsMilli =
-					Integer.parseInt(params.get(LdbcSnbInteractiveWorkloadConfiguration.UPDATE_INTERLEAVE).trim());
-			if (missingFrequencyKeys.isEmpty()) {
-				// all frequency arguments were given, compute interleave based on frequencies
-				params = LdbcSnbInteractiveWorkloadConfiguration.convertFrequenciesToInterleaves(params);
-			} else {
-				// if any frequencies are not set, there should be specified interleave times for read queries
-				Set<String> missingInterleaveKeys = LdbcSnbInteractiveGraphDBWorkloadConfiguration.missingParameters(
-						params,
-						LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_INTERLEAVE_KEYS
-				);
-				if (!missingInterleaveKeys.isEmpty()) {
-					throw new WorkloadException(format(
-							"Workload could not initialize. One of the following groups of parameters should be set: %s " +
-									"or %s",
-							missingFrequencyKeys.toString(), missingInterleaveKeys.toString()));
-				}
-			}
+		}
 
-			try {
-				readOperation1InterleaveAsMilli = Long.parseLong(
-						params.get(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_1_INTERLEAVE_KEY).trim());
-				readOperation2InterleaveAsMilli = Long.parseLong(
-						params.get(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_2_INTERLEAVE_KEY).trim());
-				readOperation3InterleaveAsMilli = Long.parseLong(
-						params.get(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_3_INTERLEAVE_KEY).trim());
-				readOperation4InterleaveAsMilli = Long.parseLong(
-						params.get(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_4_INTERLEAVE_KEY).trim());
-				readOperation5InterleaveAsMilli = Long.parseLong(
-						params.get(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_5_INTERLEAVE_KEY).trim());
-				readOperation6InterleaveAsMilli = Long.parseLong(
-						params.get(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_6_INTERLEAVE_KEY).trim());
-				readOperation7InterleaveAsMilli = Long.parseLong(
-						params.get(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_7_INTERLEAVE_KEY).trim());
-				readOperation8InterleaveAsMilli = Long.parseLong(
-						params.get(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_8_INTERLEAVE_KEY).trim());
-				readOperation9InterleaveAsMilli = Long.parseLong(
-						params.get(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_9_INTERLEAVE_KEY).trim());
-				readOperation10InterleaveAsMilli = Long.parseLong(
-						params.get(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_10_INTERLEAVE_KEY).trim());
-				readOperation11InterleaveAsMilli = Long.parseLong(
-						params.get(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_11_INTERLEAVE_KEY).trim());
-				readOperation12InterleaveAsMilli = Long.parseLong(
-						params.get(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_12_INTERLEAVE_KEY).trim());
-				readOperation13InterleaveAsMilli = Long.parseLong(
-						params.get(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_13_INTERLEAVE_KEY).trim());
-				readOperation14InterleaveAsMilli = Long.parseLong(
-						params.get(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_14_INTERLEAVE_KEY).trim());
-			} catch (NumberFormatException e) {
-				throw new WorkloadException("Unable to parse one of the read operation interleave values", e);
-			}
+		enabledWriteOperationTypes = new HashSet<>();
+		addEnabledQuery(params, enabledWriteOperationTypes, LdbcSnbInteractiveWorkloadConfiguration
+				.WRITE_OPERATION_ENABLE_KEYS, LdbcSnbInteractiveGraphDBWorkloadConfiguration.WRITE_QUERIES_PACKAGE_PREFIX);
 
-			String parserString = params.get(LdbcSnbInteractiveWorkloadConfiguration.UPDATE_STREAM_PARSER);
-			if (null == parserString) {
-				parserString = LdbcSnbInteractiveWorkloadConfiguration.DEFAULT_UPDATE_STREAM_PARSER.name();
-			}
-			if (!LdbcSnbInteractiveGraphDBWorkloadConfiguration.isValidParser(parserString)) {
-				throw new WorkloadException("Invalid parser: " + parserString);
-			}
-			this.parser = LdbcSnbInteractiveWorkloadConfiguration.UpdateStreamParser.valueOf(parserString.trim());
-			this.compressionRatio = Double.parseDouble(
-					params.get(ConsoleAndFileDriverConfiguration.TIME_COMPRESSION_RATIO_ARG).trim()
+//		for (String writeOperationEnableKey : LdbcSnbInteractiveWorkloadConfiguration.WRITE_OPERATION_ENABLE_KEYS) {
+//			String writeOperationEnabledString = params.get(writeOperationEnableKey).trim();
+//			boolean writeOperationEnabled = Boolean.parseBoolean(writeOperationEnabledString);
+//			String writeOperationClassName =
+//					LdbcSnbInteractiveGraphDBWorkloadConfiguration.LDBC_GRAPHDB_INTERACTIVE_PACKAGE_PREFIX +
+//					LdbcSnbInteractiveGraphDBWorkloadConfiguration.removePrefix(
+//							LdbcSnbInteractiveGraphDBWorkloadConfiguration.removeSuffix(
+//									writeOperationEnableKey,
+//									LdbcSnbInteractiveWorkloadConfiguration.ENABLE_SUFFIX
+//							),
+//							LdbcSnbInteractiveWorkloadConfiguration
+//									.LDBC_SNB_INTERACTIVE_PARAM_NAME_PREFIX
+//					);
+//			try {
+//				Class<?> writeOperationClass = ClassLoaderHelper.loadClass(writeOperationClassName);
+//				if (writeOperationEnabled) {
+//					enabledWriteOperationTypes.add(writeOperationClass);
+//				}
+//			} catch (ClassLoadingException e) {
+//				throw new WorkloadException(
+//						format(
+//								"Unable to load operation class for parameter: %s%nGuessed incorrect class name: %s",
+//								writeOperationEnableKey, writeOperationClassName),
+//						e
+//				);
+//			}
+//		}
+
+		List<String> frequencyKeys =
+				Lists.newArrayList(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_FREQUENCY_KEYS);
+		Set<String> missingFrequencyKeys = LdbcSnbInteractiveGraphDBWorkloadConfiguration
+				.missingParameters(params, frequencyKeys);
+		if (enabledWriteOperationTypes.isEmpty() &&
+				!params.containsKey(LdbcSnbInteractiveWorkloadConfiguration.UPDATE_INTERLEAVE)) {
+			// if UPDATE_INTERLEAVE is missing and writes are disabled set it to DEFAULT
+			params.put(
+					LdbcSnbInteractiveWorkloadConfiguration.UPDATE_INTERLEAVE,
+					LdbcSnbInteractiveWorkloadConfiguration.DEFAULT_UPDATE_INTERLEAVE
 			);
 		}
+		if (!params.containsKey(LdbcSnbInteractiveWorkloadConfiguration.UPDATE_INTERLEAVE)) {
+			// if UPDATE_INTERLEAVE is missing but writes are enabled it is an error
+			throw new WorkloadException(
+					format("Workload could not initialize. Missing parameter: %s",
+							LdbcSnbInteractiveWorkloadConfiguration.UPDATE_INTERLEAVE));
+		}
+
+		updateInterleaveAsMilli =
+				Integer.parseInt(params.get(LdbcSnbInteractiveWorkloadConfiguration.UPDATE_INTERLEAVE).trim());
+		if (missingFrequencyKeys.isEmpty()) {
+			// all frequency arguments were given, compute interleave based on frequencies
+			params = LdbcSnbInteractiveWorkloadConfiguration.convertFrequenciesToInterleaves(params);
+		} else {
+			// if any frequencies are not set, there should be specified interleave times for read queries
+			Set<String> missingInterleaveKeys = LdbcSnbInteractiveGraphDBWorkloadConfiguration.missingParameters(
+					params,
+					LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_INTERLEAVE_KEYS
+			);
+			if (!missingInterleaveKeys.isEmpty()) {
+				throw new WorkloadException(format(
+						"Workload could not initialize. One of the following groups of parameters should be set: %s " +
+								"or %s",
+						missingFrequencyKeys.toString(), missingInterleaveKeys.toString()));
+			}
+		}
+
+		try {
+			readOperation1InterleaveAsMilli = Long.parseLong(
+					params.get(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_1_INTERLEAVE_KEY).trim());
+			readOperation2InterleaveAsMilli = Long.parseLong(
+					params.get(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_2_INTERLEAVE_KEY).trim());
+			readOperation3InterleaveAsMilli = Long.parseLong(
+					params.get(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_3_INTERLEAVE_KEY).trim());
+			readOperation4InterleaveAsMilli = Long.parseLong(
+					params.get(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_4_INTERLEAVE_KEY).trim());
+			readOperation5InterleaveAsMilli = Long.parseLong(
+					params.get(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_5_INTERLEAVE_KEY).trim());
+			readOperation6InterleaveAsMilli = Long.parseLong(
+					params.get(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_6_INTERLEAVE_KEY).trim());
+			readOperation7InterleaveAsMilli = Long.parseLong(
+					params.get(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_7_INTERLEAVE_KEY).trim());
+			readOperation8InterleaveAsMilli = Long.parseLong(
+					params.get(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_8_INTERLEAVE_KEY).trim());
+			readOperation9InterleaveAsMilli = Long.parseLong(
+					params.get(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_9_INTERLEAVE_KEY).trim());
+			readOperation10InterleaveAsMilli = Long.parseLong(
+					params.get(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_10_INTERLEAVE_KEY).trim());
+			readOperation11InterleaveAsMilli = Long.parseLong(
+					params.get(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_11_INTERLEAVE_KEY).trim());
+			readOperation12InterleaveAsMilli = Long.parseLong(
+					params.get(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_12_INTERLEAVE_KEY).trim());
+			readOperation13InterleaveAsMilli = Long.parseLong(
+					params.get(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_13_INTERLEAVE_KEY).trim());
+			readOperation14InterleaveAsMilli = Long.parseLong(
+					params.get(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_14_INTERLEAVE_KEY).trim());
+		} catch (NumberFormatException e) {
+			throw new WorkloadException("Unable to parse one of the read operation interleave values", e);
+		}
+
+		String parserString = params.get(LdbcSnbInteractiveWorkloadConfiguration.UPDATE_STREAM_PARSER);
+		if (null == parserString) {
+			parserString = LdbcSnbInteractiveWorkloadConfiguration.DEFAULT_UPDATE_STREAM_PARSER.name();
+		}
+		if (!LdbcSnbInteractiveGraphDBWorkloadConfiguration.isValidParser(parserString)) {
+			throw new WorkloadException("Invalid parser: " + parserString);
+		}
+		this.parser = LdbcSnbInteractiveWorkloadConfiguration.UpdateStreamParser.valueOf(parserString.trim());
+		this.compressionRatio = Double.parseDouble(
+				params.get(ConsoleAndFileDriverConfiguration.TIME_COMPRESSION_RATIO_ARG).trim()
+		);
+	}
 
 	@Override
 	synchronized protected void onClose() throws IOException {
@@ -361,8 +440,8 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 		int operationTypeCount = enabledLongReadOperationTypes.size() + enabledWriteOperationTypes.size();
 		long minimumResultCountPerOperationType = Math.max(
 				1,
-				Math.round( Math.floor(
-						requiredValidationParameterCount.doubleValue() / (double) operationTypeCount) )
+				Math.round(Math.floor(
+						requiredValidationParameterCount.doubleValue() / (double) operationTypeCount))
 		);
 
 		final Map<Class, Long> remainingRequiredResultsPerLongReadType = new HashMap<>();
@@ -700,7 +779,7 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 	}
 
 	private Tuple2<Iterator<Operation>, Closeable> fileToWriteStreamParser(File updateOperationsFile,
-																			  LdbcSnbInteractiveWorkloadConfiguration.UpdateStreamParser parser) throws IOException, WorkloadException {
+																		   LdbcSnbInteractiveWorkloadConfiguration.UpdateStreamParser parser) throws IOException {
 		switch (parser) {
 			case REGEX: {
 				SimpleCsvFileReader csvFileReader = new SimpleCsvFileReader(updateOperationsFile,
@@ -1847,6 +1926,37 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 			return true;
 		} else {
 			return result1.equals(result2);
+		}
+	}
+
+	private void addEnabledQuery(Map<String, String> params, Set<Class> enabledOperationTypes, List<String> enableKeys, String queryPrefix)
+			throws WorkloadException {
+		for (String operationEnableKey : enableKeys) {
+			String operationEnabledString = params.get(operationEnableKey).trim();
+			boolean operationEnabled = Boolean.parseBoolean(operationEnabledString);
+			String operationClassName =
+					LdbcSnbInteractiveGraphDBWorkloadConfiguration.LDBC_GRAPHDB_INTERACTIVE_PACKAGE_PREFIX
+							+ queryPrefix + LdbcSnbInteractiveGraphDBWorkloadConfiguration.removePrefix(
+							LdbcSnbInteractiveGraphDBWorkloadConfiguration.removeSuffix(
+									operationEnableKey,
+									LdbcSnbInteractiveWorkloadConfiguration.ENABLE_SUFFIX
+							),
+							LdbcSnbInteractiveWorkloadConfiguration
+									.LDBC_SNB_INTERACTIVE_PARAM_NAME_PREFIX
+					);
+			try {
+				Class<?> operationClass = ClassLoaderHelper.loadClass(operationClassName);
+				if (operationEnabled) {
+					enabledOperationTypes.add(operationClass);
+				}
+			} catch (ClassLoadingException e) {
+				throw new WorkloadException(
+						format(
+								"Unable to load operation class for parameter: %s%nGuessed incorrect class name: %s",
+								operationEnableKey, operationClassName),
+						e
+				);
+			}
 		}
 	}
 }

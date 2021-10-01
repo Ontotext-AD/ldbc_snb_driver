@@ -1,4 +1,4 @@
-package com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive;
+package com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,34 +16,34 @@ import java.util.Objects;
 
 import static java.lang.String.format;
 
-public class LdbcQuery12 extends Operation<List<LdbcQuery12Result>> {
+public class LdbcQuery10 extends Operation<List<LdbcQuery10Result>> {
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-	public static final int TYPE = 12;
+	public static final int TYPE = 10;
 	public static final String PERSON_ID = "%Person%";
-	public static final String TAG_CLASS_NAME = "%TagType%";
+	public static final String MONTH = "%HS1%";
 
 	private final String personId;
-	private final String tagClassName;
+	private final String month;
 
-	public LdbcQuery12(long personId, String tagClassName) {
+	public LdbcQuery10(long personId, int month) {
 		this.personId = LdbcUtils.appendZeroAtStart(personId);
-		this.tagClassName = tagClassName;
+		this.month = String.valueOf(month);
 	}
 
 	public String personId() {
 		return personId;
 	}
 
-	public String tagClassName() {
-		return tagClassName;
+	public String month() {
+		return month;
 	}
 
 	@Override
 	public Map<String, Object> parameterMap() {
 		return ImmutableMap.<String, Object>builder()
 				.put(PERSON_ID, personId)
-				.put(TAG_CLASS_NAME, tagClassName)
+				.put(MONTH, month)
 				.build();
 	}
 
@@ -56,31 +56,31 @@ public class LdbcQuery12 extends Operation<List<LdbcQuery12Result>> {
 			return false;
 		}
 
-		LdbcQuery12 that = (LdbcQuery12) o;
+		LdbcQuery10 that = (LdbcQuery10) o;
 
-		if (!Objects.equals(personId, that.personId)) {
+		if (!month.equals(that.month)) {
 			return false;
 		}
-		return Objects.equals(tagClassName, that.tagClassName);
+		return Objects.equals(personId, that.personId);
 	}
 
 	@Override
 	public int hashCode() {
 		int result = 31 * personId.hashCode();
-		result = 31 * result + (tagClassName != null ? tagClassName.hashCode() : 0);
+		result = 31 * result + (month != null ? month.hashCode() : 0);
 		return result;
 	}
 
 	@Override
 	public String toString() {
-		return "LdbcQuery12{" +
+		return "LdbcQuery10{" +
 				"personId=" + personId +
-				", tagClassName='" + tagClassName + '\'' +
+				", month=" + month +
 				'}';
 	}
 
 	@Override
-	public List<LdbcQuery12Result> marshalResult(String serializedResults) throws SerializingMarshallingException {
+	public List<LdbcQuery10Result> marshalResult(String serializedResults) throws SerializingMarshallingException {
 		List<List<Object>> resultsAsList;
 		try {
 			resultsAsList = OBJECT_MAPPER.readValue(serializedResults, new TypeReference<List<List<Object>>>() {
@@ -90,20 +90,22 @@ public class LdbcQuery12 extends Operation<List<LdbcQuery12Result>> {
 					format("Error while parsing serialized results%n%s", serializedResults), e);
 		}
 
-		List<LdbcQuery12Result> results = new ArrayList<>();
+		List<LdbcQuery10Result> results = new ArrayList<>();
 		for (List<Object> resultAsList : resultsAsList) {
 			IRI friendId = LdbcUtils.createIRI(resultAsList.get(0));
 			String personFirstName = (String) resultAsList.get(1);
 			String personLastName = (String) resultAsList.get(2);
-			String tagNames = (String) resultAsList.get(3);
-			int replyCount = ((Number) resultAsList.get(4)).intValue();
+			int commonInterestScore = ((Number) resultAsList.get(3)).intValue();
+			String personGender = (String) resultAsList.get(4);
+			String personCityName = (String) resultAsList.get(5);
 
-			results.add(new LdbcQuery12Result(
+			results.add(new LdbcQuery10Result(
 					friendId,
 					personFirstName,
 					personLastName,
-					tagNames,
-					replyCount
+					commonInterestScore,
+					personGender,
+					personCityName
 			));
 		}
 
@@ -112,15 +114,16 @@ public class LdbcQuery12 extends Operation<List<LdbcQuery12Result>> {
 
 	@Override
 	public String serializeResult(Object resultsObject) throws SerializingMarshallingException {
-		List<LdbcQuery12Result> results = (List<LdbcQuery12Result>) resultsObject;
+		List<LdbcQuery10Result> results = (List<LdbcQuery10Result>) resultsObject;
 		List<List<Object>> resultsFields = new ArrayList<>();
-		for (LdbcQuery12Result result : results) {
+		for (LdbcQuery10Result result : results) {
 			List<Object> resultFields = new ArrayList<>();
 			resultFields.add(result.personId());
 			resultFields.add(result.personFirstName());
 			resultFields.add(result.personLastName());
-			resultFields.add(result.tagNames());
-			resultFields.add(result.replyCount());
+			resultFields.add(result.commonInterestScore());
+			resultFields.add(result.personGender());
+			resultFields.add(result.personCityName());
 			resultsFields.add(resultFields);
 		}
 

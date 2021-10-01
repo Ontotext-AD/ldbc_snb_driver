@@ -3,14 +3,37 @@ package com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive;
 import com.ldbc.driver.Operation;
 import com.ldbc.driver.WorkloadException;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcSnbInteractiveWorkloadConfiguration;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery1;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery2;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery3;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery4;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery5;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery6;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery7;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery8;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery9;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery10;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery11;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery12;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery13;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery14;
 
-import java.util.*;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.Arrays;
 
 import static java.lang.String.format;
 
 public class LdbcSnbInteractiveGraphDBWorkloadConfiguration {
 
 	public static final String LDBC_GRAPHDB_INTERACTIVE_PACKAGE_PREFIX = "com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.";
+	public static final String LONG_READ_QUERIES_PACKAGE_PREFIX = "queries.longreads.";
+	public static final String SHORT_READ_QUERIES_PACKAGE_PREFIX = "queries.shortreads.";
+	public static final String WRITE_QUERIES_PACKAGE_PREFIX = "queries.writes.";
+
 	public static final String LDBC_SNB_QUERY_DIR = "queryDir";
 
 	 static Set<String> missingParameters(Map<String, String> properties, Iterable<String> compulsoryPropertyKeys) {
