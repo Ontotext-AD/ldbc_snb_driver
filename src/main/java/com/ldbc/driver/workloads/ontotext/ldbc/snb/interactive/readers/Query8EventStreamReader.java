@@ -5,7 +5,7 @@ import com.ldbc.driver.csv.charseeker.CharSeeker;
 import com.ldbc.driver.csv.charseeker.Extractors;
 import com.ldbc.driver.csv.charseeker.Mark;
 import com.ldbc.driver.generator.CsvEventStreamReaderBasicCharSeeker;
-import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.LdbcQuery8;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery8;
 
 import java.io.IOException;
 import java.util.Iterator;

@@ -1,5 +1,20 @@
 package com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive;
 
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery1Result;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery2Result;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery3Result;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery4Result;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery5Result;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery6Result;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery7Result;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery8Result;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery9Result;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery10Result;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery11Result;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery12Result;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery13Result;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery14Result;
+
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.query.BindingSet;
