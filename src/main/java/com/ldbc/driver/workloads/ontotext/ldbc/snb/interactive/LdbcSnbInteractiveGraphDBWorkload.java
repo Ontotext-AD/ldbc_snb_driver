@@ -49,6 +49,7 @@ import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads
 import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery12;
 import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery13;
 import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery14;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.shortreads.LdbcShortQuery1PersonProfile;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.Equator;
 
@@ -208,70 +209,66 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 				new File(parametersDir, LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_14_PARAMS_FILENAME);
 
 		enabledLongReadOperationTypes = new HashSet<>();
-		addEnabledQuery(params, enabledLongReadOperationTypes, LdbcSnbInteractiveWorkloadConfiguration
-				.LONG_READ_OPERATION_ENABLE_KEYS, LdbcSnbInteractiveGraphDBWorkloadConfiguration.LONG_READ_QUERIES_PACKAGE_PREFIX);
-
-//		for (String longReadOperationEnableKey : LdbcSnbInteractiveWorkloadConfiguration
-//				.LONG_READ_OPERATION_ENABLE_KEYS) {
-//			String longReadOperationEnabledString = params.get(longReadOperationEnableKey).trim();
-//			boolean longReadOperationEnabled = Boolean.parseBoolean(longReadOperationEnabledString);
-//			String longReadOperationClassName =
-//					LdbcSnbInteractiveGraphDBWorkloadConfiguration.LDBC_GRAPHDB_INTERACTIVE_PACKAGE_PREFIX
-//							+ LdbcSnbInteractiveGraphDBWorkloadConfiguration.removePrefix(
-//							LdbcSnbInteractiveGraphDBWorkloadConfiguration.removeSuffix(
-//									longReadOperationEnableKey,
-//									LdbcSnbInteractiveWorkloadConfiguration.ENABLE_SUFFIX
-//							),
-//							LdbcSnbInteractiveWorkloadConfiguration
-//									.LDBC_SNB_INTERACTIVE_PARAM_NAME_PREFIX
-//					);
-//			try {
-//				Class<?> longReadOperationClass = ClassLoaderHelper.loadClass(longReadOperationClassName);
-//				if (longReadOperationEnabled) {
-//					enabledLongReadOperationTypes.add(longReadOperationClass);
-//				}
-//			} catch (ClassLoadingException e) {
-//				throw new WorkloadException(
-//						format(
-//								"Unable to load operation class for parameter: %s%nGuessed incorrect class name: %s",
-//								longReadOperationEnableKey, longReadOperationClassName),
-//						e
-//				);
-//			}
-//		}
+		for (String longReadOperationEnableKey : LdbcSnbInteractiveWorkloadConfiguration
+				.LONG_READ_OPERATION_ENABLE_KEYS) {
+			String longReadOperationEnabledString = params.get(longReadOperationEnableKey).trim();
+			boolean longReadOperationEnabled = Boolean.parseBoolean(longReadOperationEnabledString);
+			String longReadOperationClassName =
+					LdbcSnbInteractiveGraphDBWorkloadConfiguration.LDBC_GRAPHDB_INTERACTIVE_PACKAGE_PREFIX
+							+ LdbcSnbInteractiveGraphDBWorkloadConfiguration.LONG_READ_QUERIES_PACKAGE_PREFIX
+							+ LdbcSnbInteractiveGraphDBWorkloadConfiguration.removePrefix(
+							LdbcSnbInteractiveGraphDBWorkloadConfiguration.removeSuffix(
+									longReadOperationEnableKey,
+									LdbcSnbInteractiveWorkloadConfiguration.ENABLE_SUFFIX
+							),
+							LdbcSnbInteractiveWorkloadConfiguration
+									.LDBC_SNB_INTERACTIVE_PARAM_NAME_PREFIX
+					);
+			try {
+				Class<?> longReadOperationClass = ClassLoaderHelper.loadClass(longReadOperationClassName);
+				if (longReadOperationEnabled) {
+					enabledLongReadOperationTypes.add(longReadOperationClass);
+				}
+			} catch (ClassLoadingException e) {
+				throw new WorkloadException(
+						format(
+								"Unable to load operation class for parameter: %s%nGuessed incorrect class name: %s",
+								longReadOperationEnableKey, longReadOperationClassName),
+						e
+				);
+			}
+		}
 
 		enabledShortReadOperationTypes = new HashSet<>();
-		addEnabledQuery(params, enabledShortReadOperationTypes, LdbcSnbInteractiveWorkloadConfiguration
-				.SHORT_READ_OPERATION_ENABLE_KEYS, LdbcSnbInteractiveGraphDBWorkloadConfiguration.SHORT_READ_QUERIES_PACKAGE_PREFIX);
-
-//		for (String shortReadOperationEnableKey : LdbcSnbInteractiveWorkloadConfiguration
-//				.SHORT_READ_OPERATION_ENABLE_KEYS) {
-//			String shortReadOperationEnabledString = params.get(shortReadOperationEnableKey).trim();
-//			boolean shortReadOperationEnabled = Boolean.parseBoolean(shortReadOperationEnabledString);
-//			String shortReadOperationClassName =
-//					LdbcSnbInteractiveGraphDBWorkloadConfiguration.LDBC_GRAPHDB_INTERACTIVE_PACKAGE_PREFIX +
-//							LdbcSnbInteractiveGraphDBWorkloadConfiguration.removePrefix(
-//									LdbcSnbInteractiveGraphDBWorkloadConfiguration.removeSuffix(
-//											shortReadOperationEnableKey,
-//											LdbcSnbInteractiveWorkloadConfiguration.ENABLE_SUFFIX
-//									),
-//									LdbcSnbInteractiveWorkloadConfiguration
-//											.LDBC_SNB_INTERACTIVE_PARAM_NAME_PREFIX
-//							);
-//			try {
-//				Class<?> shortReadOperationClass = ClassLoaderHelper.loadClass(shortReadOperationClassName);
-//				if (shortReadOperationEnabled) {
-//					enabledShortReadOperationTypes.add(shortReadOperationClass);
-//				}
-//			} catch (ClassLoadingException e) {
-//				throw new WorkloadException(
-//						format(
-//								"Unable to load operation class for parameter: %s%nGuessed incorrect class name: %s",
-//								shortReadOperationEnableKey, shortReadOperationClassName),
-//						e
-//				);
-//			}
-//		}
+		for (String shortReadOperationEnableKey : LdbcSnbInteractiveWorkloadConfiguration
+				.SHORT_READ_OPERATION_ENABLE_KEYS) {
+			String shortReadOperationEnabledString = params.get(shortReadOperationEnableKey).trim();
+			boolean shortReadOperationEnabled = Boolean.parseBoolean(shortReadOperationEnabledString);
+			String shortReadOperationClassName =
+					LdbcSnbInteractiveGraphDBWorkloadConfiguration.LDBC_GRAPHDB_INTERACTIVE_PACKAGE_PREFIX
+							+ LdbcSnbInteractiveGraphDBWorkloadConfiguration.SHORT_READ_QUERIES_PACKAGE_PREFIX
+							+ LdbcSnbInteractiveGraphDBWorkloadConfiguration.removePrefix(
+							LdbcSnbInteractiveGraphDBWorkloadConfiguration.removeSuffix(
+									shortReadOperationEnableKey,
+									LdbcSnbInteractiveWorkloadConfiguration.ENABLE_SUFFIX
+							),
+							LdbcSnbInteractiveWorkloadConfiguration
+									.LDBC_SNB_INTERACTIVE_PARAM_NAME_PREFIX
+					);
+			try {
+				Class<?> shortReadOperationClass = ClassLoaderHelper.loadClass(shortReadOperationClassName);
+				if (shortReadOperationEnabled) {
+					enabledShortReadOperationTypes.add(shortReadOperationClass);
+				}
+			} catch (ClassLoadingException e) {
+				throw new WorkloadException(
+						format(
+								"Unable to load operation class for parameter: %s%nGuessed incorrect class name: %s",
+								shortReadOperationEnableKey, shortReadOperationClassName),
+						e
+				);
+			}
+		}
 
 		if (!enabledShortReadOperationTypes.isEmpty()) {
 			if (!params.containsKey(LdbcSnbInteractiveWorkloadConfiguration.SHORT_READ_DISSIPATION)) {
@@ -289,36 +286,34 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 		}
 
 		enabledWriteOperationTypes = new HashSet<>();
-		addEnabledQuery(params, enabledWriteOperationTypes, LdbcSnbInteractiveWorkloadConfiguration
-				.WRITE_OPERATION_ENABLE_KEYS, LdbcSnbInteractiveGraphDBWorkloadConfiguration.WRITE_QUERIES_PACKAGE_PREFIX);
-
-//		for (String writeOperationEnableKey : LdbcSnbInteractiveWorkloadConfiguration.WRITE_OPERATION_ENABLE_KEYS) {
-//			String writeOperationEnabledString = params.get(writeOperationEnableKey).trim();
-//			boolean writeOperationEnabled = Boolean.parseBoolean(writeOperationEnabledString);
-//			String writeOperationClassName =
-//					LdbcSnbInteractiveGraphDBWorkloadConfiguration.LDBC_GRAPHDB_INTERACTIVE_PACKAGE_PREFIX +
-//					LdbcSnbInteractiveGraphDBWorkloadConfiguration.removePrefix(
-//							LdbcSnbInteractiveGraphDBWorkloadConfiguration.removeSuffix(
-//									writeOperationEnableKey,
-//									LdbcSnbInteractiveWorkloadConfiguration.ENABLE_SUFFIX
-//							),
-//							LdbcSnbInteractiveWorkloadConfiguration
-//									.LDBC_SNB_INTERACTIVE_PARAM_NAME_PREFIX
-//					);
-//			try {
-//				Class<?> writeOperationClass = ClassLoaderHelper.loadClass(writeOperationClassName);
-//				if (writeOperationEnabled) {
-//					enabledWriteOperationTypes.add(writeOperationClass);
-//				}
-//			} catch (ClassLoadingException e) {
-//				throw new WorkloadException(
-//						format(
-//								"Unable to load operation class for parameter: %s%nGuessed incorrect class name: %s",
-//								writeOperationEnableKey, writeOperationClassName),
-//						e
-//				);
-//			}
-//		}
+		for (String writeOperationEnableKey : LdbcSnbInteractiveWorkloadConfiguration.WRITE_OPERATION_ENABLE_KEYS) {
+			String writeOperationEnabledString = params.get(writeOperationEnableKey).trim();
+			boolean writeOperationEnabled = Boolean.parseBoolean(writeOperationEnabledString);
+			String writeOperationClassName =
+					LdbcSnbInteractiveGraphDBWorkloadConfiguration.LDBC_GRAPHDB_INTERACTIVE_PACKAGE_PREFIX
+							+ LdbcSnbInteractiveGraphDBWorkloadConfiguration.WRITE_QUERIES_PACKAGE_PREFIX
+							+ LdbcSnbInteractiveGraphDBWorkloadConfiguration.removePrefix(
+							LdbcSnbInteractiveGraphDBWorkloadConfiguration.removeSuffix(
+									writeOperationEnableKey,
+									LdbcSnbInteractiveWorkloadConfiguration.ENABLE_SUFFIX
+							),
+							LdbcSnbInteractiveWorkloadConfiguration
+									.LDBC_SNB_INTERACTIVE_PARAM_NAME_PREFIX
+					);
+			try {
+				Class<?> writeOperationClass = ClassLoaderHelper.loadClass(writeOperationClassName);
+				if (writeOperationEnabled) {
+					enabledWriteOperationTypes.add(writeOperationClass);
+				}
+			} catch (ClassLoadingException e) {
+				throw new WorkloadException(
+						format(
+								"Unable to load operation class for parameter: %s%nGuessed incorrect class name: %s",
+								writeOperationEnableKey, writeOperationClassName),
+						e
+				);
+			}
+		}
 
 		List<String> frequencyKeys =
 				Lists.newArrayList(LdbcSnbInteractiveWorkloadConfiguration.READ_OPERATION_FREQUENCY_KEYS);
@@ -658,6 +653,18 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 							format(ERROR_WHILE_TRYING_TO_SERIALIZE_RESULT_N_S, operationAsList), e);
 				}
 			}
+			case LdbcShortQuery1PersonProfile.TYPE: {
+				LdbcShortQuery1PersonProfile ldbcQuery = (LdbcShortQuery1PersonProfile) operation;
+				List<Object> operationAsList = new ArrayList<>();
+				operationAsList.add(ldbcQuery.getClass().getName());
+				operationAsList.add(ldbcQuery.personId());
+				try {
+					return OBJECT_MAPPER.writeValueAsString(operationAsList);
+				} catch (IOException e) {
+					throw new SerializingMarshallingException(
+							format("Error while trying to serialize result\n%s", operationAsList), e);
+				}
+			}
 
 			default: {
 				throw new SerializingMarshallingException(
@@ -767,6 +774,11 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 			long person1Id = LdbcUtils.convertToLong(operationAsList.get(1));
 			long person2Id = LdbcUtils.convertToLong(operationAsList.get(2));
 			return new LdbcQuery14(person1Id, person2Id);
+		}
+
+		if (operationTypeName.equals(LdbcShortQuery1PersonProfile.class.getName())) {
+			long personId = LdbcUtils.convertToLong(operationAsList.get(1));
+			return new LdbcShortQuery1PersonProfile(personId);
 		}
 
 		throw new SerializingMarshallingException(
@@ -1926,37 +1938,6 @@ public class LdbcSnbInteractiveGraphDBWorkload extends Workload {
 			return true;
 		} else {
 			return result1.equals(result2);
-		}
-	}
-
-	private void addEnabledQuery(Map<String, String> params, Set<Class> enabledOperationTypes, List<String> enableKeys, String queryPrefix)
-			throws WorkloadException {
-		for (String operationEnableKey : enableKeys) {
-			String operationEnabledString = params.get(operationEnableKey).trim();
-			boolean operationEnabled = Boolean.parseBoolean(operationEnabledString);
-			String operationClassName =
-					LdbcSnbInteractiveGraphDBWorkloadConfiguration.LDBC_GRAPHDB_INTERACTIVE_PACKAGE_PREFIX
-							+ queryPrefix + LdbcSnbInteractiveGraphDBWorkloadConfiguration.removePrefix(
-							LdbcSnbInteractiveGraphDBWorkloadConfiguration.removeSuffix(
-									operationEnableKey,
-									LdbcSnbInteractiveWorkloadConfiguration.ENABLE_SUFFIX
-							),
-							LdbcSnbInteractiveWorkloadConfiguration
-									.LDBC_SNB_INTERACTIVE_PARAM_NAME_PREFIX
-					);
-			try {
-				Class<?> operationClass = ClassLoaderHelper.loadClass(operationClassName);
-				if (operationEnabled) {
-					enabledOperationTypes.add(operationClass);
-				}
-			} catch (ClassLoadingException e) {
-				throw new WorkloadException(
-						format(
-								"Unable to load operation class for parameter: %s%nGuessed incorrect class name: %s",
-								operationEnableKey, operationClassName),
-						e
-				);
-			}
 		}
 	}
 }

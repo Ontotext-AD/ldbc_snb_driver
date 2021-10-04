@@ -1,5 +1,6 @@
 package com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive;
 
+import com.ldbc.driver.workloads.ldbc.snb.interactive.db.DummyLdbcSnbInteractiveOperationResultInstances;
 import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery1Result;
 import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery2Result;
 import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery3Result;
@@ -15,6 +16,7 @@ import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads
 import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery13Result;
 import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery14Result;
 
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.shortreads.LdbcShortQuery1PersonProfileResult;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.query.BindingSet;
@@ -297,5 +299,13 @@ public class GraphDBLdbcSnbInteractiveOperationResultSets {
 					pathWeight));
 		}
 		return results;
+	}
+
+	/*
+    SHORT READS
+    */
+
+	public static LdbcShortQuery1PersonProfileResult readShort1Results(List<BindingSet> bindingSets) {
+		return null;
 	}
 }

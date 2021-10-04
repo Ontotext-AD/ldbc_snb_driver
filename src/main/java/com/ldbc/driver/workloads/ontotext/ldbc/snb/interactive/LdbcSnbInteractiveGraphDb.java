@@ -21,6 +21,8 @@ import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads
 import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery12;
 import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery13;
 import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery14;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.shortreads.LdbcShortQuery1PersonProfile;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.shortreads.LdbcShortQuery1PersonProfileResult;
 import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.writes.LdbcNoResult;
 import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.writes.LdbcUpdate1AddPerson;
 import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.writes.LdbcUpdate2AddPostLike;
@@ -196,7 +198,11 @@ public class LdbcSnbInteractiveGraphDb extends Db {
 		registerOperationHandler(LdbcQuery13.class, LdbcQuery13Handler.class);
 		registerOperationHandler(LdbcQuery14.class, LdbcQuery14Handler.class);
 
+		// Short Reads
+		registerOperationHandler(LdbcShortQuery1PersonProfile.class, LdbcShortQuery1PersonProfileHandler.class);
+
 		//WRITES
+		registerOperationHandler(LdbcUpdate1AddPerson.class, LdbcUpdate1AddPersonHandler.class);
 		registerOperationHandler(LdbcUpdate2AddPostLike.class, LdbcUpdate2AddPostLikeHandler.class);
 
 	}
@@ -370,20 +376,37 @@ public class LdbcSnbInteractiveGraphDb extends Db {
 		}
 	}
 
+	/*
+    SHORT READS
+    */
+
+	public static class LdbcShortQuery1PersonProfileHandler
+			implements OperationHandler<LdbcShortQuery1PersonProfile, GraphDbConnectionState> {
+
+		@Override
+		public void executeOperation(LdbcShortQuery1PersonProfile operation, GraphDbConnectionState dbConnectionState,
+									 ResultReporter resultReporter) throws DbException {
+			sleep(operation, sleepDurationAsNano);
+			List<BindingSet> results = dbConnectionState.getGraphDbClient().execute(BENCHMARK_QUERIES.get(LdbcQuery14.TYPE), operation.parameterMap());
+			resultReporter.report(0, GraphDBLdbcSnbInteractiveOperationResultSets.readShort1Results(results), operation);
+		}
+	}
+
+
 	/*UPDATE HANDLERS*/
 
-	// public static class LdbcUpdate1AddPersonHandler
-	// 		implements OperationHandler<LdbcUpdate1AddPerson, GraphDbConnectionState>
-	// {
-	// 	@Override
-	// 	public void executeOperation( LdbcUpdate1AddPerson operation, GraphDbConnectionState dbConnectionState,
-	// 			ResultReporter resultReporter ) throws DbException
-	// 	{
-	// 		sleep( operation, sleepDurationAsNano );
-	// 		resultReporter.report( 0, LdbcNoResult.INSTANCE, operation );
-	// 	}
-	// }
-	//
+	public static class LdbcUpdate1AddPersonHandler
+			implements OperationHandler<LdbcUpdate1AddPerson, GraphDbConnectionState> {
+		@Override
+		public void executeOperation(LdbcUpdate1AddPerson operation, GraphDbConnectionState dbConnectionState,
+									 ResultReporter resultReporter) throws DbException {
+			sleep(operation, sleepDurationAsNano);
+			dbConnectionState.getGraphDbClient()
+					.executeUpdate(BENCHMARK_QUERIES.get(LdbcUpdate1AddPerson.TYPE), operation.parameterMap());
+			resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
+		}
+	}
+
 	public static class LdbcUpdate2AddPostLikeHandler
 			implements OperationHandler<LdbcUpdate2AddPostLike, GraphDbConnectionState>
 	{
