@@ -58,6 +58,18 @@ public class LdbcSnbInteractiveGraphDb extends Db {
 			return bindings;
 		}
 
+		// List<BindingSet> executeUpdate(String updateString, Map<String, Object> updateParams) {
+		// 	updateString = LdbcUtils.applyParameters(updateString, updateParams);
+		// 	List<BindingSet> bindings = new ArrayList<>();
+		// 	try (RepositoryConnection conn = repository.getConnection()) {
+		// 		Update update = conn.prepareUpdate(QueryLanguage.SPARQL, updateString);//
+		// 		while (resultIter.hasNext()) {
+		// 			bindings.add(resultIter.next());
+		// 		}
+		// 	}
+		// 	return bindings;
+		// }
+
 		public void close() {
 			repository.shutDown();
 		}
@@ -349,4 +361,104 @@ public class LdbcSnbInteractiveGraphDb extends Db {
 			resultReporter.report(200, GraphDBLdbcSnbInteractiveOperationResultSets.read14Results(results), operation);
 		}
 	}
+
+	// /*UPDATE HANDLERS*/
+	//
+	// public static class LdbcUpdate1AddPersonHandler
+	// 		implements OperationHandler<LdbcUpdate1AddPerson, GraphDbConnectionState>
+	// {
+	// 	@Override
+	// 	public void executeOperation( LdbcUpdate1AddPerson operation, GraphDbConnectionState dbConnectionState,
+	// 			ResultReporter resultReporter ) throws DbException
+	// 	{
+	// 		sleep( operation, sleepDurationAsNano );
+	// 		resultReporter.report( 0, LdbcNoResult.INSTANCE, operation );
+	// 	}
+	// }
+	//
+	// public static class LdbcUpdate2AddPostLikeHandler
+	// 		implements OperationHandler<LdbcUpdate2AddPostLike, GraphDbConnectionState>
+	// {
+	// 	@Override
+	// 	public void executeOperation( LdbcUpdate2AddPostLike operation, GraphDbConnectionState dbConnectionState,
+	// 			ResultReporter resultReporter ) throws DbException
+	// 	{
+	// 		sleep( operation, sleepDurationAsNano );
+	// 		List<BindingSet> results = dbConnectionState.getGraphDbClient()
+	// 				.execute(BENCHMARK_QUERIES.get(LdbcUpdate2AddPostLike.TYPE), operation.parameterMap());
+	//
+	// 		resultReporter.report( 0, LdbcNoResult.INSTANCE, operation );
+	// 	}
+	// }
+	//
+	// public static class LdbcUpdate3AddCommentLikeHandler
+	// 		implements OperationHandler<LdbcUpdate3AddCommentLike, GraphDbConnectionState>
+	// {
+	// 	@Override
+	// 	public void executeOperation( LdbcUpdate3AddCommentLike operation, GraphDbConnectionState dbConnectionState,
+	// 			ResultReporter resultReporter ) throws DbException
+	// 	{
+	// 		sleep( operation, sleepDurationAsNano );
+	// 		resultReporter.report( 0, LdbcNoResult.INSTANCE, operation );
+	// 	}
+	// }
+	//
+	// public static class LdbcUpdate4AddForumHandler
+	// 		implements OperationHandler<LdbcUpdate4AddForum, GraphDbConnectionState>
+	// {
+	// 	@Override
+	// 	public void executeOperation( LdbcUpdate4AddForum operation, GraphDbConnectionState dbConnectionState,
+	// 			ResultReporter resultReporter ) throws DbException
+	// 	{
+	// 		sleep( operation, sleepDurationAsNano );
+	// 		resultReporter.report( 0, LdbcNoResult.INSTANCE, operation );
+	// 	}
+	// }
+	//
+	// public static class LdbcUpdate5AddForumMembershipHandler
+	// 		implements OperationHandler<LdbcUpdate5AddForumMembership, GraphDbConnectionState>
+	// {
+	// 	@Override
+	// 	public void executeOperation( LdbcUpdate5AddForumMembership operation, GraphDbConnectionState dbConnectionState,
+	// 			ResultReporter resultReporter ) throws DbException
+	// 	{
+	// 		sleep( operation, sleepDurationAsNano );
+	// 		resultReporter.report( 0, LdbcNoResult.INSTANCE, operation );
+	// 	}
+	// }
+	//
+	// public static class LdbcUpdate6AddPostHandler implements OperationHandler<LdbcUpdate6AddPost, GraphDbConnectionState>
+	// {
+	// 	@Override
+	// 	public void executeOperation( LdbcUpdate6AddPost operation, GraphDbConnectionState dbConnectionState,
+	// 			ResultReporter resultReporter ) throws DbException
+	// 	{
+	// 		sleep( operation, sleepDurationAsNano );
+	// 		resultReporter.report( 0, LdbcNoResult.INSTANCE, operation );
+	// 	}
+	// }
+	//
+	// public static class LdbcUpdate7AddCommentHandler
+	// 		implements OperationHandler<LdbcUpdate7AddComment, GraphDbConnectionState>
+	// {
+	// 	@Override
+	// 	public void executeOperation( LdbcUpdate7AddComment operation, GraphDbConnectionState dbConnectionState,
+	// 			ResultReporter resultReporter ) throws DbException
+	// 	{
+	// 		sleep( operation, sleepDurationAsNano );
+	// 		resultReporter.report( 0, LdbcNoResult.INSTANCE, operation );
+	// 	}
+	// }
+	//
+	// public static class LdbcUpdate8AddFriendshipHandler
+	// 		implements OperationHandler<LdbcUpdate8AddFriendship, GraphDbConnectionState>
+	// {
+	// 	@Override
+	// 	public void executeOperation( LdbcUpdate8AddFriendship operation, GraphDbConnectionState dbConnectionState,
+	// 			ResultReporter resultReporter ) throws DbException
+	// 	{
+	// 		sleep( operation, sleepDurationAsNano );
+	// 		resultReporter.report( 0, LdbcNoResult.INSTANCE, operation );
+	// 	}
+	// }
 }
