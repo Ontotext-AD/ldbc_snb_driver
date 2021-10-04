@@ -21,10 +21,14 @@ import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads
 import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery12;
 import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery13;
 import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.longreads.LdbcQuery14;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.writes.LdbcNoResult;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.writes.LdbcUpdate1AddPerson;
+import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.queries.writes.LdbcUpdate2AddPostLike;
 import com.ldbc.driver.workloads.ontotext.ldbc.snb.interactive.readers.LdbcUtils;
 import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.query.Update;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 
@@ -58,17 +62,15 @@ public class LdbcSnbInteractiveGraphDb extends Db {
 			return bindings;
 		}
 
-		// List<BindingSet> executeUpdate(String updateString, Map<String, Object> updateParams) {
-		// 	updateString = LdbcUtils.applyParameters(updateString, updateParams);
-		// 	List<BindingSet> bindings = new ArrayList<>();
-		// 	try (RepositoryConnection conn = repository.getConnection()) {
-		// 		Update update = conn.prepareUpdate(QueryLanguage.SPARQL, updateString);//
-		// 		while (resultIter.hasNext()) {
-		// 			bindings.add(resultIter.next());
-		// 		}
-		// 	}
-		// 	return bindings;
-		// }
+		void executeUpdate(String updateString, Map<String, Object> updateParams) {
+			updateString = LdbcUtils.applyParameters(updateString, updateParams);
+			List<BindingSet> bindings = new ArrayList<>();
+			try (RepositoryConnection conn = repository.getConnection()) {
+				Update update = conn.prepareUpdate(QueryLanguage.SPARQL, updateString);
+				update.execute();
+			}
+
+		}
 
 		public void close() {
 			repository.shutDown();
@@ -175,6 +177,8 @@ public class LdbcSnbInteractiveGraphDb extends Db {
 		params.put(SLEEP_TYPE_ARG, sleepType.name());
 
 		LdbcUtils.loadQueriesFromDirectory(BENCHMARK_QUERIES, params.get(LdbcSnbInteractiveGraphDBWorkloadConfiguration.LDBC_SNB_QUERY_DIR));
+	//	LdbcUtils.loadQueriesFromDirectory(BENCHMARK_UPDATES, params.get(LdbcSnbInteractiveGraphDBWorkloadConfiguration.LDBC_SNB_UPDATE_DIR));
+
 
 		// Long Reads
 		registerOperationHandler(LdbcQuery1.class, LdbcQuery1Handler.class);
@@ -191,6 +195,10 @@ public class LdbcSnbInteractiveGraphDb extends Db {
 		registerOperationHandler(LdbcQuery12.class, LdbcQuery12Handler.class);
 		registerOperationHandler(LdbcQuery13.class, LdbcQuery13Handler.class);
 		registerOperationHandler(LdbcQuery14.class, LdbcQuery14Handler.class);
+
+		//WRITES
+		registerOperationHandler(LdbcUpdate2AddPostLike.class, LdbcUpdate2AddPostLikeHandler.class);
+
 	}
 
 	@Override
@@ -362,8 +370,8 @@ public class LdbcSnbInteractiveGraphDb extends Db {
 		}
 	}
 
-	// /*UPDATE HANDLERS*/
-	//
+	/*UPDATE HANDLERS*/
+
 	// public static class LdbcUpdate1AddPersonHandler
 	// 		implements OperationHandler<LdbcUpdate1AddPerson, GraphDbConnectionState>
 	// {
@@ -376,20 +384,20 @@ public class LdbcSnbInteractiveGraphDb extends Db {
 	// 	}
 	// }
 	//
-	// public static class LdbcUpdate2AddPostLikeHandler
-	// 		implements OperationHandler<LdbcUpdate2AddPostLike, GraphDbConnectionState>
-	// {
-	// 	@Override
-	// 	public void executeOperation( LdbcUpdate2AddPostLike operation, GraphDbConnectionState dbConnectionState,
-	// 			ResultReporter resultReporter ) throws DbException
-	// 	{
-	// 		sleep( operation, sleepDurationAsNano );
-	// 		List<BindingSet> results = dbConnectionState.getGraphDbClient()
-	// 				.execute(BENCHMARK_QUERIES.get(LdbcUpdate2AddPostLike.TYPE), operation.parameterMap());
-	//
-	// 		resultReporter.report( 0, LdbcNoResult.INSTANCE, operation );
-	// 	}
-	// }
+	public static class LdbcUpdate2AddPostLikeHandler
+			implements OperationHandler<LdbcUpdate2AddPostLike, GraphDbConnectionState>
+	{
+		@Override
+		public void executeOperation( LdbcUpdate2AddPostLike operation, GraphDbConnectionState dbConnectionState,
+				ResultReporter resultReporter ) throws DbException
+		{
+			sleep( operation, sleepDurationAsNano );
+			dbConnectionState.getGraphDbClient()
+					.executeUpdate(BENCHMARK_QUERIES.get(LdbcUpdate2AddPostLike.TYPE), operation.parameterMap());
+
+			resultReporter.report( 200, LdbcNoResult.INSTANCE, operation );
+		}
+	}
 	//
 	// public static class LdbcUpdate3AddCommentLikeHandler
 	// 		implements OperationHandler<LdbcUpdate3AddCommentLike, GraphDbConnectionState>
